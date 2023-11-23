@@ -1,0 +1,16 @@
+image: gitlab.dsi.universite-paris-saclay.fr:5005/info111/computerlab/image:latest
+
+variables:
+  ASSIGNMENT: Projet-Jarnac
+  STUDENT: $CI_PROJECT_ROOT_NAMESPACE
+
+autograde:
+  script:
+    - STUDENT=`echo $STUDENT | sed -e 's/_travo//;s/_/./'`
+    - info-111 student_autograde $ASSIGNMENT $STUDENT
+  artifacts:
+    paths:
+      - autograded
+      - feedback
+    # reports:
+    #   junit: feedback/scores.xml
