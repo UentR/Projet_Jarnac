@@ -10,16 +10,6 @@ using namespace std;
 
 int NBR = 2;
 
-bool CheckDecode(int BorneInf, int BorneSup, unsigned long long Val, string First)
-{
-    // int Existe = Val % 2;
-    // Val = Val >> 1;
-    unsigned long long TestBorneInf = Val & int(pow(2, 18) - 1);
-    unsigned long long TestBorneSup = Val >> 18;
-    cout << TestBorneInf << " / " << BorneInf << " : " << TestBorneSup << " / " << BorneSup << " " << First << endl;
-    return true;
-}
-
 vector<long> CreateBorne(vector<string> Dico)
 {
     vector<long> Borne = vector<long>(pow(26, NBR), 0);
