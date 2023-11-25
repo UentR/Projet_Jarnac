@@ -3,9 +3,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <limits>
 #include <math.h>
-#include <fstream>
 using namespace std;
 
 int NBR = 2;
@@ -53,7 +51,7 @@ vector<string> importeDico(string adresseDico)
     return Dico;
 }
 
-vector<string> Dico = importeDico("DictionnairePurified.txt");
+vector<string> Dico = importeDico("Guidé/DictionnairePurified.txt");
 vector<long> BORNES = CreateBorne(Dico);
 
 #define CHECK(test) \
