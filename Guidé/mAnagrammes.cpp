@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 /**
@@ -12,19 +13,24 @@ using namespace std;
  * @return string: '-' si la lettre n'apparaît dans `vrac` et sinon
  * `vrac` après avoir y retiré la première occurence de la lettre
  */
-string retire(string mot, char lettre) {
+string retire(string mot, char lettre)
+{
     string Rep = "";
     char Current;
     int Count = 0;
-    for (char Current : mot) {
-        if (Current == lettre) {
+    for (char Current : mot)
+    {
+        if (Current == lettre)
+        {
             break;
         }
         Rep += Current;
         Count++;
     }
-    if (Count == mot.length()) return "-";
-    for (int i=Count+1; i<mot.size(); i++) {
+    if (Count == mot.length())
+        return "-";
+    for (int i = Count + 1; i < mot.size(); i++)
+    {
         Current = mot[i];
         Rep += Current;
     }
@@ -38,9 +44,11 @@ string retire(string mot, char lettre) {
  * renvoie vrac après lui avoir retiré une occurence de chaque lettre du mot
  * et la chaîne "-" si l'opération est impossible.
  */
-string retire(string vrac, string mot) {
+string retire(string vrac, string mot)
+{
     string Rep = vrac;
-    for (char i : mot) {
+    for (char i : mot)
+    {
         Rep = retire(Rep, i);
     }
     return Rep;
@@ -51,56 +59,71 @@ string retire(string vrac, string mot) {
  * @param string mot1: un mot
  * @param string mot2: un mot
  * renvoie vrai si les deux mots sont des anagrammes l'un de l'autre et faux sinon
-*/
-bool est_anagramme(string mot1, string mot2) {
-    return retire(mot1, mot2) != "-";      
+ */
+bool est_anagramme(string mot1, string mot2)
+{
+    return retire(mot1, mot2) != "-";
 }
-
 
 /**
  * calcule la liste d'anagramme d'un mot
  */
 #include <set>
-vector<string> listeDesAnagrammes(string mot) {
+set<string> listeDesAnagrammes(string mot)
+{
     set<string> Temp = {};
-    
+    sort(mot.begin(), mot.end());
+    do
+    {
+        Temp.insert(mot);
+    } while (next_permutation(mot.begin(), mot.end()));
+    return Temp;
 }
 
-
+#include "mDictionnaire.cpp"
 /**
  * calcul la liste des anagrammes d'un mot qui figurent dans le dico
  */
-vector<string> listeDesAnagrammesDuDico(string mot, string dico) {
-    vector<string> Rep = {};
+set<string> listeDesAnagrammesDuDico(string mot, vector<string> dico)
+{
+    set<string> Rep = {};
+    set<string> Ana = listeDesAnagrammes(mot);
+    for (auto i : Ana)
+    {
+        if (trouve(i, dico))
+        {
+            Rep.insert(i);
+        }
+    }
     return Rep;
 }
 
+#define CHECK(test) \
+    if (!(test))    \
+    cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ << ": " #test << endl
 
+int main()
+{
 
-#define CHECK(test) if (!(test)) cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ << ": " #test << endl
+    CHECK(retire("bonjour", 'o') == "bnjour");
 
+    CHECK(retire("bonjour", 'p') == "-");
 
-int main() {
+    CHECK(est_anagramme("rien", "rien"));
+    CHECK(est_anagramme("nier", "rein"));
 
-    CHECK ( retire("bonjour", 'o') == "bnjour");
+    vector<string> Dico = importeDico("Guidé/DictionnairePurified.txt");
+    vector<long> BORNES = CreateBorne(Dico);
 
-    CHECK ( retire("bonjour", 'p') == "-");
+    CHECK((listeDesAnagrammesDuDico("rien", Dico) == set<string>{"rien", "nier", "rein"}));
+    //  afficheListedeMots( listeDesAnagrammesDuDico("rien","dictionnaire.txt"));
 
+    CHECK(retire("abcd", "bac") == "d");
+    CHECK(retire("ab", "bac") == "-");
+    CHECK(retire("abc", "bac") == "");
+    CHECK(retire("famille", "m") == "faille");
+    CHECK(retire("garder", "regard") == "");
+    CHECK((retire("brossent", "sorbet") == "ns") or (retire("brossent", "sorbet") == "sn"));
 
-    CHECK ( est_anagramme("rien", "rien") );
-    CHECK ( est_anagramme("nier", "rein") );
-
-    //CHECK ( listeDesAnagrammesDuDico("rien","dictionnaire.txt") == {"rien", "nier","rein"} );
-    //afficheListedeMots( listeDesAnagrammesDuDico("rien","dictionnaire.txt"));
-
-    CHECK( retire("abcd", "bac")   == "d");
-    CHECK( retire("ab", "bac")     == "-");
-    CHECK( retire("abc", "bac")    == "");
-    CHECK( retire("famille", "m") == "faille");
-    CHECK( retire("garder", "regard") == "");
-    CHECK( (retire("brossent", "sorbet") == "ns")
-           or (retire("brossent", "sorbet") == "sn")
-         ) ;
-
+    listeDesAnagrammes("TEST");
 }
-

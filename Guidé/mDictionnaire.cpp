@@ -99,7 +99,10 @@ string purifie(string mot)
 bool trouve(string mot, vector<string> dico)
 {
     string Word = purifie(mot);
-    if (Word == "") { return false; }
+    if (Word == "")
+    {
+        return false;
+    }
     int Idx = 0;
     int Mult = 1;
     for (int i = 0; i < NBR; i++)
@@ -126,20 +129,26 @@ bool trouve(string mot, vector<string> dico)
     return false;
 }
 
-int main()
-{
-    CHECK(majuscule('a') == 'A');
-    CHECK(majuscule('b') == 'B');
-    CHECK(majuscule('D') == 'D');
-    CHECK(majuscule('^') == '-');
+// int main()
+// {
+//     CHECK(majuscule('a') == 'A');
+//     CHECK(majuscule('b') == 'B');
+//     CHECK(majuscule('D') == 'D');
+//     CHECK(majuscule('^') == '-');
 
-    CHECK(purifie(" Ou i¹") == "OUI");
-    CHECK(purifie("NOM?") == "NOM");
+//     CHECK(purifie(" Ou i¹") == "OUI");
+//     CHECK(purifie("NOM?") == "NOM");
 
-    CHECK(trouve("ZYTHUMS", Dico));
-    CHECK(trouve("non", Dico));
-    CHECK(trouve("ABACAS", Dico));
-    CHECK(trouve("AAS", Dico));
+//     CHECK(trouve("ZYTHUMS", Dico));
+//     CHECK(trouve("non", Dico));
+//     CHECK(trouve("ABACAS", Dico));
+//     CHECK(trouve("AAS", Dico));
+//     CHECK(trouve("AALENIEN", Dico));
+//     CHECK(trouve("ABACA", Dico));
 
-    return 0;
-}
+//     CHECK(!trouve("ZZZ", Dico));
+//     CHECK(!trouve("???", Dico));
+//     CHECK(!trouve("Nomination", Dico));
+
+//     return 0;
+// }
