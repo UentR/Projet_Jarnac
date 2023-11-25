@@ -101,6 +101,7 @@ string purifie(string mot)
 bool trouve(string mot, vector<string> dico)
 {
     string Word = purifie(mot);
+    if (Word == "") { return false; }
     int Idx = 0;
     int Mult = 1;
     for (int i = 0; i < NBR; i++)
