@@ -135,7 +135,7 @@ bool trouve(string mot, vector<string> dico)
     }
     int Idx = CalcIdx(Word);
     long Borne = BORNES[Idx];
-    int BorneInf = (Borne & int(pow(2, SHIFT) - 1));
+    int BorneInf = (Borne & (int)(pow(2, SHIFT) - 1));
     int BorneSup = Borne >> SHIFT;
 
     for (int i = BorneInf; i < BorneSup; i++)

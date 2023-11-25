@@ -49,7 +49,7 @@ long Borne = (BorneSup << SHIFT) + (BorneInf);
 
 ```C++
 long Borne = BORNES[Idx];
-int BorneInf = (Borne & int(pow(2, SHIFT) - 1));
+int BorneInf = Borne & int(pow(2, SHIFT) - 1);
 int BorneSup = Borne >> SHIFT;
 ```
 
@@ -58,4 +58,14 @@ int BorneSup = Borne >> SHIFT;
 **Regardons étapes par étapes**
 
 1. **Calcul de BorneInf :**
-    - On sait que BorneInf est stocké sur les **SHIFT** premiers bits de la borne. On cherche donc à se débarasser de tous les autres.
+
+    - On sait que BorneInf est stocké sur les **SHIFT** premiers bits de la borne. On cherche ainsi à se débarasser de tous les autres. On va donc utiliser l'opérateur binaire & entre Borne et 2^SHIFT - 1 afin de ne garder que les **SHIFT** premiers bits :
+        > ```C++
+        >   int BorneInf = Borne & (int)[^1](pow(2, SHIFT) - 1);
+        > ```
+
+2. **Calcul de BorneSup :**
+    - On sait également que du 2 \* **SHIFT**-ème bit jusqu'au **SHIFT**-ème bit se trouve BorneSup :
+        > ```C++
+        >   int BorneSup = Borne >> SHIFT;
+        > ```
