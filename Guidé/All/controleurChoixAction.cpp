@@ -10,8 +10,21 @@ using namespace std;
 
 #include "mAnagrammes.hpp"
 #include "mDictionnaire.hpp"
+#include "vueEnModeTexte.hpp"
 
 using BOARD = vector<vector<string>>;
+
+void Show(BOARD Board)
+{
+    for (auto i : Board)
+    {
+        cout << "-------" << endl;
+        for (auto j : i)
+        {
+            cout << j << endl;
+        }
+    }
+}
 
 bool isVowel(string Letter)
 {
@@ -62,7 +75,7 @@ vector<string> createLetters()
     while (!Vowel1 || !Vowel2)
     {
         random_shuffle(Rep.begin(), Rep.end());
-        for (int i = Size; i >= Size - 6; i--)
+        for (int i = Size; i > Size - 6; i--)
         {
             if (isVowel(Rep[i]))
             {
@@ -71,7 +84,7 @@ vector<string> createLetters()
             }
             Vowel1 = false;
         }
-        for (int i = Size - 7; i >= Size - 12; i--)
+        for (int i = Size - 7; i > Size - 12; i--)
         {
             if (isVowel(Rep[i]))
             {
@@ -98,7 +111,57 @@ string choisirDictionnaire()
 string piocheLettre()
 {
     LEN--;
+    LETTERS.pop_back();
     return LETTERS[LEN];
+}
+
+void shuffleBag(string Rep)
+{
+    for (auto i : Rep)
+    {
+        LETTERS.push_back(string(1, i));
+        LEN++;
+    }
+    random_shuffle(LETTERS.begin(), LETTERS.end());
+}
+
+BOARD echangeLettre(BOARD Board, int Joueur)
+{
+    if (Board[Joueur][0].size() < 3)
+    {
+        cout << "Vous n'avez pas assez de lettre pour en échanger." << endl;
+        return Board;
+    }
+    string Rep = "";
+    string Res;
+    while (Rep == "")
+    {
+        cout << "Votre vrac est actuellement : " << Board[Joueur][0] << endl
+             << "De quelle lettre voulez-vous vous séparer ?" << endl;
+        string Rep;
+        cin >> Rep;
+        Rep = purifie(Rep);
+        if (Rep.size() != 3)
+        {
+            cout << "Vous devez choisir exactement 3 lettres." << endl;
+            Rep = "";
+        }
+
+        Res = retire(Board[Joueur][0], Rep);
+        if (Res == "-")
+        {
+            cout << "Vous ne disposez pas d'au moins une de ces lettres." << endl;
+            Rep = "";
+        }
+    }
+    Board[Joueur][0] = Res;
+    for (int i = 0; i < 3; i++)
+    {
+        Board[Joueur][0] += piocheLettre();
+    }
+    cout << "Here" << endl;
+    shuffleBag(Rep);
+    return Board;
 }
 
 void ActionPossible()
@@ -109,25 +172,20 @@ void ActionPossible()
     cout << "    E : Echanger trois Lettres" << endl;
     cout << "    F : Finir son tour" << endl;
     cout << "    J : crier Jarnac" << endl;
-    cout << "    V : Voir ce menu" << endl;
+    cout << "    M : voir ce Menu" << endl;
+    cout << "    P : voir le Plateau" << endl;
+    cout << endl;
 }
 
-// string choisirAction(vector<string> possibilites, string nomJoueur);
-
-// string choisirMot(vector<string> plateau, string nomJoueur, string dico);
-
-// string TourJoueur()
-// {
-//     piocheLettre();
-// }
-
-void JouerMot(BOARD Board, int Joueur, int Ligne, string Mot, string diffLetter, bool isJarnac)
+BOARD JouerMot(BOARD Board, int Joueur, int Ligne, string Mot, string diffLetter, bool isJarnac)
 {
 
     Board[Joueur][0] = retire(Board[Joueur][0], diffLetter);
     if (!isJarnac)
     {
+        cout << "HRE" << endl;
         Board[Joueur][Ligne] = Mot;
+        Board[Joueur][0] += piocheLettre();
     }
     else
     {
@@ -141,9 +199,10 @@ void JouerMot(BOARD Board, int Joueur, int Ligne, string Mot, string diffLetter,
             }
         }
     }
+    return Board;
 }
 
-void PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, bool isJarnac)
+BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, bool isJarnac, string Name, vector<string> Names)
 {
     string Say = "Sur quelle ligne souhaitez-vous jouer ?";
     if (isJarnac)
@@ -152,25 +211,36 @@ void PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes,
         Say = "Où pensez-vous voir un mot ?";
     }
     bool Joue = true;
-    int Ligne = -1;
+    string Rep;
     string mot = "-";
     string CurrentLigne = "";
     string diffLetter;
     string Vrac = Board[Joueur][0];
+    bool Continue;
+    int Ligne;
 
+    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
     while (Joue)
     {
-        while (Ligne == -1)
+        Rep = "";
+        while (Rep == "")
         {
             cout << Say << endl;
-            cin >> Ligne;
-            if (1 > Ligne || 9 < Ligne)
+            cin >> Rep;
+            if (Rep == "Q")
+            {
+                Joue = false;
+                break;
+            }
+            if (("1" > Rep) || ("9" < Rep) || (Rep.size() == 2))
             {
                 cout << "Numéro de ligne invalide." << endl;
-                Ligne = -1;
+                Rep = "";
             }
         }
+        Ligne = atoi(Rep.c_str());
         CurrentLigne = Board[Joueur][Ligne];
+        mot = "-";
         while (mot == "-")
         {
             cout << endl
@@ -179,45 +249,60 @@ void PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes,
             mot = purifie(mot);
             if (mot == "R")
             {
-                Ligne = -1;
+                break;
+            }
+            if (mot == "Q")
+            {
+                Joue = false;
                 break;
             }
             diffLetter = retire(mot, CurrentLigne);
+            Continue = true;
             for (auto i : diffLetter)
             {
                 if (Vrac.find(i) == string::npos)
                 {
-                    cout << "Mot impossible a jouer. Taper 'R' pour choisir une autre ligne." << endl;
-                    // mot = "-";
+                    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+                    cout << "Mot impossible a jouer. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
+                    mot = "-";
+                    Continue = false;
                     break;
                 }
             }
-            if (!trouve(mot, Dico, Bornes, SHIFT, NBR))
+            if (Continue)
             {
-                cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne." << endl;
-                mot = "-";
-            }
-            else
-            {
-                JouerMot(Board, Joueur, Ligne, mot, diffLetter, isJarnac);
-                Ligne = -1;
+                if (!trouve(mot, Dico, Bornes, SHIFT, NBR))
+                {
+                    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+                    cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
+                    mot = "-";
+                    break;
+                }
+                else
+                {
+                    Board = JouerMot(Board, Joueur, Ligne, mot, diffLetter, isJarnac);
+                    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+                }
             }
         }
     }
+    return Board;
 }
 
-string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR)
+string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, string Name, vector<string> Names)
 {
-    string coup = "-";
-
-    while (coup == "-")
+    string coup;
+    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+    while (true)
     {
+
         cout << "Quelle action souhaitez-vous effectuer ?" << endl;
         cin >> coup;
+        coup = purifie(coup);
         cout << endl;
         if (coup == "C")
         {
-            PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, false);
+            Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, false, Name, Names);
         }
         else if (coup == "F")
         {
@@ -225,16 +310,19 @@ string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bo
         }
         else if (coup == "J")
         {
-            PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, true);
+            Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, true, Name, Names);
         }
         else if (coup == "E")
         {
-            break;
+            Board = echangeLettre(Board, Joueur);
         }
-        else if (coup == "V")
+        else if (coup == "P")
+        {
+            affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+        }
+        else if (coup == "M")
         {
             ActionPossible();
-            coup = "-";
         }
         else if (coup == "A")
         {
@@ -242,33 +330,11 @@ string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bo
         }
         else
         {
-            cout << "Choix invalide, tapez 'V' pour voir les actions possibles." << endl;
-            coup = "-";
+            affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+            cout << "Choix invalide, tapez 'M' pour voir les actions possibles." << endl;
         }
     }
     return "";
-}
-
-bool lanceLeJeu(string joueur0, string joueur1)
-{
-    string nomDico = choisirDictionnaire();
-    // vector<string> Dico = importeDico(choisirDictionnaire());
-    vector<string> Dico = importeDico("Guidé/DictionnairePurified.txt");
-    int SHIFT = ceil(log(Dico.size()) / log(2));
-    int NBR = 3;
-    vector<long> BORNES = CreateBorne(Dico, NBR, SHIFT);
-
-    BOARD Board = initBoard(8, 9);
-
-    ActionPossible();
-
-    int Joueur = 0;
-    string mot = choixAction(Board, Joueur, Dico, Bornes, SHIFT, NBR);
-    if (mot == "-STOP-")
-    {
-        cout << "Fin du jeu, " << joueur1 << " a gagné." << endl;
-    }
-    return true;
 }
 
 BOARD initBoard(int W, int H)
@@ -289,9 +355,56 @@ BOARD initBoard(int W, int H)
     return Board;
 }
 
+bool lanceLeJeu(string joueur0, string joueur1, string Name)
+{
+    string nomDico = choisirDictionnaire();
+    // vector<string> Dico = importeDico(choisirDictionnaire());
+    vector<string> Dico = importeDico("Guidé/DictionnairePurified.txt");
+    int SHIFT = ceil(log(Dico.size()) / log(2));
+    int NBR = 3;
+    vector<long> BORNES = CreateBorne(Dico, NBR, SHIFT);
+
+    BOARD Board = initBoard(8, 9);
+
+    vector<string> Names = {joueur0, joueur1};
+
+    affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
+    ActionPossible();
+    cout << "Appuyez sur 'entré' pour continuer" << endl;
+    system("PAUSE");
+    getchar();
+
+    // ATTENDRE INPUT D'UN JOUEUR AVANT DE CONTINUER
+
+    int Joueur = 0;
+    string mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    if (mot == "-STOP-")
+    {
+        cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
+    }
+    Joueur = 1 - Joueur;
+    string mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    if (mot == "-STOP-")
+    {
+        cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
+    }
+
+    while (mot != "-STOP-")
+    {
+        affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
+        Joueur = 1 - Joueur;
+        Board[Joueur][0] += piocheLettre();
+        string mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    }
+
+    cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
+
+    return true;
+}
+
 int main()
 {
 
-    lanceLeJeu("Moi", "Toi");
+    lanceLeJeu("Moi", "Toi", "----");
     return 0;
 }

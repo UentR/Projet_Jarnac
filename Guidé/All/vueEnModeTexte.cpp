@@ -4,8 +4,8 @@
 using namespace std;
 
 // #include "vueEnModeTexte.hpp"
-#include "mCalculPoints.cpp"
-#include "mDictionnaire.cpp"
+#include "mCalculPoints.hpp"
+#include "mDictionnaire.hpp"
 
 /*****************************************************
 ******************************************************
@@ -120,14 +120,14 @@ void affichePlateaux(vector<string> plateauJoueurA,
                      vector<string> plateauJoueurB, int nbMots, int nbMaxLettres, string titreJeu,
                      string prenomA, string prenomB)
 {
-
+    system("clear");
     int largeurDecor = 16;
     int largeurCase = 4;
     if (nbMaxLettres * nbMaxLettres > 100)
     {
         largeurCase = 5;
     }
-    vector<string> grec = vector<string>{"alpha", "beta", "gamma", "delta", "epsilon", "dzeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "khi", "psi", "omega"};
+    // vector<string> grec = vector<string>{"alpha", "beta", "gamma", "delta", "epsilon", "dzeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "khi", "psi", "omega"};
     vector<string> grec = vector<string>{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26"};
 
     cout

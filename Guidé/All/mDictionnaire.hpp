@@ -22,6 +22,13 @@ using namespace std;
  */
 char majuscule(char lettre);
 
+/** Convertit en majuscule
+ * @param char lettre
+ * @return lettre en majuscule, ou '-' si lettre n'est pas une lettre dans 'a-z, A-Z'.
+ *
+ */
+string majuscule(string lettre);
+
 /** «Purifie» un mot en retirant espaces et caractères spéciaux
  *  et en le mettant en majuscules
  * @param string mot

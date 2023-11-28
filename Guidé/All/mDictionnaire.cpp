@@ -74,6 +74,14 @@ char majuscule(char lettre)
     return '-';
 }
 
+string majuscule(string lettre)
+{
+    char Lettre = lettre[0];
+    string Rep = "";
+    Rep += majuscule(Lettre);
+    return Rep;
+}
+
 string purifie(string mot)
 {
     string Rep = "";
