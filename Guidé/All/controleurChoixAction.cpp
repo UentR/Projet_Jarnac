@@ -14,18 +14,6 @@ using namespace std;
 
 using BOARD = vector<vector<string>>;
 
-void Show(BOARD Board)
-{
-    for (auto i : Board)
-    {
-        cout << "-------" << endl;
-        for (auto j : i)
-        {
-            cout << j << endl;
-        }
-    }
-}
-
 bool isVowel(string Letter)
 {
     return (Letter == "A" or Letter == "E" or Letter == "I" or Letter == "O" or Letter == "U" or Letter == "Y");
@@ -125,6 +113,7 @@ void shuffleBag(string Rep)
     random_shuffle(LETTERS.begin(), LETTERS.end());
 }
 
+// DOESN'T WORK BUT BORING
 BOARD echangeLettre(BOARD Board, int Joueur)
 {
     if (Board[Joueur][0].size() < 3)
@@ -167,9 +156,9 @@ BOARD echangeLettre(BOARD Board, int Joueur)
 void ActionPossible()
 {
     cout << "Au cours du jeu il est possible de taper certaines lettres pour piloter la manche." << endl;
-    cout << "    A : Abandonner la Partie" << endl;
+    cout << "    A : Abandonner la partie" << endl;
     cout << "    C : Continuer en choisissant un mot" << endl;
-    cout << "    E : Echanger trois Lettres" << endl;
+    cout << "    E : Echanger trois lettres" << endl;
     cout << "    F : Finir son tour" << endl;
     cout << "    J : crier Jarnac" << endl;
     cout << "    M : voir ce Menu" << endl;
@@ -376,14 +365,15 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 
     // ATTENDRE INPUT D'UN JOUEUR AVANT DE CONTINUER
 
+    string mot;
     int Joueur = 0;
-    string mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
     if (mot == "-STOP-")
     {
         cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
     }
     Joueur = 1 - Joueur;
-    string mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
     if (mot == "-STOP-")
     {
         cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
@@ -393,8 +383,8 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
     {
         affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
         Joueur = 1 - Joueur;
-        Board[Joueur][0] += piocheLettre();
-        string mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+        Board[Joueur][0] += piocheLettre(); // PIOCHER OU ECHANGER MAIS PAS LES DEUX
+        mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
     }
 
     cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
@@ -404,7 +394,6 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 
 int main()
 {
-
     lanceLeJeu("Moi", "Toi", "----");
     return 0;
 }
