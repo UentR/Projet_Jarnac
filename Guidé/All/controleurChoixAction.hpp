@@ -1,12 +1,11 @@
-
 #include <iostream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-#include "vueEnModeTexte.hpp"
-#include "mPoseMotJarnac-correction.hpp"
+// #include "vueEnModeTexte.hpp"
+// #include "mPoseMotJarnac-correction.hpp"
 
 /***********************************************************************
  *
@@ -18,7 +17,7 @@ using namespace std;
  *
  * **********************************************************************/
 
-///BEGIN SOLUTION
+/// BEGIN SOLUTION
 
 string choisirDictionnaire();
 

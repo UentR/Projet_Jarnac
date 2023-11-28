@@ -128,8 +128,10 @@ void affichePlateaux(vector<string> plateauJoueurA,
         largeurCase = 5;
     }
     vector<string> grec = vector<string>{"alpha", "beta", "gamma", "delta", "epsilon", "dzeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "khi", "psi", "omega"};
+    vector<string> grec = vector<string>{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26"};
 
-    cout << endl;
+    cout
+        << endl;
     cout << endl;
 
     // affichage graphique de l'entete du jeu si 9 lettres

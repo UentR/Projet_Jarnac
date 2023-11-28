@@ -1,11 +1,11 @@
 // un bibliotheque pour jouer avec les anagrammes
-#include <vector>
 #include <string>
+#include <set>
+#include <vector>
 
 using namespace std;
 
 #include "mDictionnaire.hpp"
-
 
 /**
  * retire une lettre
@@ -30,17 +30,15 @@ string retire(string vrac, string mot);
  * @param string mot1: un mot
  * @param string mot2: un mot
  * renvoie vrai si les deux mots sont des anagrammes l'un de l'autre et faux sinon
-*/
+ */
 bool est_anagramme(string mot1, string mot2);
-
 
 /**
  * calcule la liste d'anagramme d'un mot
  */
-vector<string> listeDesAnagrammes(string mot);
-
+set<string> listeDesAnagrammes(string mot);
 
 /**
  * calcul la liste des anagrammes d'un mot qui figurent dans le dico
  */
-vector<string> listeDesAnagrammesDuDico(string mot, string dico);
+set<string> listeDesAnagrammesDuDico(string mot, vector<string> dico);
