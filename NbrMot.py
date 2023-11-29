@@ -1,4 +1,4 @@
-with open("Guidé/DicoIA.txt") as T:
+with open("Guidé/All/Text/DicoIA.txt") as T:
     data = T.readlines()
 
 SortedData = dict([(9, 0), (8, 0), (7, 0), (6, 0), (5, 0), (4, 0), (3, 0)])

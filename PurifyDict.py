@@ -8,5 +8,5 @@ for i in data:
 
 print((len(NewData)-len(data))/len(data)*100)
 
-with open("Guidé/DictionnairePurified.txt", "w") as T:
+with open("Guidé/All/Text/DictionnairePurified.txt", "w") as T:
     T.writelines(NewData)

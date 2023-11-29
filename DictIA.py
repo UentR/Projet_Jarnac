@@ -3,7 +3,7 @@ def sortLetters(Mot):
 
 
 
-with open("Guidé/DictionnairePurified.txt") as T:
+with open("Guidé/All/Text/DictionnairePurified.txt") as T:
     data = T.readlines()
 
 Anagrames = list()
@@ -21,5 +21,5 @@ for Idx, i in enumerate(data):
 
 
 import json
-with open("Guidé/Correspondance.json","w") as T:
+with open("Guidé/All/Text/Correspondance.json","w") as T:
     json.dump(Total, T, indent=2)

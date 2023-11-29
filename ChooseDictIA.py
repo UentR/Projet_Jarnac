@@ -3,10 +3,10 @@ def Sort(mot):
 
 
 import json 
-with open("Guidé/DicoIA.txt") as T:
+with open("Guidé/All/Text/DicoIA.txt") as T:
     data = T.readlines()
 
-with open("Guidé/Correspondance.json") as T:
+with open("Guidé/All/Text/Correspondance.json") as T:
     Corr = json.load(T)
 
 SortedData = dict([(9, dict()), (8, dict()), (7, dict()), (6, dict()), (5, dict()), (4, dict()), (3, dict())])
@@ -41,5 +41,5 @@ print(times)
 # print(SortedData)
 
 
-with open("Stats/After2.json", "w") as T:
-    json.dump(Response, T, indent=2)
+with open("Guidé/All/Text/Arbre.txt", "w") as T:
+    T.writelines(Response)
