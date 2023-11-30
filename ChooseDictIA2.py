@@ -31,12 +31,12 @@ for NBR in TEMP:
     for Idx in range(9, 2, -1):
         print(Idx)
         for I, value in enumerate(SortedData[Idx].keys()):
-            Temp = f"{Corr[value]} [ "
+            Temp = f"{Corr[value]} "
             for letter in Alphabet:
                 Mot = Sort(value+letter)
                 if SortedData[Idx+1].get(Mot, 0):
                     Temp += letter + " "
-            Temp += "]\n"
+            Temp += ";\n"
             Response.append(Temp)
     fin = pf() - deb
     times[NBR] = fin

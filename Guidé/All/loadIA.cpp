@@ -21,25 +21,26 @@ string Sort(string Mot)
 int main()
 {
     ifstream File;
-    File.open("Text/Arbre.txt");
     Node *T;
     map<string, Node *> Tree;
     string letter;
-    int Size;
-    for (int i = 0; i < 124492; i++)
+
+    File.open("Text/Arbre.txt");
+    T = new Node;
+
+    while (File >> T->Ana)
     {
-        T = new Node;
-        File >> T->Ana;
 
         File >> letter;
-        File >> letter;
 
-        while (letter != "]")
+        while (letter != ";")
         {
             T->Children[letter] = Tree[Sort((T->Ana + letter))];
             File >> letter;
         }
 
         Tree[Sort(T->Ana)] = T;
+        T = new Node;
     }
+    File.close();
 }
