@@ -58,7 +58,6 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords)
         toAnalyze.erase(toAnalyze.begin());
 
         Child = false;
-        // cout << Path.length() << endl;
         for (char Letter : tVrac)
         {
             if (Word->Children.find(Letter) != Word->Children.end())
@@ -88,6 +87,13 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords)
     }
     return make_tuple(BestStart, BestPath);
 }
+
+
+string Create3LettersWord(string Vrac, set<string> ShortWords) {
+    
+}
+
+
 
 /**
  * Loads a tree data structure from a text file.
