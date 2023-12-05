@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include <random>
+#include <tuple>
 
 using namespace std;
 
@@ -210,7 +211,6 @@ void ActionPossible()
     cout << "Au cours du jeu il est possible de taper certaines lettres pour piloter la manche." << endl;
     cout << "    A : Abandonner la partie" << endl;
     cout << "    C : Continuer en choisissant un mot" << endl;
-    cout << "    E : Echanger trois lettres" << endl;
     cout << "    F : Finir son tour" << endl;
     cout << "    J : crier Jarnac" << endl;
     cout << "    M : voir ce Menu" << endl;
@@ -295,14 +295,14 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
             }
             if (("1" > Rep) || ("9" < Rep) || (Rep.size() == 2))
             {
-                cout << "Numéro de ligne invalide." << endl;
+                cout << "Numéro de ligne invalide. Tapez 'Q' pour changer d'action." << endl;
                 Rep = "";
             }
         }
         Ligne = atoi(Rep.c_str());
         CurrentLigne = Board[Joueur][Ligne];
         mot = "-";
-        while (mot == "-")
+        while (mot == "-" and Rep != "Q")
         {
             cout << endl
                  << "Quel mot souhaitez-vous jouer ?" << endl;
@@ -350,6 +350,30 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
     return Board;
 }
 
+BOARD piocheOuEchange(BOARD Board, int Joueur)
+{
+    string Rep;
+    cout << "Voulez-vous piocher une lettre ou échanger 3 lettres ?" << endl;
+    cout << "    P : Piocher une lettre" << endl;
+    cout << "    E : Echanger 3 lettres" << endl;
+    cin >> Rep;
+    if (Rep == "P")
+    {
+        Board[Joueur][0] += piocheLettre();
+    }
+    else if (Rep == "E")
+    {
+        Board = echangeLettre(Board, Joueur);
+    }
+    else
+    {
+        cout << "Choix invalide." << endl;
+        cout << "    P : Piocher une lettre" << endl;
+        cout << "    E : Echanger 3 lettres" << endl;
+    }
+    return Board;
+}
+
 /**
  * Prompts the user to choose an action and performs it, alternating turns between players.
  *
@@ -360,10 +384,12 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
  * Returns a special string to stop the game loop if the user resigns, otherwise
  * returns an empty string to continue alternating turns.
  */
-string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, string Name, vector<string> Names)
+tuple<string, BOARD> choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, string Name, vector<string> Names)
 {
     string coup;
+
     affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+    bool J = true;
     while (true)
     {
 
@@ -374,18 +400,22 @@ string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bo
         if (coup == "C")
         {
             Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, false, Name, Names);
+            J = false;
         }
         else if (coup == "F")
         {
-            return "";
+            return make_tuple("", Board);
         }
         else if (coup == "J")
         {
-            Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, true, Name, Names);
-        }
-        else if (coup == "E")
-        {
-            Board = echangeLettre(Board, Joueur);
+            if (J)
+            {
+                Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, true, Name, Names);
+            }
+            else
+            {
+                cout << "Vous avez déjà joué un mot." << endl;
+            }
         }
         else if (coup == "P")
         {
@@ -397,7 +427,7 @@ string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bo
         }
         else if (coup == "A")
         {
-            return "-STOP-";
+            return make_tuple("-STOP-", Board);
         }
         else
         {
@@ -405,7 +435,7 @@ string choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bo
             cout << "Choix invalide, tapez 'M' pour voir les actions possibles." << endl;
         }
     }
-    return "";
+    return make_tuple("", Board);
 }
 
 /**
@@ -453,7 +483,7 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 {
     string nomDico = choisirDictionnaire();
     // vector<string> Dico = importeDico(choisirDictionnaire());
-    vector<string> Dico = importeDico("Guidé/DictionnairePurified.txt");
+    vector<string> Dico = importeDico("Text/DictionnairePurified.txt");
     int SHIFT = ceil(log(Dico.size()) / log(2));
     int NBR = 3;
     vector<long> BORNES = CreateBorne(Dico, NBR, SHIFT);
@@ -464,7 +494,7 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 
     affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
     ActionPossible();
-    cout << "Appuyez sur 'entré' pour continuer" << endl;
+    cout << "Appuyez sur 'enter' pour continuer" << endl;
     system("PAUSE");
     getchar();
 
@@ -472,13 +502,14 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 
     string mot;
     int Joueur = 0;
-    mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    tie(mot, Board) = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
     if (mot == "-STOP-")
     {
         cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
     }
+
     Joueur = 1 - Joueur;
-    mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    tie(mot, Board) = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
     if (mot == "-STOP-")
     {
         cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
@@ -488,8 +519,8 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
     {
         affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
         Joueur = 1 - Joueur;
-        Board[Joueur][0] += piocheLettre(); // PIOCHER OU ECHANGER MAIS PAS LES DEUX
-        mot = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+        Board = piocheOuEchange(Board, Joueur);
+        tie(mot, Board) = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
     }
 
     cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
@@ -506,6 +537,6 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
  */
 int main()
 {
-    lanceLeJeu("Moi", "Toi", "----");
+    lanceLeJeu("Joueur 1", "Joueur 2", "Jarnac");
     return 0;
 }

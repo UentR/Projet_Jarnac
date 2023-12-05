@@ -88,12 +88,9 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords)
     return make_tuple(BestStart, BestPath);
 }
 
-
-string Create3LettersWord(string Vrac, set<string> ShortWords) {
-    
-}
-
-
+// string Create3LettersWord(string Vrac, set<string> ShortWords)
+// {
+// }
 
 /**
  * Loads a tree data structure from a text file.
@@ -135,18 +132,12 @@ map<string, Node *> LoadTree(string FileName)
     return Tree;
 }
 
-int main()
+void TEST()
 {
     map<string, Node *> Tree = LoadTree("Text/Arbre.txt");
+
     cout << "Tree loaded" << endl;
     vector<string> WORDS = {
-        "OUT",
-        "OSA",
-        "TON",
-        "ZEN",
-        "NON",
-        "MEO",
-        "SKI",
         "RIE"};
     vector<Node *> PlayerWords = {};
     for (string Word : WORDS)
@@ -163,7 +154,7 @@ int main()
         sleep(1);
     }
 
-    string Vrac = "UGYFT";
+    string Vrac = "SZDI";
     Node *Origin;
     string Path;
     tie(Origin, Path) = Analyze(Vrac, PlayerWords);
@@ -180,3 +171,8 @@ int main()
         cout << Temp->Ana << endl;
     }
 }
+
+// int main()
+// {
+//     TEST();
+// }
