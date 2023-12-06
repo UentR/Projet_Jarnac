@@ -5,4 +5,8 @@ def Decode(Nbr):
     BorneSup = int(t[-39:-21], 2)
     print(BorneSup)
 
-Decode(18446744072511360295)
+def Convert(str):
+    return (ord(str[0])-65)*26**2 +  (ord(str[1])-65)*26 + ord(str[2])-65
+
+print(Convert("BITA"))
+Decode(4760553023)

@@ -12,6 +12,8 @@ using namespace std;
 #include "mDictionnaire.hpp"
 #include "vueEnModeTexte.hpp"
 
+struct ForDict;
+
 using BOARD = vector<vector<string>>;
 
 struct Names
@@ -338,7 +340,7 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac, Name
             }
             if (Continue)
             {
-                if (!trouve(mot, DictHelper->Mots, DictHelper->Bornes, DictHelper->SHIFT, DictHelper->NBR))
+                if (!trouve(mot, DictHelper))
                 {
                     affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
                     cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
@@ -363,6 +365,7 @@ BOARD piocheOuEchange(BOARD Board, int Joueur)
     cout << "    P : Piocher une lettre" << endl;
     cout << "    E : Echanger 3 lettres" << endl;
     cin >> Rep;
+    Rep = purifie(Rep);
     if (Rep == "P")
     {
         Board[Joueur][0] += piocheLettre();
@@ -488,16 +491,13 @@ BOARD initBoard(int W, int H)
 bool lanceLeJeu(string joueur0, string joueur1, string Name)
 {
     string nomDico = choisirDictionnaire();
-    // vector<string> Dico = importeDico(choisirDictionnaire());
-    
 
-    cout << "Here" << endl;
+    ForDict *DictHelper = new ForDict;
+    CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
 
     BOARD Board = initBoard(8, 9);
 
-    cout << "Here" << endl;
-
-    Names *NamesHelper;
+    Names *NamesHelper = new Names;
     NamesHelper->Name1 = joueur0;
     NamesHelper->Name2 = joueur1;
     NamesHelper->NameGame = Name;
@@ -529,8 +529,8 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 
     while (mot == "")
     {
-        affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur);
         Joueur = 1 - Joueur;
+        affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur);
         Board = piocheOuEchange(Board, Joueur);
         tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
     }

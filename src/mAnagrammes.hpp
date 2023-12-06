@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#include "mDictionnaire.hpp"
+// #include "mDictionnaire.hpp"
 
 /**
  * retire une lettre

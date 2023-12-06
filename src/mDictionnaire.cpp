@@ -7,13 +7,17 @@
 
 using namespace std;
 
-struct ForDict
-{
-    vector<string> Mots;
-    vector<long> Bornes;
-    int NBR;
-    int SHIFT;
-};
+// struct ForDict
+// {
+//     vector<string> Mots;
+//     vector<long> Bornes;
+//     int NBR;
+//     int SHIFT;
+// };
+
+#include "mDictionnaire.hpp"
+
+struct ForDict;
 
 
 void importeDico(string adresseDico, ForDict *DictHelper)
@@ -51,12 +55,14 @@ void CreateBorne(ForDict *DictHelper)
         exit(136);
     }
     double Size = pow(26, DictHelper->NBR);
+
+    DictHelper->Bornes = vector<long>(Size, 0);
+
     string First = DictHelper->Mots[0].substr(0, DictHelper->NBR);
     long BorneInf = 0;
     long BorneSup = 0;
     int Idx;
     string Word;
-    cout << DictHelper->SHIFT << endl;
     long Value;
     for (int i = 0; i < DictHelper->Mots.size(); i++) // parcours du dico
     {
@@ -65,10 +71,7 @@ void CreateBorne(ForDict *DictHelper)
         {                              // OUI
             Idx = CalcIdx(First, DictHelper->NBR);
             BorneSup = i;
-            Value = (BorneSup << DictHelper->SHIFT) + (BorneInf);
-            cout << Value << endl;
-            cout << "Value : " << DictHelper->Bornes[Idx] << endl;
-            DictHelper->Bornes[Idx] = Value; // Se référer à la doc
+            DictHelper->Bornes[Idx] = (BorneSup << DictHelper->SHIFT) + (BorneInf); // Se référer à la doc
             BorneInf = i;
             First = Word.substr(0, DictHelper->NBR);
         }
@@ -133,42 +136,39 @@ bool trouve(string mot, ForDict *DictHelper)
 
 void CreateHelper(ForDict *DictHelper, string adresseDico, int NBR) {
     DictHelper->NBR = 3;
-    cout << "Here" << endl;
     importeDico(adresseDico, DictHelper);
-    cout << "Here" << endl;
     CreateBorne(DictHelper);
-    cout << "Here" << endl;
 }
 
 #define CHECK(test) \
     if (!(test))    \
     cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ << ": " #test << endl
 
-int main()
-{
-    ForDict *DictHelper = new ForDict;
-    CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
-    // CHECK(majuscule('a') == 'A');
-    // CHECK(majuscule('b') == 'B');
-    // CHECK(majuscule('D') == 'D');
-    // CHECK(majuscule('^') == '-');
+// int main()
+// {
+//     ForDict *DictHelper = new ForDict;
+//     CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
+//     // CHECK(majuscule('a') == 'A');
+//     // CHECK(majuscule('b') == 'B');
+//     // CHECK(majuscule('D') == 'D');
+//     // CHECK(majuscule('^') == '-');
 
-    // CHECK(purifie(" Ou i¹") == "OUI");
-    // CHECK(purifie("NOM?") == "NOM");
+//     // CHECK(purifie(" Ou i¹") == "OUI");
+//     // CHECK(purifie("NOM?") == "NOM");
 
-    CHECK(trouve("ZYTHUMS", DictHelper));
-    CHECK(trouve("non", DictHelper));
-    CHECK(trouve("ABACAS", DictHelper));
-    CHECK(trouve("AAS", DictHelper));
-    CHECK(trouve("AALENIEN", DictHelper));
-    CHECK(trouve("ABACA", DictHelper));
-    CHECK(trouve("REABONNAI", DictHelper));
-    CHECK(trouve("REABONNA", DictHelper));
-    CHECK(trouve("REABONNAS", DictHelper));
+//     CHECK(trouve("ZYTHUMS", DictHelper));
+//     CHECK(trouve("non", DictHelper));
+//     CHECK(trouve("ABACAS", DictHelper));
+//     CHECK(trouve("AAS", DictHelper));
+//     CHECK(trouve("AALENIEN", DictHelper));
+//     CHECK(trouve("ABACA", DictHelper));
+//     CHECK(trouve("REABONNAI", DictHelper));
+//     CHECK(trouve("REABONNA", DictHelper));
+//     CHECK(trouve("BITA", DictHelper));
 
-    CHECK(!trouve("ZZZ", DictHelper));
-    CHECK(!trouve("???", DictHelper));
-    CHECK(!trouve("Nomination", DictHelper));
+//     CHECK(!trouve("ZZZ", DictHelper));
+//     CHECK(!trouve("???", DictHelper));
+//     CHECK(!trouve("Nomination", DictHelper));
 
-    return 0;
-}
+//     return 0;
+// }

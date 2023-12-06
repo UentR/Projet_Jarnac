@@ -8,6 +8,8 @@ using namespace std;
 
 #include "mDictionnaire.hpp"
 
+struct ForDict;
+
 string retire(string mot, char lettre)
 {
     string Rep = "";
@@ -58,13 +60,13 @@ set<string> listeDesAnagrammes(string mot)
     return Temp;
 }
 
-set<string> listeDesAnagrammesDuDico(string mot, vector<string> dico, vector<long> Bornes, int SHIFT, int NBR)
+set<string> listeDesAnagrammesDuDico(string mot, ForDict *DictHelper)
 {
     set<string> Rep = {};
     set<string> Ana = listeDesAnagrammes(mot);
     for (auto i : Ana)
     {
-        if (trouve(i, dico, Bornes, SHIFT, NBR))
+        if (trouve(i, DictHelper))
         {
             Rep.insert(i);
         }

@@ -15,6 +15,15 @@ using namespace std;
  *
  ***************************************/
 
+struct ForDict
+{
+    vector<string> Mots;
+    vector<long> Bornes;
+    int NBR;
+    int SHIFT;
+};
+
+
 /** Convertit en majuscule
  * @param char lettre
  * @return lettre en majuscule, ou '-' si lettre n'est pas une lettre dans 'a-z, A-Z'.
@@ -47,7 +56,7 @@ vector<string> importeDico(string dico);
  * @param vector<string> Dico: le dictionnaire a partionner
  * @return vector<long> Borne: la liste de toutes les bornes pour chaque couple
  */
-vector<long> CreateBorne(vector<string> Dico, int NBR, int SHIFT);
+void CreateBorne(ForDict *DictHelper);
 
 /** Calcul l'indexe d'un couple de NBR lettre
  *  Note: Convertisseur de la base 26 de l'alphabet en base 10
@@ -62,4 +71,7 @@ int CalcIdx(string Word, int NBR);
  * @param vector<string> dico: un dictionnaire sous forme de tableau
  * @return bool: vrai si le mot est dans le dictionnaire, faux sinon
  */
-bool trouve(string mot, vector<string> dico, vector<long> BORNES, int SHIFT, int NBR);
+bool trouve(string mot, ForDict *DictHelper);
+
+
+void CreateHelper(ForDict *DictHelper, string adresseDico, int NBR);

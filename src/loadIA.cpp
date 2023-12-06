@@ -44,6 +44,8 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords)
         toAnalyze.insert(make_tuple(Word, Vrac, "", Word));
     }
 
+    tuple<Node *, string> BaseCase = make_tuple(PlayerWords[0], "");
+
     set<tuple<Node *, string>> End = {};
 
     Node *Word;
@@ -81,11 +83,10 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords)
         if (Path.length() > Longest)
         {
             Longest = Path.length();
-            BestPath = Path;
-            BestStart = Word;
+            BaseCase = make_tuple(Word, Path);
         }
     }
-    return make_tuple(BestStart, BestPath);
+    return BaseCase;
 }
 
 // string Create3LettersWord(string Vrac, set<string> ShortWords)
@@ -137,8 +138,16 @@ void TEST()
     map<string, Node *> Tree = LoadTree("Text/Arbre.txt");
 
     cout << "Tree loaded" << endl;
-    vector<string> WORDS = {
-        "RIE"};
+    vector<string> WORDS = {};
+    int NBR;
+    cout << "Combien de mots déjà placé :" << endl;
+    cin >> NBR;
+    string TT;
+    for (int i=0; i<NBR; i++) {
+        cout << "Mot numéro " << i+1 << " :" << endl;
+        cin >> TT;
+        WORDS.push_back(TT);
+    }
     vector<Node *> PlayerWords = {};
     for (string Word : WORDS)
     {
@@ -147,14 +156,17 @@ void TEST()
 
     cout << "Player words loaded" << endl;
 
-    // 5s pause
-    for (int i = 0; i < 5; i++)
-    {
-        cout << i << endl;
-        sleep(1);
-    }
+    // // 5s pause
+    // for (int i = 0; i < 5; i++)
+    // {
+    //     cout << i << endl;
+    //     sleep(1);
+    // }
 
-    string Vrac = "SZDI";
+    string Vrac;
+    cout << "Quel est votre vrac ?" << endl;
+    cin >> Vrac;
+
     Node *Origin;
     string Path;
     tie(Origin, Path) = Analyze(Vrac, PlayerWords);
@@ -172,7 +184,7 @@ void TEST()
     }
 }
 
-// int main()
-// {
-//     TEST();
-// }
+int main()
+{
+    TEST();
+}

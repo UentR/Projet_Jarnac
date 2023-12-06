@@ -59,7 +59,9 @@ void afficheGrillePoints(int nbMaxLettres, int largeurCase)
             {
                 afficheSymbolesRepete(1, " ");
             }
+            cout << "\033[1;97m";
             cout << nbAffiche;
+            cout << "\033[0m";
         }
     }
 }
@@ -122,17 +124,20 @@ void affichePlateaux(vector<string> plateauJoueurA,
 {
     system("clear");
 
-    vector<string> Perso;
-    string End;
+    vector<string> Perso = {" ", " "};
+    string End = "";
+    string Titre = "";
+    string SCORE = "";
+    string VRAC = "";
+    string NBR = "";
     if (true)
     {
-        Perso = {"\033[91;1m", "\033[32;1m"};
+        Perso = {"\033[91;1m ", "\033[32;1m "};
         End = "\033[0m";
-    }
-    else
-    {
-        Perso = {"", ""};
-        End = "";
+        Titre = "\033[1;93m";
+        SCORE = "\033[1;35m";
+        VRAC = "\033[1;96m";
+        NBR = "\033[1;97m";
     }
 
     int largeurDecor = 16;
@@ -169,7 +174,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
     cout << "|";
     afficheSymbolesRepete((largeurInterne - titreJeu.size()) / 2, " ");
     afficheSymbolesRepete((largeurInterne - titreJeu.size()) % 2, " ");
+    cout << Titre;
     cout << titreJeu;
+    cout << End;
     afficheSymbolesRepete((largeurInterne - titreJeu.size()) / 2, " ");
     cout << "|";
     cout << endl;
@@ -197,7 +204,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
     {
         cout << " ";
     }
+    cout << SCORE;
     cout << nbAffiche << " point";
+    
     if (nbAffiche > 1)
     {
         cout << "s";
@@ -206,6 +215,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
     {
         cout << " ";
     }
+    cout << End;
     cout << " |";
     afficheSymbolesRepete(largeurDecor, " ");
     cout << "|";
@@ -226,7 +236,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
     {
         cout << " ";
     }
+    cout << SCORE;
     cout << nbAffiche << " point";
+    
     if (nbAffiche > 1)
     {
         cout << "s";
@@ -235,6 +247,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
     {
         cout << " ";
     }
+    cout << End;
     cout << " |";
     cout << endl;
 
@@ -290,7 +303,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
         cout << "|";
 
         afficheSymbolesRepete((largeurDecor - grec[ligne - 1].size()) / 2, " ");
+        cout << NBR;
         cout << grec[ligne - 1];
+        cout << End;
         afficheSymbolesRepete(largeurDecor - grec[ligne - 1].size() - ((largeurDecor - grec[ligne - 1].size()) / 2), " ");
 
         afficheMots(motB, nbMaxLettres, largeurCase);
@@ -331,7 +346,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
                                plateauJoueurA[0].size()) /
                                   2,
                               " ");
+        cout << VRAC;
         cout << plateauJoueurA[0];
+        cout << End;
         afficheSymbolesRepete(largeurCase * nbMaxLettres - plateauJoueurA[0].size() -
                                   1 - (largeurCase * nbMaxLettres - plateauJoueurA[0].size()) / 2,
                               " ");
@@ -346,7 +363,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
                                plateauJoueurB[0].size()) /
                                   2,
                               " ");
+        cout << VRAC;
         cout << plateauJoueurB[0];
+        cout << End;
         afficheSymbolesRepete(largeurCase * nbMaxLettres - plateauJoueurB[0].size() -
                                   1 - (largeurCase * nbMaxLettres - plateauJoueurB[0].size()) / 2,
                               " ");
