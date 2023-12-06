@@ -126,7 +126,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
     string End;
     if (true)
     {
-        Perso = {"\033[31;1m", "\033[32;1m"};
+        Perso = {"\033[91;1m", "\033[32;1m"};
         End = "\033[0m";
     }
     else
