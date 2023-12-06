@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,14 +13,6 @@ using namespace std;
 #include "vueEnModeTexte.hpp"
 
 using BOARD = vector<vector<string>>;
-
-struct ForDict
-{
-    vector<string> Mots;
-    vector<long> Bornes;
-    int NBR;
-    int SHIFT;
-};
 
 struct Names
 {
@@ -498,16 +489,7 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 {
     string nomDico = choisirDictionnaire();
     // vector<string> Dico = importeDico(choisirDictionnaire());
-    ForDict *DictHelper;
-    cout << "Here" << endl;
-    DictHelper->Mots = importeDico("Text/DictionnairePurified.txt");
-    cout << "Here" << endl;
-    DictHelper->SHIFT = ceil(log(DictHelper->Mots.size()) / log(2));
-    DictHelper->NBR = 3;
-
-    cout << "Here" << endl;
-
-    DictHelper->Bornes = CreateBorne(DictHelper->Mots, DictHelper->NBR, DictHelper->SHIFT);
+    
 
     cout << "Here" << endl;
 

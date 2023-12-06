@@ -1,10 +1,24 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
+struct Temp
+{
+    vector<long> TT;
+};
+
+
+void modif(Temp *Test) {
+    Test->TT.push_back(1);
+    // return Test;
+}
+
+
 int main()
 {
-    string Temp = "Test";
-    string Deb = "\033[31;1m";
-    cout << Deb << Temp << "\033[0m" << endl;
+    Temp *Test = new Temp;
+    modif(Test);
+    Test->TT.push_back(524288);
+    cout << Test->TT[1] << endl;
 }
