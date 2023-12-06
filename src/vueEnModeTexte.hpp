@@ -34,7 +34,7 @@ using namespace std;
  */
 void affichePlateaux(vector<string> plateauJoueurA,
                      vector<string> plateauJoueurB, int nbMots, int nbMaxLettres, string titreJeu,
-                     string prenomA, string prenomB, int Joueur);
+                     string prenomA, string prenomB, int Joueur, bool Jarnac);
 
 /**
  *

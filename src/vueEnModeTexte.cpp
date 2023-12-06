@@ -24,7 +24,21 @@ using namespace std;
 
 int size(string s)
 {
-    return s.length();
+    if ((int)s[0] != 27) {
+        return s.length();
+    } else {
+        int Idx = 0;
+        int Count = 0;
+        while ((int)s[Idx] != 109) {
+            Idx++;
+        }
+        Idx++;
+        while ((int)s[Idx] != 27) {
+            Count++;
+            Idx++;
+        }
+        return Count;
+    }
 }
 
 void afficheSymbolesRepete(int combien, string symboles)
@@ -120,7 +134,7 @@ string filtre(string mot, int nbMaxLettres)
  */
 void affichePlateaux(vector<string> plateauJoueurA,
                      vector<string> plateauJoueurB, int nbMots, int nbMaxLettres, string titreJeu,
-                     string prenomA, string prenomB, int Joueur)
+                     string prenomA, string prenomB, int Joueur, bool Jarnac)
 {
     system("clear");
 
@@ -130,11 +144,20 @@ void affichePlateaux(vector<string> plateauJoueurA,
     string SCORE = "";
     string VRAC = "";
     string NBR = "";
+    string J = "";
     if (true)
     {
-        Perso = {"\033[91;1m ", "\033[32;1m "};
+        J = "\033[91;1m";
+        if (Jarnac) {
+            J = "\033[36;4;1m";
+            Joueur = 1 - Joueur;
+        }
+        Perso = {J, "\033[32;1m"};
         End = "\033[0m";
-        Titre = "\033[1;93m";
+        prenomA = Perso[1-Joueur] + prenomA + End;
+        prenomB = Perso[Joueur] + prenomB + End;
+        
+        titreJeu = "\033[1;93m" + titreJeu + End;
         SCORE = "\033[1;35m";
         VRAC = "\033[1;96m";
         NBR = "\033[1;97m";
@@ -172,12 +195,10 @@ void affichePlateaux(vector<string> plateauJoueurA,
     cout << endl;
 
     cout << "|";
-    afficheSymbolesRepete((largeurInterne - titreJeu.size()) / 2, " ");
-    afficheSymbolesRepete((largeurInterne - titreJeu.size()) % 2, " ");
-    cout << Titre;
+    afficheSymbolesRepete((largeurInterne - size(titreJeu)) / 2, " ");
+    afficheSymbolesRepete((largeurInterne - size(titreJeu)) % 2, " ");
     cout << titreJeu;
-    cout << End;
-    afficheSymbolesRepete((largeurInterne - titreJeu.size()) / 2, " ");
+    afficheSymbolesRepete((largeurInterne - size(titreJeu)) / 2, " ");
     cout << "|";
     cout << endl;
 
@@ -188,9 +209,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
 
     // entete des joueurs
     cout << "|";
-    cout << Perso[1 - Joueur];
     cout << prenomA;
-    cout << End;
     int nbAffiche = calculPoints(plateauJoueurA, nbMaxLettres, nbMots);
     afficheSymbolesRepete(largeurCase * nbMaxLettres - (size(
                                                             prenomA) +
@@ -220,9 +239,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
     afficheSymbolesRepete(largeurDecor, " ");
     cout << "|";
 
-    cout << Perso[Joueur];
     cout << prenomB;
-    cout << End;
     nbAffiche = calculPoints(plateauJoueurB, nbMaxLettres, nbMots);
     afficheSymbolesRepete(largeurCase * nbMaxLettres - (size(
                                                             prenomB) +
