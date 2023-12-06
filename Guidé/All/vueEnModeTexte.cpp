@@ -118,9 +118,23 @@ string filtre(string mot, int nbMaxLettres)
  */
 void affichePlateaux(vector<string> plateauJoueurA,
                      vector<string> plateauJoueurB, int nbMots, int nbMaxLettres, string titreJeu,
-                     string prenomA, string prenomB)
+                     string prenomA, string prenomB, int Joueur)
 {
     system("clear");
+
+    vector<string> Perso;
+    string End;
+    if (true)
+    {
+        Perso = {"\033[31;1m", "\033[32;1m"};
+        End = "\033[0m";
+    }
+    else
+    {
+        Perso = {"", ""};
+        End = "";
+    }
+
     int largeurDecor = 16;
     int largeurCase = 4;
     if (nbMaxLettres * nbMaxLettres > 100)
@@ -167,7 +181,9 @@ void affichePlateaux(vector<string> plateauJoueurA,
 
     // entete des joueurs
     cout << "|";
+    cout << Perso[1 - Joueur];
     cout << prenomA;
+    cout << End;
     int nbAffiche = calculPoints(plateauJoueurA, nbMaxLettres, nbMots);
     afficheSymbolesRepete(largeurCase * nbMaxLettres - (size(
                                                             prenomA) +
@@ -193,7 +209,10 @@ void affichePlateaux(vector<string> plateauJoueurA,
     cout << " |";
     afficheSymbolesRepete(largeurDecor, " ");
     cout << "|";
+
+    cout << Perso[Joueur];
     cout << prenomB;
+    cout << End;
     nbAffiche = calculPoints(plateauJoueurB, nbMaxLettres, nbMots);
     afficheSymbolesRepete(largeurCase * nbMaxLettres - (size(
                                                             prenomB) +

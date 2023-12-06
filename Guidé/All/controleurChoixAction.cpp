@@ -15,6 +15,21 @@ using namespace std;
 
 using BOARD = vector<vector<string>>;
 
+struct ForDict
+{
+    vector<string> Mots;
+    vector<long> Bornes;
+    int NBR;
+    int SHIFT;
+};
+
+struct Names
+{
+    string Name1;
+    string Name2;
+    string NameGame;
+};
+
 /**
  * Checks if a letter is a vowel.
  *
@@ -263,7 +278,7 @@ BOARD JouerMot(BOARD Board, int Joueur, int Ligne, string Mot, string diffLetter
  * Handles confirmation loops and user cancellation.
  * Returns the updated board state after successfully placing a word.
  */
-BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, bool isJarnac, string Name, vector<string> Names)
+BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac, Names *NamesHelper)
 {
     string Say = "Sur quelle ligne souhaitez-vous jouer ?";
     if (isJarnac)
@@ -280,7 +295,7 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
     bool Continue;
     int Ligne;
 
-    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
     while (Joue)
     {
         Rep = "";
@@ -323,7 +338,7 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
             {
                 if (Vrac.find(i) == string::npos)
                 {
-                    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+                    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
                     cout << "Mot impossible a jouer. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
                     mot = "-";
                     Continue = false;
@@ -332,9 +347,9 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
             }
             if (Continue)
             {
-                if (!trouve(mot, Dico, Bornes, SHIFT, NBR))
+                if (!trouve(mot, DictHelper->Mots, DictHelper->Bornes, DictHelper->SHIFT, DictHelper->NBR))
                 {
-                    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+                    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
                     cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
                     mot = "-";
                     break;
@@ -342,7 +357,7 @@ BOARD PlaceMot(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes
                 else
                 {
                     Board = JouerMot(Board, Joueur, Ligne, mot, diffLetter, isJarnac);
-                    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+                    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
                 }
             }
         }
@@ -384,11 +399,11 @@ BOARD piocheOuEchange(BOARD Board, int Joueur)
  * Returns a special string to stop the game loop if the user resigns, otherwise
  * returns an empty string to continue alternating turns.
  */
-tuple<string, BOARD> choixAction(BOARD Board, int Joueur, vector<string> Dico, vector<long> Bornes, int SHIFT, int NBR, string Name, vector<string> Names)
+tuple<string, BOARD> choixAction(BOARD Board, int Joueur, ForDict *DictHelper, Names *NamesHelper)
 {
     string coup;
 
-    affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
     bool J = true;
     while (true)
     {
@@ -399,7 +414,7 @@ tuple<string, BOARD> choixAction(BOARD Board, int Joueur, vector<string> Dico, v
         cout << endl;
         if (coup == "C")
         {
-            Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, false, Name, Names);
+            Board = PlaceMot(Board, Joueur, DictHelper, false, NamesHelper);
             J = false;
         }
         else if (coup == "F")
@@ -410,7 +425,7 @@ tuple<string, BOARD> choixAction(BOARD Board, int Joueur, vector<string> Dico, v
         {
             if (J)
             {
-                Board = PlaceMot(Board, Joueur, Dico, Bornes, SHIFT, NBR, true, Name, Names);
+                Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper);
             }
             else
             {
@@ -419,7 +434,7 @@ tuple<string, BOARD> choixAction(BOARD Board, int Joueur, vector<string> Dico, v
         }
         else if (coup == "P")
         {
-            affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+            affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
         }
         else if (coup == "M")
         {
@@ -431,7 +446,7 @@ tuple<string, BOARD> choixAction(BOARD Board, int Joueur, vector<string> Dico, v
         }
         else
         {
-            affichePlateaux(Board[0], Board[1], 8, 9, Name, Names[0], Names[1]);
+            affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur);
             cout << "Choix invalide, tapez 'M' pour voir les actions possibles." << endl;
         }
     }
@@ -483,48 +498,69 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
 {
     string nomDico = choisirDictionnaire();
     // vector<string> Dico = importeDico(choisirDictionnaire());
-    vector<string> Dico = importeDico("Text/DictionnairePurified.txt");
-    int SHIFT = ceil(log(Dico.size()) / log(2));
-    int NBR = 3;
-    vector<long> BORNES = CreateBorne(Dico, NBR, SHIFT);
+    ForDict *DictHelper;
+    cout << "Here" << endl;
+    DictHelper->Mots = importeDico("Text/DictionnairePurified.txt");
+    cout << "Here" << endl;
+    DictHelper->SHIFT = ceil(log(DictHelper->Mots.size()) / log(2));
+    DictHelper->NBR = 3;
+
+    cout << "Here" << endl;
+
+    DictHelper->Bornes = CreateBorne(DictHelper->Mots, DictHelper->NBR, DictHelper->SHIFT);
+
+    cout << "Here" << endl;
 
     BOARD Board = initBoard(8, 9);
 
-    vector<string> Names = {joueur0, joueur1};
+    cout << "Here" << endl;
 
-    affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
-    ActionPossible();
-    cout << "Appuyez sur 'enter' pour continuer" << endl;
-    system("PAUSE");
-    getchar();
+    Names *NamesHelper;
+    NamesHelper->Name1 = joueur0;
+    NamesHelper->Name2 = joueur1;
+    NamesHelper->NameGame = Name;
+
+    cout << "Here" << endl;
+
+    // affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, 0);
+    // ActionPossible();
+    // cout << "Appuyez sur 'enter' pour continuer" << endl;
+    // system("PAUSE");
+    // getchar();
 
     // ATTENDRE INPUT D'UN JOUEUR AVANT DE CONTINUER
 
     string mot;
     int Joueur = 0;
-    tie(mot, Board) = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
     if (mot == "-STOP-")
     {
-        cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
+        cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
     }
 
     Joueur = 1 - Joueur;
-    tie(mot, Board) = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+    tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
     if (mot == "-STOP-")
     {
-        cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
+        cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
     }
 
-    while (mot != "-STOP-")
+    while (mot == "")
     {
-        affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1);
+        affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur);
         Joueur = 1 - Joueur;
         Board = piocheOuEchange(Board, Joueur);
-        tie(mot, Board) = choixAction(Board, Joueur, Dico, BORNES, SHIFT, NBR, Name, Names);
+        tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
     }
 
-    cout << "Fin du jeu, " << Names[1 - Joueur] << " a gagné." << endl;
-
+    if (mot[6] == '0')
+    {
+        cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+    }
+    else
+    {
+        cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+    }
     return true;
 }
 
