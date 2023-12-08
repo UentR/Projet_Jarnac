@@ -32,6 +32,7 @@ void importeDico(string adresseDico, ForDict *DictHelper)
         Nbr++;
         DictHelper->Mots.push_back(Word);
     }
+    File.close();
     DictHelper->SHIFT = ceil(log(Nbr) / log(2));
 }
 
