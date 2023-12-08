@@ -6,7 +6,8 @@
 		"vector": "cpp",
 		"ostream": "cpp",
 		"chrono": "cpp",
-		"tuple": "cpp"
+		"tuple": "cpp",
+		"map": "cpp"
 	},
 	"C_Cpp.default.compilerPath": "/usr/bin/g++"
 }

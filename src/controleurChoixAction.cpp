@@ -1,28 +1,36 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <random>
-#include <tuple>
-#include <time.h>
 #include <stdlib.h>
+#include <time.h>
+
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <random>
+#include <string>
+#include <tuple>
+#include <vector>
 
 using namespace std;
 
+#include "loadIA.hpp"
 #include "mAnagrammes.hpp"
 #include "mDictionnaire.hpp"
 #include "vueEnModeTexte.hpp"
 
 struct ForDict;
+struct Play;
+struct IA;
 
 using BOARD = vector<vector<string>>;
 
-struct Names
-{
-    string Name1;
-    string Name2;
-    string NameGame;
+struct Names {
+  string Name1;
+  string Name2;
+  string NameGame;
+};
+
+struct StorePlayers {
+  bool isAI[2] = {false, false};
+  AI *AIS[2];
 };
 
 /**
@@ -31,9 +39,9 @@ struct Names
  * @param Letter The letter to check.
  * @return True if Letter is 'A', 'E', 'I', 'O', 'U' or 'Y', false otherwise.
  */
-bool isVowel(string Letter)
-{
-    return (Letter == "A" or Letter == "E" or Letter == "I" or Letter == "O" or Letter == "U" or Letter == "Y");
+bool isVowel(string Letter) {
+  return (Letter == "A" or Letter == "E" or Letter == "I" or Letter == "O" or
+          Letter == "U" or Letter == "Y");
 }
 
 /**
@@ -46,70 +54,40 @@ bool isVowel(string Letter)
  * and second halves.
  * Returns the shuffled vector of letters.
  */
-vector<string> createLetters()
-{
-    map<string, int> usableLetter = {
-        {"A", 14},
-        {"B", 4},
-        {"C", 7},
-        {"D", 5},
-        {"E", 19},
-        {"F", 2},
-        {"G", 4},
-        {"H", 2},
-        {"I", 11},
-        {"J", 1},
-        {"K", 1},
-        {"L", 6},
-        {"M", 5},
-        {"N", 9},
-        {"O", 8},
-        {"P", 4},
-        {"Q", 1},
-        {"R", 10},
-        {"S", 7},
-        {"T", 9},
-        {"U", 8},
-        {"V", 2},
-        {"W", 1},
-        {"X", 1},
-        {"Y", 1},
-        {"Z", 2}};
-    vector<string> Rep = {};
-    for (auto &iter : usableLetter)
-    {
-        for (int i = 0; i < iter.second; i++)
-        {
-            Rep.push_back(iter.first);
-        }
+vector<string> createLetters() {
+  map<string, int> usableLetter = {
+      {"A", 14}, {"B", 4},  {"C", 7}, {"D", 5},  {"E", 19}, {"F", 2}, {"G", 4},
+      {"H", 2},  {"I", 11}, {"J", 1}, {"K", 1},  {"L", 6},  {"M", 5}, {"N", 9},
+      {"O", 8},  {"P", 4},  {"Q", 1}, {"R", 10}, {"S", 7},  {"T", 9}, {"U", 8},
+      {"V", 2},  {"W", 1},  {"X", 1}, {"Y", 1},  {"Z", 2}};
+  vector<string> Rep = {};
+  for (auto &iter : usableLetter) {
+    for (int i = 0; i < iter.second; i++) {
+      Rep.push_back(iter.first);
     }
-    srand(time(NULL));
-    bool Vowel1 = false;
-    bool Vowel2 = false;
-    int Size = Rep.size() - 1;
-    while (!Vowel1 || !Vowel2)
-    {
-        random_shuffle(Rep.begin(), Rep.end());
-        for (int i = Size; i > Size - 6; i--)
-        {
-            if (isVowel(Rep[i]))
-            {
-                Vowel1 = true;
-                break;
-            }
-            Vowel1 = false;
-        }
-        for (int i = Size - 7; i > Size - 12; i--)
-        {
-            if (isVowel(Rep[i]))
-            {
-                Vowel2 = true;
-                break;
-            }
-            Vowel2 = false;
-        }
+  }
+  srand(time(NULL));
+  bool Vowel1 = false;
+  bool Vowel2 = false;
+  int Size = Rep.size() - 1;
+  while (!Vowel1 || !Vowel2) {
+    random_shuffle(Rep.begin(), Rep.end());
+    for (int i = Size; i > Size - 6; i--) {
+      if (isVowel(Rep[i])) {
+        Vowel1 = true;
+        break;
+      }
+      Vowel1 = false;
     }
-    return Rep;
+    for (int i = Size - 7; i > Size - 12; i--) {
+      if (isVowel(Rep[i])) {
+        Vowel2 = true;
+        break;
+      }
+      Vowel2 = false;
+    }
+  }
+  return Rep;
 }
 
 vector<string> LETTERS = createLetters();
@@ -122,12 +100,11 @@ int LEN = LETTERS.size();
  * Reads the user's input into a string variable.
  * Returns the user's dictionary choice as a string.
  */
-string choisirDictionnaire()
-{
-    string choix;
-    cout << "Quel dictionnaire souhaitez-vous choisir" << endl;
-    cin >> choix;
-    return choix;
+string choisirDictionnaire() {
+  string choix;
+  cout << "Quel dictionnaire souhaitez-vous choisir" << endl;
+  cin >> choix;
+  return choix;
 }
 
 /**
@@ -136,11 +113,10 @@ string choisirDictionnaire()
  * Decrements the global LEN counter tracking remaining letters.
  * Returns the popped letter to the caller.
  */
-string piocheLettre()
-{
-    LEN--;
-    LETTERS.pop_back();
-    return LETTERS[LEN];
+string piocheLettre() {
+  LEN--;
+  LETTERS.pop_back();
+  return LETTERS[LEN];
 }
 
 /**
@@ -152,14 +128,12 @@ string piocheLettre()
  *   - Increments the global LEN counter tracking number of letters
  * After adding all letters back, shuffles the LETTERS vector randomly.
  */
-void shuffleBag(string Rep)
-{
-    for (auto i : Rep)
-    {
-        LETTERS.push_back(string(1, i));
-        LEN++;
-    }
-    random_shuffle(LETTERS.begin(), LETTERS.end());
+void shuffleBag(string Rep) {
+  for (auto i : Rep) {
+    LETTERS.push_back(string(1, i));
+    LEN++;
+  }
+  random_shuffle(LETTERS.begin(), LETTERS.end());
 }
 
 // DOESN'T WORK BUT BORING
@@ -173,59 +147,55 @@ void shuffleBag(string Rep)
  * Adds 3 new random letters to the player's rack.
  * Returns the updated board state.
  */
-BOARD echangeLettre(BOARD Board, int Joueur)
-{
-    if (Board[Joueur][0].size() < 3)
-    {
-        cout << "Vous n'avez pas assez de lettre pour en échanger." << endl;
-        return Board;
-    }
-    string Rep = "";
-    string Res;
-    while (Rep == "")
-    {
-        cout << "Votre vrac est actuellement : " << Board[Joueur][0] << endl
-             << "De quelle lettre voulez-vous vous séparer ?" << endl;
-        cin >> Rep;
-        Rep = purifie(Rep);
-        if (Rep.size() != 3)
-        {
-            cout << "Vous devez choisir exactement 3 lettres." << endl;
-            Rep = "";
-        }
-
-        Res = retire(Board[Joueur][0], Rep);
-        if (Res == "-")
-        {
-            cout << "Vous ne disposez pas d'au moins une de ces lettres." << endl;
-            Rep = "";
-        }
-    }
-    Board[Joueur][0] = Res;
-    for (int i = 0; i < 3; i++)
-    {
-        Board[Joueur][0] += piocheLettre();
-    }
-    cout << "Here" << endl;
-    shuffleBag(Rep);
+// structure pour echanger des lettres
+BOARD echangeLettre(BOARD Board, int Joueur) {
+  if (Board[Joueur][0].size() < 3) {
+    cout << "Vous n'avez pas assez de lettre pour en échanger." << endl;
     return Board;
+  }
+  string Rep = "";
+  string Res;
+  while (Rep == "") {
+    cout << "Votre vrac est actuellement : " << Board[Joueur][0] << endl
+         << "De quelle lettre voulez-vous vous séparer ?" << endl;
+    cin >> Rep;
+    Rep = purifie(Rep);
+    if (Rep.size() != 3) {
+      cout << "Vous devez choisir exactement 3 lettres." << endl;
+      Rep = "";
+    }
+
+    Res = retire(Board[Joueur][0], Rep);
+    if (Res == "-") {
+      cout << "Vous ne disposez pas d'au moins une de ces lettres." << endl;
+      Rep = "";
+    }
+  }
+  Board[Joueur][0] = Res;
+  for (int i = 0; i < 3; i++) {
+    Board[Joueur][0] += piocheLettre();
+  }
+  cout << "Here" << endl;
+  shuffleBag(Rep);
+  return Board;
 }
 
 /**
- * Prints a message to the console showing the player their possible actions during the game.
- * Actions include abandoning, continuing, exchanging letters, finishing turn,
- * challenging Jarnac, viewing menu, and viewing board.
+ * Prints a message to the console showing the player their possible actions
+ * during the game. Actions include abandoning, continuing, exchanging letters,
+ * finishing turn, challenging Jarnac, viewing menu, and viewing board.
  */
-void ActionPossible()
-{
-    cout << "Au cours du jeu il est possible de taper certaines lettres pour piloter la manche." << endl;
-    cout << "    A : Abandonner la partie" << endl;
-    cout << "    C : Continuer en choisissant un mot" << endl;
-    cout << "    F : Finir son tour" << endl;
-    cout << "    J : crier Jarnac" << endl;
-    cout << "    M : voir ce Menu" << endl;
-    cout << "    P : voir le Plateau" << endl;
-    cout << endl;
+void ActionPossible() {
+  cout << "Au cours du jeu il est possible de taper certaines lettres pour "
+          "piloter la manche."
+       << endl;
+  cout << "    A : Abandonner la partie" << endl;
+  cout << "    C : Continuer en choisissant un mot" << endl;
+  cout << "    F : Finir son tour" << endl;
+  cout << "    J : crier Jarnac" << endl;
+  cout << "    M : voir ce Menu" << endl;
+  cout << "    P : voir le Plateau" << endl;
+  cout << endl;
 }
 
 /**
@@ -242,215 +212,206 @@ void ActionPossible()
  * @param isJarnac True if this is a Jarnac challenge
  * @return The updated board state
  */
-BOARD JouerMot(BOARD Board, int Joueur, int Ligne, string Mot, string diffLetter, bool isJarnac)
-{
+tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
+                           Names *NamesHelper, ForDict *DictHelper) {
+  if (Current->End) {
+    cout << "Fin du tour de l'IA" << endl;
+  }
+  if (Current->DLetter == "") {
+    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                    NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                    Current->Jarnac);
+    cout << "Vous devez ajouter au moins une lettre. Taper 'R' pour "
+            "choisir une autre ligne. Taper 'Q' pour changer d'action."
+         << endl;
+    return make_tuple(Board, 0);
+  }
+  bool Continue = true;
+  for (auto i : Current->DLetter) {
+    if (Board[Joueur][0].find(i) == string::npos) {
+      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                      NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                      Current->Jarnac);
+      cout << "Mot impossible a jouer. Taper 'R' pour choisir une autre "
+              "ligne. Taper 'Q' pour changer d'action."
+           << endl;
+      return make_tuple(Board, 0);
+    }
+  }
+  if (!trouve(Current->Word, DictHelper)) {
+    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                    NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                    Current->Jarnac);
+    cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. "
+            "Taper 'Q' pour changer d'action."
+         << endl;
+    return make_tuple(Board, 0);
+  }
 
-    Board[Joueur][0] = retire(Board[Joueur][0], diffLetter);
-    if (!isJarnac)
-    {
-        cout << "HRE" << endl;
-        Board[Joueur][Ligne] = Mot;
-        Board[Joueur][0] += piocheLettre();
+  if (!(Current->Jarnac)) {
+    Board[Joueur][0] = retire(Board[Joueur][0], Current->DLetter);
+    Board[Joueur][Current->Ligne] = Current->Word;
+    Board[Joueur][0] += piocheLettre();
+  } else {
+    Board[1 - Joueur][0] = retire(Board[1 - Joueur][0], Current->DLetter);
+    if (Current->Origin != -1) {
+      Board[1 - Joueur][Current->Origin] = "";
     }
-    else
-    {
-        Board[Joueur][Ligne] = "";
-        for (int i = 1; i < Board[1 - Joueur].size(); i++)
-        {
-            if (Board[1 - Joueur][i] == "")
-            {
-                Board[1 - Joueur][i] = Mot;
-                break;
-            }
-        }
-    }
-    return Board;
+    Board[Joueur][Current->Ligne] = Current->Word;
+  }
+  affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                  NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                  Current->Jarnac);
+  return make_tuple(Board, 1);
 }
 
 /**
  * Prompts the user to place a word on the board, handling invalid input.
- * Allows choosing a line, entering a word, and validating it against the board state and dictionary.
- * Handles confirmation loops and user cancellation.
+ * Allows choosing a line, entering a word, and validating it against the board
+ * state and dictionary. Handles confirmation loops and user cancellation.
  * Returns the updated board state after successfully placing a word.
  */
-BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac, Names *NamesHelper)
-{
-    string Say = "Sur quelle ligne souhaitez-vous jouer ?";
-    if (isJarnac)
-    {
-        Joueur = 1 - Joueur;
-        Say = "Où pensez-vous voir un mot ?";
-    }
-    bool Joue = true;
-    string Rep;
-    string mot;
-    string CurrentLigne = "";
-    string diffLetter;
-    string Vrac = Board[Joueur][0];
-    bool Continue;
-    int Ligne;
+BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
+               Names *NamesHelper) {
+  string Say = "Sur quelle ligne souhaitez-vous jouer ?";
+  if (isJarnac) {
+    Say = "Où pensez-vous voir un mot ?";
+  }
+  bool Joue = true;
+  string Rep;
+  string mot;
+  string CurrentLigne = "";
+  string diffLetter;
+  string Vrac = Board[Joueur][0];
+  bool Continue;
+  int Ligne;
 
-    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
-    while (Joue)
-    {
-        mot = "-";
+  Play *Current = new Play;
+  Current->Jarnac = isJarnac;
+  Current->End = false;
+
+  affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                  NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
+  int state = 0;
+  while (!state) {
+    mot = "-";
+    Rep = "";
+    // get line
+    while (Rep == "") {
+      cout << Say << endl;
+      cin >> Rep;
+      if (Rep == "Q") {
+        state = 1;
+        break;
+      }
+      if (("1" > Rep) || ("9" < Rep) || (Rep.size() == 2)) {
+        cout << "Numéro de ligne invalide. Tapez 'Q' pour changer d'action."
+             << endl;
         Rep = "";
-        while (Rep == "")
-        {
-            cout << Say << endl;
-            cin >> Rep;
-            if (Rep == "Q")
-            {
-                Joue = false;
-                break;
-            }
-            if (("1" > Rep) || ("9" < Rep) || (Rep.size() == 2))
-            {
-                cout << "Numéro de ligne invalide. Tapez 'Q' pour changer d'action." << endl;
-                Rep = "";
-            }
-        }
-        Ligne = atoi(Rep.c_str());
-        CurrentLigne = Board[Joueur][Ligne];
-        mot = "-";
-        while (mot == "-" and Rep != "Q")
-        {
-            cout << endl
-                 << "Quel mot souhaitez-vous jouer ?" << endl;
-            cin >> mot;
-            mot = purifie(mot);
-            if (mot == "R")
-            {
-                break;
-            }
-            if (mot == "Q")
-            {
-                Joue = false;
-                break;
-            }
-            diffLetter = retire(mot, CurrentLigne);
-            if (diffLetter == "") {
-                affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
-                cout << "Vous devez ajouter au moins une lettre. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
-                mot = "-";
-            }
-            Continue = true;
-            for (auto i : diffLetter)
-            {
-                if (Vrac.find(i) == string::npos)
-                {
-                    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
-                    cout << "Mot impossible a jouer. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
-                    mot = "-";
-                    Continue = false;
-                    break;
-                }
-            }
-            if (Continue)
-            {
-                if (!trouve(mot, DictHelper))
-                {
-                    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
-                    cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. Taper 'Q' pour changer d'action." << endl;
-                    mot = "-";
-                    break;
-                }
-                else
-                {
-                    Board = JouerMot(Board, Joueur, Ligne, mot, diffLetter, isJarnac);
-                    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
-                }
-            }
-        }
+      }
     }
-    return Board;
+
+    Ligne = atoi(Rep.c_str());
+    CurrentLigne = Board[Joueur][Ligne];
+    mot = "-";
+
+    // get word
+    while (mot == "-" and Rep != "Q") {
+      cout << endl << "Quel mot souhaitez-vous jouer ?" << endl;
+      cin >> mot;
+      mot = purifie(mot);
+      if (mot == "R") {
+        break;
+      }
+      if (mot == "Q") {
+        Joue = false;
+        break;
+      }
+      diffLetter = retire(mot, CurrentLigne);
+      Current->Word = mot;
+      Current->DLetter = diffLetter;
+      if (isJarnac) {
+        Current->Ligne = findWord(Board, mot, 1 - Joueur);
+        Current->Origin = Ligne;
+      } else {
+        Current->Ligne = Ligne;
+        Current->Origin = -1;
+      }
+
+      tie(Board, state) =
+          JouerMot(Board, Joueur, Current, NamesHelper, DictHelper);
+    }
+  }
+  return Board;
 }
 
-BOARD piocheOuEchange(BOARD Board, int Joueur)
-{
-    string Rep;
-    cout << "Voulez-vous piocher une lettre ou échanger 3 lettres ?" << endl;
+BOARD piocheOuEchange(BOARD Board, int Joueur) {
+  string Rep;
+  cout << "Voulez-vous piocher une lettre ou échanger 3 lettres ?" << endl;
+  cout << "    P : Piocher une lettre" << endl;
+  cout << "    E : Echanger 3 lettres" << endl;
+  cin >> Rep;
+  Rep = purifie(Rep);
+  if (Rep == "P") {
+    Board[Joueur][0] += piocheLettre();
+  } else if (Rep == "E") {
+    Board = echangeLettre(Board, Joueur);
+  } else {
+    cout << "Choix invalide." << endl;
     cout << "    P : Piocher une lettre" << endl;
     cout << "    E : Echanger 3 lettres" << endl;
-    cin >> Rep;
-    Rep = purifie(Rep);
-    if (Rep == "P")
-    {
-        Board[Joueur][0] += piocheLettre();
-    }
-    else if (Rep == "E")
-    {
-        Board = echangeLettre(Board, Joueur);
-    }
-    else
-    {
-        cout << "Choix invalide." << endl;
-        cout << "    P : Piocher une lettre" << endl;
-        cout << "    E : Echanger 3 lettres" << endl;
-    }
-    return Board;
+  }
+  return Board;
 }
 
 /**
- * Prompts the user to choose an action and performs it, alternating turns between players.
+ * Prompts the user to choose an action and performs it, alternating turns
+ * between players.
  *
- * Displays the game board, prompts for an action, and executes it, handling invalid input.
- * Actions include placing a word (normal or Jarnac mode), exchanging letters,
- * passing turn, viewing possible actions, and resigning.
+ * Displays the game board, prompts for an action, and executes it, handling
+ * invalid input. Actions include placing a word (normal or Jarnac mode),
+ * exchanging letters, passing turn, viewing possible actions, and resigning.
  *
  * Returns a special string to stop the game loop if the user resigns, otherwise
  * returns an empty string to continue alternating turns.
  */
-tuple<string, BOARD> choixAction(BOARD Board, int Joueur, ForDict *DictHelper, Names *NamesHelper)
-{
-    string coup;
-    bool J = true;
-    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
-    while (true)
-    {
-        cout << "Quelle action souhaitez-vous effectuer ?" << endl;
-        cin >> coup;
-        coup = purifie(coup);
-        cout << endl;
-        if (coup == "C")
-        {
-            Board = PlaceMot(Board, Joueur, DictHelper, false, NamesHelper);
-            J = false;
-        }
-        else if (coup == "F")
-        {
-            return make_tuple("", Board);
-        }
-        else if (coup == "J")
-        {
-            if (J)
-            {
-                Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper);
-            }
-            else
-            {
-                cout << "Vous avez déjà joué un mot." << endl;
-            }
-        }
-        else if (coup == "P")
-        {
-            affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
-        }
-        else if (coup == "M")
-        {
-            ActionPossible();
-        }
-        else if (coup == "A")
-        {
-            return make_tuple("-STOP-", Board);
-        }
-        else
-        {
-            affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
-            cout << "Choix invalide, tapez 'M' pour voir les actions possibles." << endl;
-        }
+tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
+                                 Names *NamesHelper) {
+  string coup;
+  bool J = true;
+  affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                  NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+  while (true) {
+    cout << "Quelle action souhaitez-vous effectuer ?" << endl;
+    cin >> coup;
+    coup = purifie(coup);
+    cout << endl;
+    if (coup == "C") {
+      Board = PlaceMot(Board, Joueur, DictHelper, false, NamesHelper);
+      J = false;
+    } else if (coup == "F") {
+      return make_tuple(Board, "");
+    } else if (coup == "J") {
+      if (J) {
+        Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper);
+      } else {
+        cout << "Vous avez déjà joué un mot." << endl;
+      }
+    } else if (coup == "P") {
+      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                      NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+    } else if (coup == "M") {
+      ActionPossible();
+    } else if (coup == "A") {
+      return make_tuple(Board, "-STOP-");
+    } else {
+      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                      NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+      cout << "Choix invalide, tapez 'M' pour voir les actions possibles."
+           << endl;
     }
-    return make_tuple("", Board);
+  }
+  return make_tuple(Board, "");
 }
 
 /**
@@ -462,22 +423,43 @@ tuple<string, BOARD> choixAction(BOARD Board, int Joueur, ForDict *DictHelper, N
  *
  * Returns the initialized BOARD.
  */
-BOARD initBoard(int W, int H)
-{
-    BOARD Board = {{""}, {""}};
-    for (int i = 0; i < 2; i++)
-    {
-        for (int j = 0; j < 6; j++)
-        {
-            Board[i][0] += piocheLettre();
-        }
-
-        for (int j = 1; j < H; j++)
-        {
-            Board[i].push_back("");
-        }
+BOARD initBoard(int W, int H) {
+  BOARD Board = {{""}, {""}};
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < 6; j++) {
+      Board[i][0] += piocheLettre();
     }
-    return Board;
+
+    for (int j = 1; j < H; j++) {
+      Board[i].push_back("");
+    }
+  }
+  return Board;
+}
+
+tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
+                           Names *NamesHelper, StorePlayers *PlayerHelper) {
+  if ((PlayerHelper->isAI[Joueur])) {
+    return choixAction(Board, Joueur, DictHelper, NamesHelper);
+  } else {
+    Play *IAMove =
+        BestMove(Board, Joueur, DictHelper, PlayerHelper->AIS[Joueur]);
+    int state;
+    tie(Board, state) =
+        JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper);
+    if (state == 0) {
+      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                      NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                      IAMove->Jarnac);
+      cout << IAMove->Word << endl;
+      cout << IAMove->DLetter << endl;
+      cout << IAMove->Ligne << endl;
+      cout << IAMove->Origin << endl;
+
+      throw "L'IA a tenté de jouer un mot impossible.";
+    }
+    return make_tuple(Board, "");
+  }
 }
 
 /**
@@ -494,64 +476,77 @@ BOARD initBoard(int W, int H)
  * joueur1: Name of Player 2
  * Name: Name displayed at top of board
  */
-bool lanceLeJeu(string joueur0, string joueur1, string Name)
-{
-    string nomDico = choisirDictionnaire();
+bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
+                bool IA2) {
+  string nomDico = choisirDictionnaire();
 
-    ForDict *DictHelper = new ForDict;
-    CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
+  ForDict *DictHelper = new ForDict;
+  CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
 
-    BOARD Board = initBoard(8, 9);
+  BOARD Board = initBoard(8, 9);
 
-    Names *NamesHelper = new Names;
-    NamesHelper->Name1 = joueur0;
-    NamesHelper->Name2 = joueur1;
-    NamesHelper->NameGame = Name;
+  Names *NamesHelper = new Names;
+  NamesHelper->Name1 = joueur0;
+  NamesHelper->Name2 = joueur1;
+  NamesHelper->NameGame = Name;
 
-    cout << "Here" << endl;
+  StorePlayers *PlayersHelper = new StorePlayers;
+  if (IA1) {
+    PlayersHelper->AIS[0] = new AI;
+    StartUpAI(PlayersHelper->AIS[0]);
+    PlayersHelper->isAI[0] = true;
+  }
+  if (IA2) {
+    PlayersHelper->AIS[1] = new AI;
+    StartUpAI(PlayersHelper->AIS[1]);
+    PlayersHelper->isAI[1] = true;
+  }
 
-    // affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, 0);
-    // ActionPossible();
-    // cout << "Appuyez sur 'enter' pour continuer" << endl;
-    // system("PAUSE");
-    // getchar();
+  cout << "Here" << endl;
 
-    // ATTENDRE INPUT D'UN JOUEUR AVANT DE CONTINUER
+  // affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, 0);
+  // ActionPossible();
+  // cout << "Appuyez sur 'enter' pour continuer" << endl;
+  // system("PAUSE");
+  // getchar();
 
-    string mot;
-    int Joueur = 0;
-    tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
-    if (mot == "-STOP-")
-    {
-        cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
-    }
+  // ATTENDRE INPUT D'UN JOUEUR AVANT DE CONTINUER
 
+  string mot;
+  int Joueur = 0;
+  tie(Board, mot) =
+      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper);
+  if (mot == "-STOP-") {
+    cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+  }
+
+  Joueur = 1 - Joueur;
+  tie(Board, mot) =
+      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper);
+  if (mot == "-STOP-") {
+    cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+  }
+
+  while (mot == "") {
     Joueur = 1 - Joueur;
-    tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
-    if (mot == "-STOP-")
-    {
-        cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
-    }
+    affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur,
+                    false);
+    Board = piocheOuEchange(Board, Joueur);
+    tie(Board, mot) =
+        Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper);
+  }
 
-    while (mot == "")
-    {
-        Joueur = 1 - Joueur;
-        affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur, false);
-        Board = piocheOuEchange(Board, Joueur);
-        tie(mot, Board) = choixAction(Board, Joueur, DictHelper, NamesHelper);
-    }
+  cout << "Fin du jeu." << endl;
 
-    cout << "Fin du jeu." << endl;
-
-    // if (mot[6] == '0')
-    // {
-    //     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
-    // }
-    // else
-    // {
-    //     cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
-    // }
-    return true;
+  // if (mot[6] == '0')
+  // {
+  //     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+  // }
+  // else
+  // {
+  //     cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+  // }
+  return true;
 }
 
 /**
@@ -561,21 +556,20 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name)
  *
  * Returns 0 to indicate successful program completion.
  */
-int main()
-{
-    string j1, j2;
-    cout << "Nom du premier joueur : ";
-    cin >> j1;
-    cout << "Nom du deuxième joueur : ";
-    cin >> j2;
+int main() {
+  string j1, j2;
+  cout << "Nom du premier joueur : ";
+  cin >> j1;
+  cout << "Nom du deuxième joueur : ";
+  cin >> j2;
 
-    srand(time(0));
-    if (rand()%2) {
-        string Temp = j1;
-        j1 = j2;
-        j2 = Temp;
-    }
+  srand(time(NULL));
+  if (rand() % 2) {
+    string Temp = j1;
+    j1 = j2;
+    j2 = Temp;
+  }
 
-    lanceLeJeu(j1, j2, "Jarnac");
-    return 0;
+  lanceLeJeu(j1, j2, "Jarnac", false, false);
+  return 0;
 }
