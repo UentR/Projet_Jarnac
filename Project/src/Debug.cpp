@@ -1,8 +1,4 @@
-#include <ctime>
-#include <fstream>
-#include <iostream>
-
-using namespace std;
+#include "Debug.hpp"
 
 // Use this function to log most commun words
 void writeToDebugFile(string logInfo) {

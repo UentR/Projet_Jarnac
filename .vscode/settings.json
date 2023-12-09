@@ -8,7 +8,9 @@
 		"chrono": "cpp",
 		"tuple": "cpp",
 		"map": "cpp",
-		"string_view": "cpp"
+		"string_view": "cpp",
+		"string": "cpp",
+		"algorithm": "cpp"
 	},
 	"C_Cpp.default.compilerPath": "/usr/bin/g++",
 	"cmake.configureOnOpen": true
