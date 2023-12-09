@@ -1,8 +1,5 @@
 #include "loadIA.hpp"
 
-#include "Debug.hpp"
-#include "mDictionnaire.hpp"
-
 struct ForDict;
 struct Node;
 struct AI;
@@ -52,11 +49,15 @@ set<string> DictPermutations(string Vrac, int Length) {
   return Permutations;
 }
 
-set<string> FindWords(string Vrac, map<string, string> Words) {
+set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac) {
   set<string> FoundWords = {};
   string SortedWord;
   bool StopSearch = false;
-  for (int i = 3; i <= Vrac.length(); i++) {
+  int Len = Vrac.length();
+  for (int i = 3; i <= Len; i++) {
+    if (Jarnac) {
+      i = (Len + 3) - i;
+    }
     set<string> Permutations = DictPermutations(Vrac, i);
     for (string Permutation : Permutations) {
       if (Words.find(Permutation) != Words.end()) {
@@ -76,14 +77,13 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
   if (PlayerWords.size() == 0) {
     return make_tuple(new Node, "");
   }
+  // On analyse tous les mots du joueur
   for (Node *Word : PlayerWords) {
     toAnalyze.insert(make_tuple(Word, Vrac, "", Word));
   }
 
   tuple<Node *, string> BaseCase = make_tuple(PlayerWords[0], "");
-
   set<tuple<Node *, string> > End = {};
-
   Node *Word;
   string tVrac;
   bool Child;
@@ -91,23 +91,26 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
   Node *Origin;
   while (!toAnalyze.empty()) {
     tie(Word, tVrac, Path, Origin) = *toAnalyze.begin();
-
     toAnalyze.erase(toAnalyze.begin());
-
     Child = false;
     for (char Letter : tVrac) {
       if (Word->Children.find(Letter) != Word->Children.end()) {
         Child = true;
+        // Si on peut atteindre un enfant, on l'ajoute à la liste des
+        // noeuds à analyser
         toAnalyze.insert(make_tuple(Word->Children[Letter],
                                     fRetire(tVrac, Letter), Path + Letter,
                                     Origin));
       }
     }
+    // Si on ne peut pas atteindre d'enfant, on ajoute le mot à la liste
+    // des mots finaux
     if (!Child) {
       End.insert(make_tuple(Origin, Path));
     }
   }
 
+  // On cherche le mot qui permet d'ajouter le plus de lettres
   int Longest = 0;
   string BestPath;
   Node *BestStart;
@@ -145,8 +148,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
 
   int Ligne = getLine(Board, "", Joueur);
   if (Jarnac) {
-    // Dans quels sens jouer ici
-    // faire fonctions
+    // On regarde si on peut aggrandir les mots de l'adversaire
     for (int i = 1; i < Board[1 - Joueur].size(); i++) {
       if (Board[1 - Joueur][i].length() > 0) {
         PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
@@ -160,7 +162,9 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
       Current->DLetter = Path[0];
       return Current;
     }
-    Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict);
+
+    // On regarde si on peut placer un mot avec le vrac de l'adversaire
+    Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict, true);
     if (Playable.size() > 0) {
       Current->Word = *Playable.begin();
       Current->Ligne = Ligne;
@@ -171,14 +175,10 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   }
 
   Current->Jarnac = false;
-
-  // writeToDebugFile("Fct IA BestMove");
   PlayerWords = {};
   Playable = {};
 
-  // writeToDebugFile("Fct IA BestMove : Mots allongeables");
-
-  // Mots allongeables
+  // On regarde si on peut aggrandir l'un de nos mots
   for (int i = 1; i < Ligne; i++) {
     PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[Joueur][i])]);
   }
@@ -190,17 +190,18 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
     return Current;
   }
 
-  // Mots placables
-  Playable = FindWords(Board[Joueur][0], AIHelper->Dict);
+  // On regarde si on peut placer un mot avec notre vrac
+  Playable = FindWords(Board[Joueur][0], AIHelper->Dict, false);
   if (Playable.size() > 0) {
     Current->Word = *Playable.begin();
     Current->Ligne = Ligne;
     Current->DLetter = *Playable.begin();
     return Current;
   }
+
+  // Si on n'a toujours pas trouvé de mot on fini notre tour
   Current->End = true;
   Current->DLetter = "";
-  // writeToDebugFile("Fct IA BestMove : Fin");
   return Current;
 }
 
@@ -208,6 +209,10 @@ void LoadDict(AI *AIHelper, string FileName) {
   ifstream File;
   string Word;
   File.open(FileName);
+  // Avec une map on peut trouver un mot en O(1) au lieu de chercher
+  // dans un vecteur en O(n)
+  // En triant les mots on stocke moins de noeuds dans l'arbre
+  // qui auraient eu les mêmes enfants
   while (File >> Word) {
     AIHelper->Dict[Sort(Word)] = Word;
   }
@@ -220,9 +225,12 @@ void LoadTree(AI *AIHelper, string FileName) {
   string letter;
   File.open(FileName);
   T = new Node;
+  // Structure du fichier :
+  // Mot Lettre1 Lettre2 ... LettreN;
   while (File >> T->Ana) {
     File >> letter;
     while (letter != ";") {
+      // On ajoute les noeuds enfants
       T->Children[letter[0]] = AIHelper->NodeDict[Sort((T->Ana + letter))];
       File >> letter;
     }

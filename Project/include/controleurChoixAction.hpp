@@ -1,67 +1,197 @@
+#include <time.h>
+
+#include <algorithm>
 #include <iostream>
+#include <map>
+#include <random>
 #include <string>
+#include <tuple>
 #include <vector>
+
+#include "Debug.hpp"
+#include "loadIA.hpp"
+#include "vueEnModeTexte.hpp"
 
 using namespace std;
 
-// #include "vueEnModeTexte.hpp"
-// #include "mPoseMotJarnac-correction.hpp"
+using BOARD = vector<vector<string>>;
 
-/***********************************************************************
+/**
+ * @brief Structure de données pour les noms à stocker
  *
- *  CCC     OOO   N   N  TTTTT RRRR    OOO   L      EEEEE  U    U  RRRR
- * C       O   O  NN  N    T   R   R  O   O  L      E      U    U  R   R
- * C       O   O  N N N    T   RRRR   O   O  L      EEEE   U    U  RRRR
- * C       O   O  N  NN    T   R  R   O   O  L      E      U    U  R  R
- *  CCC     OOO   N   N    T   R   R   OOO   LLLLL  EEEEE   UUUU   R   R
+ * @param string Name1 - Nom du joueur 1
+ * @param string Name2 - Nom du joueur 2
+ * @param string NameGame - Nom du jeu
+ */
+struct Names {
+  string Name1;
+  string Name2;
+  string NameGame;
+};
+
+/**
+ * @brief Structure de données pour un mot à jouer
  *
- * **********************************************************************/
+ * @param bool isAI[2] - Si les joueurs sont des IA
+ * @param AI* AIS[2] - Les IA à charger
+ */
+struct StorePlayers {
+  bool isAI[2] = {false, false};
+  AI *AIS[2];
+};
 
-/// BEGIN SOLUTION
+/**
+ * @brief Renvoie si une lettre est une voyelle ou non
+ *
+ * @param string Letter - Lettre à vérifier
+ * @return bool - Si la lettre est une voyelle
+ */
+bool isVowel(string Letter);
 
+/**
+ * @brief Permet de vérifier s'il y a une voyelle entre les bornes
+ *
+ * @param int Start - Début des bornes
+ * @param int End - Fin des bornes
+ * @return bool - S'il y a une voyelle entre les bornes
+ */
+bool CheckVowel(int Start, int End);
+
+/**
+ * @brief Permet de créer le sac de lettres
+ *
+ * @return vector<string> - Sac de lettres
+ */
+vector<string> createLetters();
+
+/**
+ * @brief Permet de mélanger le sac de lettres
+ *
+ * @param string Rep - Lettres à remettre dans le sac
+ */
+void shuffleBag(string Rep);
+
+/**
+ * @brief Permet de piocher une lettre dans le sac
+ *
+ * @return string - Lettre piochée
+ */
+string piocheLettre();
+
+/**
+ * @brief Permet d'afficher l'ensemble des actions possibles pour un joueur
+ */
+void ActionPossible();
+
+/**
+ * @brief Permet de choisir 3 lettres à échanger
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @return tuple<BOARD,bool> - Plateau de jeu avec les lettres échangées et si
+ * l'échange a été effectué
+ */
+tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur);
+
+/**
+ * @brief Permet à un humain de choisir entre piocher une lettre ou échanger des
+ * lettres
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @return BOARD - Plateau de jeu avec la lettre piochée/les lettres échangées
+ */
+BOARD piocheOuEchange(BOARD Board, int Joueur);
+
+/**
+ * @brief Permet de jouer un mot en suivant la structure Play
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @param Play* Current - Structure de données du mot à jouer
+ * @param Names* NamesHelper - Noms des joueurs
+ * @param ForDict* DictHelper - Structure de données du dictionnaire
+ * @return tuple<BOARD,int> - Plateau de jeu et état du mot joué
+ */
+tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
+                           Names *NamesHelper, ForDict *DictHelper);
+
+/**
+ * @brief Permet à un humain de choisir un mot à jouer en suivant la structure
+ * Play
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @param ForDict* DictHelper - Structure de données du dictionnaire
+ * @param bool isJarnac - Si le jeu est en mode Jarnac
+ * @param Names* NamesHelper - Noms des joueurs
+ * @return BOARD - Le plateau de jeu avec le mot joué
+ */
+BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
+               Names *NamesHelper);
+
+/**
+ * @brief Permet à un humain de choisir une action
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @param ForDict* DictHelper - Structure de données du dictionnaire
+ * @param Names* NamesHelper - Noms des joueurs
+ * @param int Tour - Tour actuel
+ * @return tuple<BOARD,string> - Plateau de jeu et état du jeu
+ */
+tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
+                                 Names *NamesHelper, int Tour);
+
+/**
+ * @brief Permet de jouer un tour, que ce soit un tour d'IA ou de joueur
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @param ForDict* DictHelper - Structure de données du dictionnaire
+ * @param Names* NamesHelper - Noms des joueurs
+ * @param StorePlayers* PlayerHelper - Structure de données pour l'IA
+ * @param int Tour - Tour actuel
+ * @return tuple<BOARD,string> - Plateau de jeu et état du jeu
+ */
+tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
+                           Names *NamesHelper, StorePlayers *PlayerHelper,
+                           int Tour);
+
+/**
+ * @brief Check si la partie doit se terminer
+ *
+ * @param BOARD Board - Plateau de jeu
+ * @param int Joueur - Joueur actuel
+ * @return bool - Si la partie doit se terminer
+ */
+bool endGame(BOARD Board, int Joueur);
+
+/**
+ * @brief Permet de créer le plateau de jeu
+ *
+ * @param int W - Largeur du plateau
+ * @param int H - Hauteur du plateau
+ * @return BOARD - Plateau de jeu
+ */
+BOARD initBoard(int W, int H);
+
+/**
+ * @brief Permet de choisir le dictionnaire
+ *
+ * @return string - Nom du dictionnaire
+ */
 string choisirDictionnaire();
 
-string piocher6lettres();
-
-/// END SOLUTION
-
-/************************
- * choisit une action parmi les actions possibles proposées dans possibilités
- * @param possibilites une liste de chaine de caractères
- * @param nomJoueur
- * @return une des chaines de caractères de possibilités,
- * laquelle aura été choisie par définition par le joueur nommé nomJoueur.
- **/
-string choisirAction(vector<string> possibilites, string nomJoueur);
-
-/************************
- * choisit un mot parmis les mots du diconnaire dans le fichier dico
- * @param plateau un plateau de jeu (voir définition:
- * le premier mot represente des lettres en vrac, les suivants des mots.)
- * @param nomJoueur le nom du joueur concerné par le choix
- * @param l'adresse du dictionnaire à consulter
- * @return la chaine de caractère "-" si le joueur (n'a pas voulu choisir)
- * ou un des mots du dictionnaire
- * lequel aura été choisi en principe par le joueur nommé nomJoueur.
- **/
-string choisirMot(vector<string> plateau, string nomJoueur, string dico);
-
-/*****************
- * Permet à deux joueurs de s'affronter
- * au Jarnac de l'installation à la notification du gagnant,
- * ils auront au cour du jeu à choisir
- *  - leur dictionnaire commun
- *  - leur interface et leur mode de jeu
- *  - leur actions et leurs coups respectifs
- * @param les prenoms de chacun deux joueurs
- * @retour vrai si le jeu s'est terminé normalement
- * avec un vainqueur (supériorité en nombre de points lors de la pose du 8eme mot)
- * et un perdant notifiés
- * (en cas d'égalité au points
- * c'est le joueur qui a fini
- * le tour qui gagne
- * de ce fait il y a toujours
- * un gagnant qui est notifé lors que le jeu va jusqu'au bout),
- * faux si le jeu a fait l'objet d'un abandon.
+/**
+ * @brief Permet de commencer le jeu
+ *
+ * @param string joueur0 - Nom du joueur 1
+ * @param string joueur1 - Nom du joueur 2
+ * @param strin Name - Nom du jeu
+ * @param bool IA1 - Si le joueur 1 est une IA
+ * @param bool IA2 - Si le joueur 2 est une IA
+ * @return true
  */
-bool lanceLeJeu(string joueur0, string joueur1);
+bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
+                bool IA2);

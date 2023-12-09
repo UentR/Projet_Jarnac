@@ -1,8 +1,10 @@
-#include <stdexcept>
-#include <iostream>
-#include <vector>
-#include <string>
+#include <math.h>
+
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
 using namespace std;
 
 /**************************************
@@ -15,63 +17,84 @@ using namespace std;
  *
  ***************************************/
 
-struct ForDict
-{
-    vector<string> Mots;
-    vector<long> Bornes;
-    int NBR;
-    int SHIFT;
+/**
+ * @brief Structure contenant le dictionnaire
+ * @param vector<string> Mots - Les mots du dictionnaire
+ * @param vector<long> Bornes - Les bornes de chaque couple de NBR premières
+ * @param int NBR - Le nombre de lettres à prendre en compte
+ * @param int SHIFT - Le nombre de bits de décalage
+ */
+struct ForDict {
+  vector<string> Mots;
+  vector<long> Bornes;
+  int NBR;
+  int SHIFT;
 };
 
-
-/** Convertit en majuscule
- * @param char lettre
- * @return lettre en majuscule, ou '-' si lettre n'est pas une lettre dans 'a-z, A-Z'.
- *
+/**
+ * @brief Convertit en majuscule
+ * @param char lettre - La lettre à convertir
+ * @return char - La lettre en majuscule, ou '-' si ce n'est pas une
+ * lettre
  */
 char majuscule(char lettre);
 
-/** Convertit en majuscule
- * @param char lettre
- * @return lettre en majuscule, ou '-' si lettre n'est pas une lettre dans 'a-z, A-Z'.
- *
+/**
+ * @brief Convertit en majuscule
+ * @param string Lettre - La lettre à convertir
+ * @return string - La lettre en majuscule, ou '-' si ce n'est pas une
+ * lettre
  */
-string majuscule(string lettre);
+string majuscule(string Lettre);
 
-/** «Purifie» un mot en retirant espaces et caractères spéciaux
- *  et en le mettant en majuscules
- * @param string mot
- * @return string: le mot purifié
+/**
+ * @brief «Purifie» un mot en retirant espaces et caractères spéciaux et en le
+ * mettant en majuscules
+ * @param string mot - Le mot à purifier
+ * @return string - Le mot purifié
  */
 string purifie(string mot);
 
-/**importeDico
- * @param string l'adresse d'un fichier contenant une liste de mots correctes.
- * @return vector<string> un tableau de chaines de caracteres contenant les memes mots.
- **/
-vector<string> importeDico(string dico);
-
-/** Crée les bornes de chaque couple de NBR première lettres
- *  Note: l'explication du stockage de la valeur des bornes est dans "..."
- * @param vector<string> Dico: le dictionnaire a partionner
- * @return vector<long> Borne: la liste de toutes les bornes pour chaque couple
+/**
+ * @brief «Purifie» un nombre en retirant espaces et autres caractères
+ * @param string Nbr - Le nombre à purifier
+ * @return string - Le nombre purifié
  */
-void CreateBorne(ForDict *DictHelper);
+string purifieNbr(string Nbr);
 
-/** Calcul l'indexe d'un couple de NBR lettre
- *  Note: Convertisseur de la base 26 de l'alphabet en base 10
- * @param string Word: le mot dont on cherche l'indexe
- * @return int Idx: l'indexe correspondant
- */
-int CalcIdx(string Word, int NBR);
-
-/** Teste si un mot est dans le dictionnaire
- *  Note: on comparera deux mots en testant si leurs purifications sont égales
- * @param string mot: le mot recherché
- * @param vector<string> dico: un dictionnaire sous forme de tableau
- * @return bool: vrai si le mot est dans le dictionnaire, faux sinon
+/**
+ * @brief Trouve un mot dans un dictionnaire
+ * @param string mot - Le mot a trouver
+ * @param ForDict* DictHelper - La structure contenant le dictionnaire
+ * @return bool - Le résultat de la recherche
  */
 bool trouve(string mot, ForDict *DictHelper);
 
+/**
+ * @brief Calcule l'indexe d'un couple de NBR lettre
+ * @note Convertisseur de la base 26 de l'alphabet en base 10
+ * @param string Word - le mot dont on cherche l'indexe
+ * @return int - l'indexe correspondant
+ */
+int CalcIdx(string Word, int NBR);
 
+/**
+ * @brief Crée les bornes de chaque couple de NBR première lettres
+ * @param ForDict* DictHelper - La structure contenant le dictionnaire
+ */
+void CreateBorne(ForDict *DictHelper);
+
+/**
+ * @brief Importe un dictionnaire
+ * @param string adresseDico - L'adresse du dictionnaire
+ * @param ForDict* DictHelper - La structure contenant le dictionnaire
+ */
+void importeDico(string adresseDico, ForDict *DictHelper);
+
+/**
+ * @brief Charge la structure contenant le dictionnaire
+ * @param ForDict* DictHelper - La structure contenant le dictionnaire
+ * @param string adresseDico - L'adresse du dictionnaire
+ * @param int NBR - Le nombre de lettres à prendre en compte
+ */
 void CreateHelper(ForDict *DictHelper, string adresseDico, int NBR);
