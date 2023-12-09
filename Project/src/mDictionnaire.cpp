@@ -16,7 +16,7 @@ using namespace std;
 //     int SHIFT;
 // };
 
-#include "mDictionnaire.hpp"
+#include "../include/mDictionnaire.hpp"
 
 struct ForDict;
 

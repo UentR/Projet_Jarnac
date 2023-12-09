@@ -2,6 +2,7 @@
 #include <time.h>
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <random>
@@ -11,10 +12,11 @@
 
 using namespace std;
 
-#include "loadIA.hpp"
-#include "mAnagrammes.hpp"
-#include "mDictionnaire.hpp"
-#include "vueEnModeTexte.hpp"
+#include "../include/Debug.hpp"
+#include "../include/loadIA.hpp"
+#include "../include/mAnagrammes.hpp"
+#include "../include/mDictionnaire.hpp"
+#include "../include/vueEnModeTexte.hpp"
 
 struct ForDict;
 struct Play;
@@ -163,7 +165,7 @@ BOARD echangeLettre(BOARD Board, int Joueur) {
   string Res;
   while (Rep == "") {
     cout << "Votre vrac est actuellement : " << Board[Joueur][0] << endl
-         << "De quelle lettre voulez-vous vous séparer ?" << endl;
+         << "De quelleq lettreq voulez-vous vous séparer ?" << endl;
     cin >> Rep;
     Rep = purifie(Rep);
     if (Rep.size() != 3) {
@@ -181,7 +183,6 @@ BOARD echangeLettre(BOARD Board, int Joueur) {
   for (int i = 0; i < 3; i++) {
     Board[Joueur][0] += piocheLettre();
   }
-  cout << "Here Vrac Echange" << endl;
   shuffleBag(Rep);
   return Board;
 }
@@ -222,7 +223,9 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
                            Names *NamesHelper, ForDict *DictHelper) {
   if (Current->End) {
     cout << "Fin du tour de l'IA" << endl;
+    return make_tuple(Board, 1);
   }
+
   if (Current->DLetter == "") {
     affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
                     NamesHelper->Name1, NamesHelper->Name2, Joueur,
@@ -232,15 +235,28 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
          << endl;
     return make_tuple(Board, 0);
   }
+
   for (auto i : Current->DLetter) {
-    if (Board[Joueur][0].find(i) == string::npos) {
-      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                      NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                      Current->Jarnac);
-      cout << "Mot impossible a jouer. Taper 'R' pour choisir une autre "
-              "ligne. Taper 'Q' pour changer d'action."
-           << endl;
-      return make_tuple(Board, 0);
+    if (Current->Jarnac) {
+      if (Board[1 - Joueur][0].find(i) == string::npos) {
+        affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                        NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                        Current->Jarnac);
+        cout << "Mot impossible à jouer. Taper 'R' pour choisir une autre "
+                "ligne. Taper 'Q' pour changer d'action."
+             << endl;
+        return make_tuple(Board, 0);
+      }
+    } else {
+      if (Board[Joueur][0].find(i) == string::npos) {
+        affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                        NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                        Current->Jarnac);
+        cout << "Mot impossible à jouer. Taper 'R' pour choisir une autre "
+                "ligne. Taper 'Q' pour changer d'action."
+             << endl;
+        return make_tuple(Board, 0);
+      }
     }
   }
 
@@ -257,7 +273,11 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
 
   if (!(Current->Jarnac)) {
     Board[Joueur][0] = retire(Board[Joueur][0], Current->DLetter);
+    // cout << "Word : " << Current->Word << endl;
+    // cout << "Ligne : " << Current->Ligne << endl;
+    // cout << "Board : " << Board[Joueur][Current->Ligne] << endl;
     Board[Joueur][Current->Ligne] = Current->Word;
+    // cout << "Place Word" << endl;
     Board[Joueur][0] += piocheLettre();
   } else {
     Board[1 - Joueur][0] = retire(Board[1 - Joueur][0], Current->DLetter);
@@ -384,7 +404,7 @@ BOARD piocheOuEchange(BOARD Board, int Joueur) {
  * returns an empty string to continue alternating turns.
  */
 tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
-                                 Names *NamesHelper) {
+                                 Names *NamesHelper, int Tour) {
   string coup;
   bool J = true;  // check for tour si jarnac a un sens
   affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
@@ -399,7 +419,7 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
       J = false;
     } else if (coup == "F") {
       return make_tuple(Board, "");
-    } else if (coup == "J") {
+    } else if (coup == "J" and Tour != 0) {
       if (J) {
         Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper);
       } else {
@@ -446,28 +466,45 @@ BOARD initBoard(int W, int H) {
 }
 
 tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
-                           Names *NamesHelper, StorePlayers *PlayerHelper) {
+                           Names *NamesHelper, StorePlayers *PlayerHelper,
+                           int Tour) {
   if (!(PlayerHelper->isAI[Joueur])) {
-    return choixAction(Board, Joueur, DictHelper, NamesHelper);
-  } else {
-    Play *IAMove = BestMove(Board, Joueur, false, PlayerHelper->AIS[Joueur]);
-
-    int state;
-    tie(Board, state) =
-        JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper);
-
-    if (state == 0) {
-      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                      NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                      IAMove->Jarnac);
-      cout << IAMove->Word << endl;
-      cout << IAMove->DLetter << endl;
-      cout << IAMove->Ligne << endl;
-      cout << IAMove->Origin << endl;
-
-      throw "L'IA a tenté de jouer un mot impossible.";
+    if (Tour >= 2) {
+      Board = piocheOuEchange(Board, Joueur);
     }
+    return choixAction(Board, Joueur, DictHelper, NamesHelper, Tour);
+  } else {
+    if (Tour >= 2) {
+      Board[Joueur][0] += piocheLettre();
+    }
+    Play *IAMove = new Play;
+    int nbPlay = 0;
+    bool JarnacPossible = true;
+    do {
+      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                      NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+      if (Tour == 0 or nbPlay > 0) {
+        JarnacPossible = false;
+      }
+      IAMove =
+          BestMove(Board, Joueur, JarnacPossible, PlayerHelper->AIS[Joueur]);
+      nbPlay++;
+      int state;
+      tie(Board, state) =
+          JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper);
 
+      if (state == 0) {
+        affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+                        NamesHelper->Name1, NamesHelper->Name2, Joueur,
+                        IAMove->Jarnac);
+        cout << IAMove->Word << endl;
+        cout << IAMove->DLetter << endl;
+        cout << IAMove->Ligne << endl;
+        cout << IAMove->Origin << endl;
+
+        throw "L'IA a tenté de jouer un mot impossible.";
+      }
+    } while (IAMove->End == false);
     return make_tuple(Board, "");
   }
 }
@@ -524,15 +561,19 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
 
   string mot;
   int Joueur = 0;
+  int Tour = 0;
   tie(Board, mot) =
-      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper);
+      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
+  Tour++;
   if (mot == "-STOP-") {
     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
   }
 
   Joueur = 1 - Joueur;
+
   tie(Board, mot) =
-      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper);
+      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
+  Tour++;
   if (mot == "-STOP-") {
     cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
   }
@@ -541,9 +582,9 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
     Joueur = 1 - Joueur;
     affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur,
                     false);
-    Board = piocheOuEchange(Board, Joueur);
     tie(Board, mot) =
-        Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper);
+        Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
+    Tour++;
   }
 
   cout << "Fin du jeu." << endl;
@@ -583,6 +624,6 @@ int main() {
     j2 = Temp;
   }
 
-  lanceLeJeu(j1, j2, "Jarnac", false, false);
+  lanceLeJeu(j1, j2, "Jarnac", false, true);
   return 0;
 }

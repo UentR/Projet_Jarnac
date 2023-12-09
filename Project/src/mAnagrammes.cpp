@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#include "mDictionnaire.hpp"
+#include "../include/mDictionnaire.hpp"
 
 struct ForDict;
 

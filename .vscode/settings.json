@@ -9,5 +9,6 @@
 		"tuple": "cpp",
 		"map": "cpp"
 	},
-	"C_Cpp.default.compilerPath": "/usr/bin/g++"
+	"C_Cpp.default.compilerPath": "/usr/bin/g++",
+	"cmake.configureOnOpen": true
 }

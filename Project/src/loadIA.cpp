@@ -11,8 +11,8 @@
 
 using namespace std;
 
-#include "loadIA.hpp"
-#include "mDictionnaire.hpp"
+#include "../include/loadIA.hpp"
+#include "../include/mDictionnaire.hpp"
 
 struct ForDict;
 struct Node;
@@ -138,8 +138,9 @@ void LoadDict(AI *AIHelper, string FileName) {
 bool PiocheEchange(BOARD Board, int Joueur, bool Jarnac) { return true; }
 
 int findWord(BOARD Board, string Word, int Joueur) {
+  // Check with anagrams
   for (int i = 1; i < Board[Joueur].size(); i++) {
-    if (Board[Joueur][i] == Word) {
+    if (Sort(Board[Joueur][i]) == Sort(Word)) {
       return i;
     }
   }
@@ -160,21 +161,29 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   int Ligne = findWord(Board, "", Joueur);
   if (Jarnac) {
     // Dans quels sens jouer ici
-    for (int i = 1; i < findWord(Board, "", 1 - Joueur); i++) {
-      PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
+    // faire fonctions
+    for (int i = 1; i < Board[1 - Joueur].size(); i++) {
+      if (Board[1 - Joueur][i].length() > 0) {
+        PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
+      }
     }
+    cout << "Player words loaded" << endl;
     tie(Word, Path) = Analyze(Board[1 - Joueur][0], PlayerWords);
+    cout << "Analyzed" << endl;
     if (Path.length() >= 1) {
       Current->Word = Word->Children[Path[0]]->Ana;
+      Current->Origin = findWord(Board, Word->Ana, Joueur);
       Current->Ligne = Ligne;
       Current->DLetter = Path[0];
       return Current;
     }
-
+    cout << "Test find words" << endl;
     Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict);
+    cout << "Test find words done" << endl;
     if (Playable.size() > 0) {
       Current->Word = *Playable.begin();
       Current->Ligne = Ligne;
+      Current->Ligne = findWord(Board, "", 1 - Joueur);
       Current->DLetter = *Playable.begin();
       return Current;
     }
@@ -189,7 +198,8 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   tie(Word, Path) = Analyze(Board[Joueur][0], PlayerWords);
   if (Path.length() >= 1) {
     Current->Word = Word->Children[Path[0]]->Ana;
-    Current->Ligne = Ligne;
+    cout << "Word: " << Word->Ana << endl;
+    Current->Ligne = findWord(Board, Word->Ana, Joueur);
     Current->DLetter = Path[0];
     return Current;
   }
@@ -198,7 +208,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   Playable = FindWords(Board[Joueur][0], AIHelper->Dict);
   if (Playable.size() > 0) {
     Current->Word = *Playable.begin();
-    Current->Ligne = findWord(Board, Current->Word, Joueur) - 1;
+    Current->Ligne = Ligne;
     Current->DLetter = *Playable.begin();
     return Current;
   }
