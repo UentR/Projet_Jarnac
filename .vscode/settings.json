@@ -7,7 +7,8 @@
 		"ostream": "cpp",
 		"chrono": "cpp",
 		"tuple": "cpp",
-		"map": "cpp"
+		"map": "cpp",
+		"string_view": "cpp"
 	},
 	"C_Cpp.default.compilerPath": "/usr/bin/g++",
 	"cmake.configureOnOpen": true

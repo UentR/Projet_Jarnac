@@ -9,6 +9,7 @@ using namespace std;
 
 using BOARD = vector<vector<string> >;
 
+// Structure de données d'arbre
 struct Node {
   string Ana;
   map<char, Node *> Children;

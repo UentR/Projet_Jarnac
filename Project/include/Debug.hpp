@@ -2,4 +2,4 @@
 
 using namespace std;
 
-void writeToDebugFile(string& logInfo);
+void writeToDebugFile(string logInfo);

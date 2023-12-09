@@ -11,8 +11,9 @@
 
 using namespace std;
 
-#include "../include/loadIA.hpp"
-#include "../include/mDictionnaire.hpp"
+#include "Debug.hpp"
+#include "loadIA.hpp"
+#include "mDictionnaire.hpp"
 
 struct ForDict;
 struct Node;
@@ -156,7 +157,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   Node *Word = new Node;
 
   vector<Node *> PlayerWords = {};
-  set<string> Playable;
+  set<string> Playable = {};
 
   int Ligne = findWord(Board, "", Joueur);
   if (Jarnac) {
@@ -167,9 +168,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
         PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
       }
     }
-    cout << "Player words loaded" << endl;
     tie(Word, Path) = Analyze(Board[1 - Joueur][0], PlayerWords);
-    cout << "Analyzed" << endl;
     if (Path.length() >= 1) {
       Current->Word = Word->Children[Path[0]]->Ana;
       Current->Origin = findWord(Board, Word->Ana, Joueur);
@@ -177,19 +176,23 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
       Current->DLetter = Path[0];
       return Current;
     }
-    cout << "Test find words" << endl;
     Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict);
-    cout << "Test find words done" << endl;
     if (Playable.size() > 0) {
       Current->Word = *Playable.begin();
       Current->Ligne = Ligne;
-      Current->Ligne = findWord(Board, "", 1 - Joueur);
+      Current->Origin = findWord(Board, "", 1 - Joueur);
       Current->DLetter = *Playable.begin();
       return Current;
     }
   }
+
+  Current->Jarnac = false;
+
+  // writeToDebugFile("Fct IA BestMove");
   PlayerWords = {};
   Playable = {};
+
+  // writeToDebugFile("Fct IA BestMove : Mots allongeables");
 
   // Mots allongeables
   for (int i = 1; i < Ligne; i++) {
@@ -198,7 +201,6 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   tie(Word, Path) = Analyze(Board[Joueur][0], PlayerWords);
   if (Path.length() >= 1) {
     Current->Word = Word->Children[Path[0]]->Ana;
-    cout << "Word: " << Word->Ana << endl;
     Current->Ligne = findWord(Board, Word->Ana, Joueur);
     Current->DLetter = Path[0];
     return Current;
@@ -214,6 +216,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   }
   Current->End = true;
   Current->DLetter = "";
+  // writeToDebugFile("Fct IA BestMove : Fin");
   return Current;
 }
 

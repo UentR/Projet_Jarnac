@@ -2,6 +2,7 @@
 #include <time.h>
 
 #include <algorithm>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -12,11 +13,11 @@
 
 using namespace std;
 
-#include "../include/Debug.hpp"
-#include "../include/loadIA.hpp"
-#include "../include/mAnagrammes.hpp"
-#include "../include/mDictionnaire.hpp"
-#include "../include/vueEnModeTexte.hpp"
+#include "Debug.hpp"
+#include "loadIA.hpp"
+#include "mAnagrammes.hpp"
+#include "mDictionnaire.hpp"
+#include "vueEnModeTexte.hpp"
 
 struct ForDict;
 struct Play;
@@ -86,7 +87,6 @@ vector<string> createLetters() {
       }
       Vowel1 = false;
     }
-
     for (int i = Size - 7; i > Size - 12; i--) {
       if (isVowel(Rep[i])) {
         Vowel2 = true;
@@ -122,9 +122,12 @@ string choisirDictionnaire() {
  * Returns the popped letter to the caller.
  */
 string piocheLettre() {
-  LEN--;
-  LETTERS.pop_back();
-  return LETTERS[LEN];
+  if (LEN != 0) {
+    LEN--;
+    LETTERS.pop_back();
+    return LETTERS[LEN];
+  }
+  return "";
 }
 
 /**
@@ -221,9 +224,12 @@ void ActionPossible() {
  */
 tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
                            Names *NamesHelper, ForDict *DictHelper) {
+  // writeToDebugFile("Entrée dans fct JouerMot");
+
   if (Current->End) {
-    cout << "Fin du tour de l'IA" << endl;
-    return make_tuple(Board, 1);
+    // cout << "Fin du tour de l'IA" << endl;
+    // writeToDebugFile("Fin du tour de l'IA");
+    return make_tuple(Board, 2);
   }
 
   if (Current->DLetter == "") {
@@ -271,15 +277,18 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
     return make_tuple(Board, 0);
   }
 
+  // writeToDebugFile(to_string(Current->Jarnac));
   if (!(Current->Jarnac)) {
     Board[Joueur][0] = retire(Board[Joueur][0], Current->DLetter);
-    // cout << "Word : " << Current->Word << endl;
-    // cout << "Ligne : " << Current->Ligne << endl;
-    // cout << "Board : " << Board[Joueur][Current->Ligne] << endl;
+    // writeToDebugFile("Found Word : " + Current->Word);
+    // writeToDebugFile("Ligne : " + to_string(Current->Ligne));
+    // writeToDebugFile("Origin : " + to_string(Current->Origin));
     Board[Joueur][Current->Ligne] = Current->Word;
-    // cout << "Place Word" << endl;
     Board[Joueur][0] += piocheLettre();
   } else {
+    // writeToDebugFile("Found Word : " + Current->Word);
+    // writeToDebugFile("Ligne : " + to_string(Current->Ligne));
+    // writeToDebugFile("Origin : " + to_string(Current->Origin));
     Board[1 - Joueur][0] = retire(Board[1 - Joueur][0], Current->DLetter);
     if (Current->Origin != -1) {
       Board[1 - Joueur][Current->Origin] = "";
@@ -480,6 +489,7 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
     Play *IAMove = new Play;
     int nbPlay = 0;
     bool JarnacPossible = true;
+    int state;
     do {
       affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
                       NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
@@ -489,9 +499,11 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
       IAMove =
           BestMove(Board, Joueur, JarnacPossible, PlayerHelper->AIS[Joueur]);
       nbPlay++;
-      int state;
       tie(Board, state) =
           JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper);
+
+      // writeToDebugFile("State : " + to_string(state));
+      // writeToDebugFile("IA End : " + to_string(IAMove->End));
 
       if (state == 0) {
         affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
@@ -501,12 +513,27 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
         cout << IAMove->DLetter << endl;
         cout << IAMove->Ligne << endl;
         cout << IAMove->Origin << endl;
+        cout << IAMove->Jarnac << endl;
 
-        throw "L'IA a tenté de jouer un mot impossible.";
+        // throw an error
+
+        throw invalid_argument("L'IA a tenté de jouer un mot impossible.");
       }
-    } while (IAMove->End == false);
+    } while (state == 1);
+    // writeToDebugFile("SORTIE PRINCIPALE TOUR IA");
     return make_tuple(Board, "");
   }
+}
+
+bool endGame(BOARD Board, int Joueur) {
+  bool AllEmpty = true;
+  for (int j = 1; j < Board[Joueur].size(); j++) {
+    if (Board[Joueur][j].length() == 0) {
+      AllEmpty = false;
+      break;
+    }
+  }
+  return AllEmpty;
 }
 
 /**
@@ -584,7 +611,12 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
                     false);
     tie(Board, mot) =
         Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
+    // writeToDebugFile("Joueur : " + to_string(Joueur));
     Tour++;
+
+    if (endGame(Board, Joueur)) {
+      break;
+    }
   }
 
   cout << "Fin du jeu." << endl;
@@ -614,16 +646,16 @@ int main() {
   // cout << "Nom du deuxième joueur : ";
   // cin >> j2;
 
-  j1 = "1";
-  j2 = "2";
+  j1 = "Joueur 0";
+  j2 = "Joueur 1";
 
-  srand(time(NULL));
-  if (rand() % 2) {
-    string Temp = j1;
-    j1 = j2;
-    j2 = Temp;
-  }
+  // srand(time(NULL));
+  // if (rand() % 2) {
+  //   string Temp = j1;
+  //   j1 = j2;
+  //   j2 = Temp;
+  // }
 
-  lanceLeJeu(j1, j2, "Jarnac", false, true);
+  lanceLeJeu(j1, j2, "Jarnac", true, true);
   return 0;
 }

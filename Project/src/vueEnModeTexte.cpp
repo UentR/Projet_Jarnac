@@ -4,8 +4,8 @@
 using namespace std;
 
 // #include "vueEnModeTexte.hpp"
-#include "../include/mCalculPoints.hpp"
-#include "../include/mDictionnaire.hpp"
+#include "mCalculPoints.hpp"
+#include "mDictionnaire.hpp"
 
 /*****************************************************
 ******************************************************
@@ -328,11 +328,8 @@ void affichePlateaux(vector<string> plateauJoueurA,
 
   if (plateauJoueurA[0].size() < largeurCase * nbMaxLettres) {
     afficheSymbolesRepete(
-        (largeurCase * nbMaxLettres - (plateauJoueurA[0].size() * 2)) / 2, " ");
+        (largeurCase * nbMaxLettres - plateauJoueurA[0].size()) / 2, " ");
     cout << VRAC;
-    for (char c : plateauJoueurA[0]) {
-      cout << c << " ";
-    }
     cout << plateauJoueurA[0];
     cout << End;
     afficheSymbolesRepete(

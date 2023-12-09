@@ -3,7 +3,7 @@
 
 CXX = g++
 # CXXFLAGS = -W -Wall -std=c++11 -O2 -g -Wno-sign-compare -Wno-narrowing
-CXXFLAGS = -O2
+CXXFLAGS = -O2 -Iinclude -g -Wno-sign-compare -Wno-narrowing
 OBJDIR = object
 INCDIR = include
 vpath %.cpp src
@@ -30,10 +30,8 @@ clean:
 # $(TESTS)
 
 Jarnac: $(objects)
-	$(CXX) $(CXXFLAGS) $^ -o $@ 2> Error.txt
-# echo "Compilation terminée"
-
-
+	@$(CXX) $(CXXFLAGS) $^ -o $@ 2> Error.txt
+	@echo "Compilation terminée"
 
 # ExempleInterface: ExempleInterface.cpp vueEnModeTexte.cpp mCalculPoints.o mDictionnaire.cpp
 # 	$(CXX) $^ -o $@ $(CXXFLAGS)
@@ -58,7 +56,7 @@ Jarnac: $(objects)
 
 
 $(OBJDIR)/%.o : %.cpp
-	$(CXX) -c $(CXXFLAGS) $< -o $@
+	@$(CXX) -c $(CXXFLAGS) $< -o $@
 
 Move:
 	mv *.o ./object/
