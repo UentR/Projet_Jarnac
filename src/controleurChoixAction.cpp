@@ -60,18 +60,23 @@ vector<string> createLetters() {
       {"H", 2},  {"I", 11}, {"J", 1}, {"K", 1},  {"L", 6},  {"M", 5}, {"N", 9},
       {"O", 8},  {"P", 4},  {"Q", 1}, {"R", 10}, {"S", 7},  {"T", 9}, {"U", 8},
       {"V", 2},  {"W", 1},  {"X", 1}, {"Y", 1},  {"Z", 2}};
+
   vector<string> Rep = {};
   for (auto &iter : usableLetter) {
     for (int i = 0; i < iter.second; i++) {
       Rep.push_back(iter.first);
     }
   }
+
   srand(time(NULL));
   bool Vowel1 = false;
   bool Vowel2 = false;
   int Size = Rep.size() - 1;
+
   while (!Vowel1 || !Vowel2) {
     random_shuffle(Rep.begin(), Rep.end());
+
+    // faire fonction
     for (int i = Size; i > Size - 6; i--) {
       if (isVowel(Rep[i])) {
         Vowel1 = true;
@@ -79,6 +84,7 @@ vector<string> createLetters() {
       }
       Vowel1 = false;
     }
+
     for (int i = Size - 7; i > Size - 12; i--) {
       if (isVowel(Rep[i])) {
         Vowel2 = true;
@@ -175,7 +181,7 @@ BOARD echangeLettre(BOARD Board, int Joueur) {
   for (int i = 0; i < 3; i++) {
     Board[Joueur][0] += piocheLettre();
   }
-  cout << "Here" << endl;
+  cout << "Here Vrac Echange" << endl;
   shuffleBag(Rep);
   return Board;
 }
@@ -226,7 +232,6 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
          << endl;
     return make_tuple(Board, 0);
   }
-  bool Continue = true;
   for (auto i : Current->DLetter) {
     if (Board[Joueur][0].find(i) == string::npos) {
       affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
@@ -238,6 +243,7 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
       return make_tuple(Board, 0);
     }
   }
+
   if (!trouve(Current->Word, DictHelper)) {
     affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
                     NamesHelper->Name1, NamesHelper->Name2, Joueur,
@@ -245,6 +251,7 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
     cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. "
             "Taper 'Q' pour changer d'action."
          << endl;
+    cout << Current->Word << endl;
     return make_tuple(Board, 0);
   }
 
@@ -278,45 +285,46 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
     Say = "Où pensez-vous voir un mot ?";
   }
   bool Joue = true;
-  string Rep;
+  string ligneTxt;
   string mot;
   string CurrentLigne = "";
   string diffLetter;
   string Vrac = Board[Joueur][0];
   bool Continue;
-  int Ligne;
+  int NumLigne;
 
   Play *Current = new Play;
   Current->Jarnac = isJarnac;
   Current->End = false;
 
+  // Constante 8 et 9
   affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
                   NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
   int state = 0;
   while (!state) {
     mot = "-";
-    Rep = "";
+    ligneTxt = "";
     // get line
-    while (Rep == "") {
+    while (ligneTxt == "") {
       cout << Say << endl;
-      cin >> Rep;
-      if (Rep == "Q") {
+      cin >> ligneTxt;
+      if (ligneTxt == "Q") {
         state = 1;
         break;
       }
-      if (("1" > Rep) || ("9" < Rep) || (Rep.size() == 2)) {
+      if (("1" > ligneTxt) || ("9" < ligneTxt) || (ligneTxt.size() == 2)) {
         cout << "Numéro de ligne invalide. Tapez 'Q' pour changer d'action."
              << endl;
-        Rep = "";
+        ligneTxt = "";
       }
     }
 
-    Ligne = atoi(Rep.c_str());
-    CurrentLigne = Board[Joueur][Ligne];
+    NumLigne = atoi(ligneTxt.c_str());
+    CurrentLigne = Board[Joueur][NumLigne];
     mot = "-";
 
     // get word
-    while (mot == "-" and Rep != "Q") {
+    while (mot == "-" and ligneTxt != "Q") {
       cout << endl << "Quel mot souhaitez-vous jouer ?" << endl;
       cin >> mot;
       mot = purifie(mot);
@@ -332,9 +340,9 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
       Current->DLetter = diffLetter;
       if (isJarnac) {
         Current->Ligne = findWord(Board, mot, 1 - Joueur);
-        Current->Origin = Ligne;
+        Current->Origin = NumLigne;
       } else {
-        Current->Ligne = Ligne;
+        Current->Ligne = NumLigne;
         Current->Origin = -1;
       }
 
@@ -378,7 +386,7 @@ BOARD piocheOuEchange(BOARD Board, int Joueur) {
 tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
                                  Names *NamesHelper) {
   string coup;
-  bool J = true;
+  bool J = true;  // check for tour si jarnac a un sens
   affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
                   NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
   while (true) {
@@ -439,14 +447,15 @@ BOARD initBoard(int W, int H) {
 
 tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
                            Names *NamesHelper, StorePlayers *PlayerHelper) {
-  if ((PlayerHelper->isAI[Joueur])) {
+  if (!(PlayerHelper->isAI[Joueur])) {
     return choixAction(Board, Joueur, DictHelper, NamesHelper);
   } else {
-    Play *IAMove =
-        BestMove(Board, Joueur, DictHelper, PlayerHelper->AIS[Joueur]);
+    Play *IAMove = BestMove(Board, Joueur, false, PlayerHelper->AIS[Joueur]);
+
     int state;
     tie(Board, state) =
         JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper);
+
     if (state == 0) {
       affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
                       NamesHelper->Name1, NamesHelper->Name2, Joueur,
@@ -458,6 +467,7 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
 
       throw "L'IA a tenté de jouer un mot impossible.";
     }
+
     return make_tuple(Board, "");
   }
 }
@@ -478,7 +488,7 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
  */
 bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
                 bool IA2) {
-  string nomDico = choisirDictionnaire();
+  // string nomDico = choisirDictionnaire();
 
   ForDict *DictHelper = new ForDict;
   CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
@@ -502,7 +512,7 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
     PlayersHelper->isAI[1] = true;
   }
 
-  cout << "Here" << endl;
+  cout << "Fin Load IA" << endl;
 
   // affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, 0);
   // ActionPossible();
@@ -558,10 +568,13 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
  */
 int main() {
   string j1, j2;
-  cout << "Nom du premier joueur : ";
-  cin >> j1;
-  cout << "Nom du deuxième joueur : ";
-  cin >> j2;
+  // cout << "Nom du premier joueur : ";
+  // cin >> j1;
+  // cout << "Nom du deuxième joueur : ";
+  // cin >> j2;
+
+  j1 = "1";
+  j2 = "2";
 
   srand(time(NULL));
   if (rand() % 2) {

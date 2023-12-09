@@ -37,6 +37,9 @@ string fRetire(string Word, char Letter) {
 
 tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
   set<tuple<Node *, string, string, Node *> > toAnalyze = {};
+  if (PlayerWords.size() == 0) {
+    return make_tuple(new Node, "");
+  }
   for (Node *Word : PlayerWords) {
     toAnalyze.insert(make_tuple(Word, Vrac, "", Word));
   }
@@ -303,7 +306,5 @@ void TEST() {
 //   cout << Current->Jarnac << endl;
 //   cout << Current->End << endl;
 
-//   // cout << AIHelper->NodeDict[Sort("ZOB")]->Children['S'] << endl;
-//   // map<string, string> Dict = LoadDict("Text/DicoIA.txt");
-//   // TEST();
+//   cout << AIHelper->NodeDict[Sort("ZOB")]->Children['S'] << endl;
 // }
