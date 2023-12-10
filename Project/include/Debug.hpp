@@ -4,8 +4,25 @@
 
 using namespace std;
 
+#ifndef Done
+#define Done
+enum DebugLevel {
+  NOTHING = 0,
+  ERROR = 1,
+  INFO = 2,
+  WARNING = 3,
+  INFO_DETAIL = 4,
+  ALL_LOG = 5,
+};
+#endif
+
 /**
- * Ecrit un messge log vers un fichier de debug.
+ * @brief Ecrit un messge log vers un fichier de debug.
  * @param {string} logInfo - Le message a écrire.
  */
-void writeToDebugFile(string logInfo);
+void writeToDebugFile(string logInfo, int level);
+
+/**
+ * @brief Vide le fichier de debug.
+ */
+void flushDebug();

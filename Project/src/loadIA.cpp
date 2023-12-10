@@ -166,14 +166,16 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
       return Current;
     }
 
-    // On regarde si on peut placer un mot avec le vrac de l'adversaire
-    Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict, true);
-    if (Playable.size() > 0) {
-      Current->Word = *Playable.begin();
-      Current->Ligne = Ligne;
-      Current->Origin = getLine(Board, "", 1 - Joueur);
-      Current->DLetter = *Playable.begin();
-      return Current;
+    if (Ligne != -1) {
+      // On regarde si on peut placer un mot avec le vrac de l'adversaire
+      Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict, true);
+      if (Playable.size() > 0) {
+        Current->Word = *Playable.begin();
+        Current->Ligne = Ligne;
+        Current->Origin = getLine(Board, "", 1 - Joueur);
+        Current->DLetter = *Playable.begin();
+        return Current;
+      }
     }
   }
 
@@ -194,12 +196,15 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   }
 
   // On regarde si on peut placer un mot avec notre vrac
-  Playable = FindWords(Board[Joueur][0], AIHelper->Dict, false);
-  if (Playable.size() > 0) {
-    Current->Word = *Playable.begin();
-    Current->Ligne = Ligne;
-    Current->DLetter = *Playable.begin();
-    return Current;
+  // Ne pas chercher si tableau complet
+  if (Ligne != -1) {
+    Playable = FindWords(Board[Joueur][0], AIHelper->Dict, false);
+    if (Playable.size() > 0) {
+      Current->Word = *Playable.begin();
+      Current->Ligne = Ligne;
+      Current->DLetter = *Playable.begin();
+      return Current;
+    }
   }
 
   // Si on n'a toujours pas trouvé de mot on fini notre tour

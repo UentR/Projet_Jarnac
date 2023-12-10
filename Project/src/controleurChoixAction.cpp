@@ -8,11 +8,13 @@ struct StorePlayers;
 struct StoreLetters;
 
 bool isVowel(string Letter) {
+  writeToDebugFile("isVowel", INFO_DETAIL);
   return (Letter == "A" or Letter == "E" or Letter == "I" or Letter == "O" or
           Letter == "U" or Letter == "Y");
 }
 
 bool CheckVowel(vector<string> vectorLetter, int Start, int End) {
+  writeToDebugFile("CheckVowel", INFO_DETAIL);
   for (int i = Start; i > End; i--) {
     if (isVowel(vectorLetter[i])) {
       return true;
@@ -22,6 +24,7 @@ bool CheckVowel(vector<string> vectorLetter, int Start, int End) {
 }
 
 vector<string> createLetters() {
+  writeToDebugFile("createLetters", INFO_DETAIL);
   // Toutes les lettres de base du jeu
   // Les mettre dans un fichier texte ?
   map<string, int> usableLetter = {
@@ -50,10 +53,12 @@ vector<string> createLetters() {
     Vowel2 = CheckVowel(vectorLetter, Size - 1 - TAILLE_VRAC,
                         Size - 2 * TAILLE_VRAC);
   }
+  writeToDebugFile("createLetters end", INFO_DETAIL);
   return vectorLetter;
 }
 
 void shuffleBag(StoreLetters *LETTERS, string Rep) {
+  writeToDebugFile("shuffleBag", INFO_DETAIL);
   for (auto i : Rep) {
     // On remet les lettres dans le sac
     LETTERS->Letters.push_back(string(1, i));
@@ -61,9 +66,11 @@ void shuffleBag(StoreLetters *LETTERS, string Rep) {
   }
   // On mélange le sac
   random_shuffle(LETTERS->Letters.begin(), LETTERS->Letters.end());
+  writeToDebugFile("shuffleBag end", INFO_DETAIL);
 }
 
 string piocheLettre(StoreLetters *LETTERS) {
+  writeToDebugFile("piocheLettre", INFO_DETAIL);
   if (LETTERS->Len != 0) {
     // Si le sac n'est pas vide
     LETTERS->Len--;
@@ -73,10 +80,12 @@ string piocheLettre(StoreLetters *LETTERS) {
   cout << "Le sac est vide " << endl;
   cout << "Appuyez sur 'enter' pour continuer" << endl;
   getchar();
+  writeToDebugFile("piocheLettre end", INFO_DETAIL);
   return "";
 }
 
 void ActionPossible() {
+  writeToDebugFile("ActionPossible", INFO_DETAIL);
   cout << "Au cours du jeu il est possible de taper certaines lettres pour "
           "piloter la manche."
        << endl;
@@ -87,12 +96,14 @@ void ActionPossible() {
   cout << "    M : voir ce Menu" << endl;
   cout << "    P : voir le Plateau" << endl;
   cout << endl;
+  writeToDebugFile("ActionPossible end", INFO_DETAIL);
 }
 
 #define NB_LETTRES_ECHANGE 3
 
 tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur,
                                  StoreLetters *LETTERS) {
+  writeToDebugFile("echangeLettre", INFO_DETAIL);
   if (Board[Joueur][0].size() < NB_LETTRES_ECHANGE) {
     cout << "Vous n'avez pas assez de lettre pour en échanger." << endl;
     return make_tuple(Board, false);
@@ -109,12 +120,15 @@ tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur,
       cout << "Vous devez choisir exactement " << NB_LETTRES_ECHANGE
            << " lettre(s)." << endl;
       LettresAEchanger = "";
+      writeToDebugFile("LettresAEchanger.size() != NB_LETTRES_ECHANGE",
+                       ALL_LOG);
     }
 
     nouveauVrac = Retire(Board[Joueur][0], LettresAEchanger);
     if (nouveauVrac == "-") {
       cout << "Vous ne disposez pas d'au moins une de ces lettres." << endl;
       LettresAEchanger = "";
+      writeToDebugFile("Choix de lettres invalides", ALL_LOG);
     }
   }
 
@@ -123,10 +137,12 @@ tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur,
     Board[Joueur][0] += piocheLettre(LETTERS);
   }
   shuffleBag(LETTERS, LettresAEchanger);
+  writeToDebugFile("echangeLettre end", INFO_DETAIL);
   return make_tuple(Board, true);
 }
 
 BOARD piocheOuEchange(BOARD Board, int Joueur, StoreLetters *LETTERS) {
+  writeToDebugFile("piocheOuEchange", INFO_DETAIL);
   string RepJoueur;
   bool EchangeReussi;
   while (true) {
@@ -138,16 +154,21 @@ BOARD piocheOuEchange(BOARD Board, int Joueur, StoreLetters *LETTERS) {
     RepJoueur = purifie(RepJoueur);
     if (RepJoueur == "P") {
       Board[Joueur][0] += piocheLettre(LETTERS);
+      writeToDebugFile("piocheOuEchange end avec pioche", INFO_DETAIL);
       return Board;
     } else if (RepJoueur == "E") {
       tie(Board, EchangeReussi) = echangeLettre(Board, Joueur, LETTERS);
       if (EchangeReussi) {
+        writeToDebugFile("piocheOuEchange end avec echange", INFO_DETAIL);
         return Board;
+      } else {
+        writeToDebugFile("Echange raté", ALL_LOG);
       }
     } else {
       cout << "Choix invalide." << endl;
       cout << "    P : Piocher une lettre" << endl;
       cout << "    E : Echanger " << NB_LETTRES_ECHANGE << " lettres" << endl;
+      writeToDebugFile("Choix invalide", ALL_LOG);
     }
   }
 }
@@ -173,12 +194,15 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
                                          Names *NamesHelper,
                                          ForDict *DictHelper,
                                          StoreLetters *LETTERS) {
+  writeToDebugFile("JouerMot", INFO_DETAIL);
   if (Current->End) {
+    writeToDebugFile("JouerMot end avec FinTourIA", INFO_DETAIL);
     // Si l'IA a fini son tour
     return make_tuple(Board, FinTourIA);
   }
 
   // Debut check si mot possible
+  writeToDebugFile("Debut test", ERROR);
   if (Current->DLetter == "") {
     // Si aucune lettre n'est ajoutée
     affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
@@ -187,6 +211,7 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
     cout << "Vous devez ajouter au moins une lettre. Taper 'R' pour "
             "choisir une autre ligne. Taper 'Q' pour changer d'action."
          << endl;
+    writeToDebugFile("JouerMot end avec aucune lettre ajoutée", INFO_DETAIL);
     return make_tuple(Board, EchecPlacementMot);
   }
   for (auto i : Current->DLetter) {
@@ -199,6 +224,8 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
         cout << "Mot impossible à jouer. Taper 'R' pour choisir une autre "
                 "ligne. Taper 'Q' pour changer d'action."
              << endl;
+        writeToDebugFile("JouerMot end avec pas les bonnes lettres Jarnac",
+                         INFO_DETAIL);
         return make_tuple(Board, EchecPlacementMot);
       }
     } else {
@@ -209,6 +236,8 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
         cout << "Mot impossible à jouer. Taper 'R' pour choisir une autre "
                 "ligne. Taper 'Q' pour changer d'action."
              << endl;
+        writeToDebugFile("JouerMot end avec pas les bonnes lettres",
+                         INFO_DETAIL);
         return make_tuple(Board, EchecPlacementMot);
       }
     }
@@ -221,13 +250,23 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
     cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. "
             "Taper 'Q' pour changer d'action."
          << endl;
-    cout << Current->Word << endl;
+    writeToDebugFile("Mot joué : " + Current->Word, INFO);
+    writeToDebugFile("JouerMot end avec mot inexistant", INFO_DETAIL);
     return make_tuple(Board, EchecPlacementMot);
   }
+  writeToDebugFile("Fin test", ERROR);
   // Fin check si mot possible
 
   // Ici mots possibles
+  writeToDebugFile("Jarnac :" + to_string(Current->Jarnac), ERROR);
+  writeToDebugFile("Origin :" + to_string(Current->Origin), ERROR);
   if (!(Current->Jarnac)) {
+    writeToDebugFile("Jarnac false", ERROR);
+    writeToDebugFile("Ligne :" + to_string(Current->Ligne), ERROR);
+    writeToDebugFile(
+        "Board[Joueur][Current->Ligne] :" + Board[Joueur][Current->Ligne],
+        ERROR);
+    writeToDebugFile("Current->Word :" + Current->Word, ERROR);
     // Retire du vrac - Ajoute au plateau - Ajoute une lettre au vrac
     Board[Joueur][0] = Retire(Board[Joueur][0], Current->DLetter);
     Board[Joueur][Current->Ligne] = Current->Word;
@@ -242,17 +281,17 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
     Board[Joueur][Current->Ligne] = Current->Word;
   }
 
-  writeToDebugFile(Current->Word);
-
-  // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
-  // NamesHelper->NameGame,
-  //                 NamesHelper->Name1, NamesHelper->Name2, Joueur,
-  //                 Current->Jarnac);
+  affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                  NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2,
+                  Joueur, Current->Jarnac);
+  writeToDebugFile("JouerMot end avec mot joué : " + Current->Word,
+                   INFO_DETAIL);
   return make_tuple(Board, ReussitePlacementMot);
 }
 
 BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
                Names *NamesHelper, StoreLetters *LETTERS) {
+  writeToDebugFile("PlaceMot", INFO_DETAIL);
   string Say = "Sur quelle ligne souhaitez-vous jouer ?";
   if (isJarnac) {
     Say = "Où pensez-vous voir un mot ?";
@@ -281,6 +320,7 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
       cout << Say << endl;
       cin >> ligneTxt;
       if (ligneTxt == "Q" or ligneTxt == "q") {
+        writeToDebugFile("PlaceMot end avec Q", INFO_DETAIL);
         return Board;
       }
       ligneTxt = purifieNbr(ligneTxt);
@@ -288,6 +328,7 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
         cout << "Numéro de ligne invalide. Tapez 'Q' pour changer d'action."
              << endl;
         ligneTxt = "";
+        writeToDebugFile("Numéro de ligne invalide", ALL_LOG);
       }
     }
 
@@ -299,9 +340,11 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
     cin >> mot;
     mot = purifie(mot);
     if (mot == "R") {
+      writeToDebugFile("PlaceMot restart avec R", ALL_LOG);
       continue;
     }
     if (mot == "Q") {
+      writeToDebugFile("PlaceMot end avec Q", INFO_DETAIL);
       return Board;
     }
     diffLetter =
@@ -322,12 +365,14 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
     tie(Board, state) =
         JouerMot(Board, Joueur, Current, NamesHelper, DictHelper, LETTERS);
   }
+  writeToDebugFile("PlaceMot end", INFO_DETAIL);
   return Board;
 }
 
 tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
                                  Names *NamesHelper, int Tour,
                                  StoreLetters *LETTERS) {
+  writeToDebugFile("choixAction", INFO_DETAIL);
   string ChoixUtilisateur;
   bool dejaJoue = false;
   affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
@@ -338,6 +383,7 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
     cin >> ChoixUtilisateur;
     ChoixUtilisateur = purifie(ChoixUtilisateur);
     cout << endl;
+    writeToDebugFile("ChoixUtilisateur : " + ChoixUtilisateur, ALL_LOG);
     if (ChoixUtilisateur[0] == PlacerUnMot) {
       // Si le joueur veut placer un mot
       Board = PlaceMot(Board, Joueur, DictHelper, false, NamesHelper, LETTERS);
@@ -345,12 +391,14 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
     } else if (ChoixUtilisateur[0] == TentativeJarnac and Tour != 0) {
       // Si le joueur veut crier Jarnac
       if (dejaJoue) {
+        writeToDebugFile("Joueur a déjà joué un mot", ALL_LOG);
         cout << "Vous avez déjà joué un mot." << endl;
       } else {
         Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper, LETTERS);
       }
     } else if (ChoixUtilisateur[0] == FinTour) {
       // Si le joueur veut finir son tour
+      writeToDebugFile("choixAction end avec FinTour", INFO_DETAIL);
       return make_tuple(Board, "");
     } else if (ChoixUtilisateur[0] == VoirPlateau) {
       // Si le joueur veut voir le plateau
@@ -361,6 +409,7 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
       // Si le joueur veut voir les actions possibles
       ActionPossible();
     } else if (ChoixUtilisateur[0] == Abandonner) {
+      writeToDebugFile("choixAction end avec Abandonner", INFO_DETAIL);
       // Si le joueur veut abandonner
       return make_tuple(Board, "-STOP-");
     } else {
@@ -372,20 +421,25 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
            << endl;
     }
   }
+  writeToDebugFile("choixAction end", INFO_DETAIL);
   return make_tuple(Board, "");
 }
 
 tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
                            Names *NamesHelper, StorePlayers *PlayerHelper,
                            int Tour, StoreLetters *LETTERS) {
+  writeToDebugFile("Round", INFO_DETAIL);
   if (!(PlayerHelper->isAI[Joueur])) {
+    writeToDebugFile("Humain", ALL_LOG);
     // Si humain
     if (Tour >= 2) {
       // On ne pioche qu'à partir du 2e tour
       Board = piocheOuEchange(Board, Joueur, LETTERS);
     }
+    writeToDebugFile("Round end", INFO_DETAIL);
     return choixAction(Board, Joueur, DictHelper, NamesHelper, Tour, LETTERS);
   } else {
+    writeToDebugFile("IA", ALL_LOG);
     // Si IA
     if (Tour >= 2) {
       // On ne pioche qu'à partir du 2e tour
@@ -397,9 +451,9 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
     bool JarnacPossible = true;
     TentativeMotPlace state = EchecPlacementMot;
     do {
-      // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
-      // NamesHelper->NameGame,
-      //                 NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+      affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                      NamesHelper->NameGame, NamesHelper->Name1,
+                      NamesHelper->Name2, Joueur, false);
 
       if (Tour == 0 or nbPlay > 0) {
         // Verifier si jarnac possible
@@ -417,31 +471,37 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
         affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
                         NamesHelper->NameGame, NamesHelper->Name1,
                         NamesHelper->Name2, Joueur, IAMove->Jarnac);
-        cout << IAMove->Word << endl;
-        cout << IAMove->DLetter << endl;
-        cout << IAMove->Ligne << endl;
-        cout << IAMove->Origin << endl;
-        cout << IAMove->Jarnac << endl;
-
+        writeToDebugFile("Mot joué : " + IAMove->Word, ERROR);
+        writeToDebugFile("Lettres jouées : " + IAMove->DLetter, ERROR);
+        writeToDebugFile("Ligne jouée : " + to_string(IAMove->Ligne), ERROR);
+        writeToDebugFile("Ligne d'origine : " + to_string(IAMove->Origin),
+                         ERROR);
+        writeToDebugFile("Jarnac : " + to_string(IAMove->Jarnac), ERROR);
+        writeToDebugFile("Fin du jeu IA a joué mot impossible", ERROR);
         throw invalid_argument("L'IA a tenté de jouer un mot impossible.");
       }
     } while (state == ReussitePlacementMot);
+    writeToDebugFile("Round end", INFO_DETAIL);
     return make_tuple(Board, "");
   }
 }
 
 bool endGame(BOARD Board, int Joueur) {
+  writeToDebugFile("endGame", INFO_DETAIL);
   // Si toutes les lignes sont commencées et aucun jarnac n'est possible
   // alors fin de la partie
   for (int j = 1; j < Board[Joueur].size(); j++) {
     if (Board[Joueur][j].length() == 0) {
+      writeToDebugFile("endGame end avec false", INFO_DETAIL);
       return false;
     }
   }
+  writeToDebugFile("endGame end avec true", INFO_DETAIL);
   return true;
 }
 
 BOARD initBoard(StoreLetters *LETTERS, int W, int H) {
+  writeToDebugFile("initBoard", INFO_DETAIL);
   // initialisation de la pioche de lettre pour les 2 joueurs
   LETTERS->Letters = createLetters();
   LETTERS->Len = LETTERS->Letters.size();
@@ -458,18 +518,23 @@ BOARD initBoard(StoreLetters *LETTERS, int W, int H) {
       Board[i].push_back("");
     }
   }
+  writeToDebugFile("initBoard end", INFO_DETAIL);
   return Board;
 }
 
 string choisirDictionnaire() {
+  writeToDebugFile("choisirDictionnaire", INFO_DETAIL);
   string choix;
   cout << "Quel dictionnaire souhaitez-vous choisir" << endl;
   cin >> choix;
+  writeToDebugFile("Choix utilisateur " + choix, ALL_LOG);
+  writeToDebugFile("choisirDictionnaire end", INFO_DETAIL);
   return choix;
 }
 
 bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
                 bool IA2) {
+  writeToDebugFile("lanceLeJeu", INFO_DETAIL);
   ForDict *DictHelper = new ForDict;
   // string nomDico = choisirDictionnaire();
   // CreateHelper(DictHelper, nomDico, TAILLES_CLEES_DICO);
@@ -484,25 +549,34 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   // Stockage des IA
   StorePlayers *PlayersHelper = new StorePlayers;
   if (IA1) {
+    writeToDebugFile("IA1 loading", ALL_LOG);
     PlayersHelper->AIS[0] = new AI;
     StartUpAI(PlayersHelper->AIS[0]);
     PlayersHelper->isAI[0] = true;
   }
   if (IA2) {
+    writeToDebugFile("IA2 loading", ALL_LOG);
     PlayersHelper->AIS[1] = new AI;
     StartUpAI(PlayersHelper->AIS[1]);
     PlayersHelper->isAI[1] = true;
   }
 
   BOARD Board;
-  StoreLetters *LETTERS = new StoreLetters;
+  StoreLetters *LETTERS;
   int NbPartie = 0;
+  int Joueur;
+  int Tour;
+  string mot;
   while (true) {
+    NamesHelper->NameGame = Name + " N°" + to_string(NbPartie);
+    writeToDebugFile("Nouvelle partie N°" + to_string(NbPartie), INFO);
+    LETTERS = new StoreLetters;
     // writeToDebugFile("Nouvelle partie N°" + to_string(NbPartie));
     Board = initBoard(LETTERS, NB_LIGNES_PLATEAU, TAILLE_MAX_MOT);
 
     // Affiche règle si pas IA
     if (!IA1 or !IA2) {
+      writeToDebugFile("Affichage des règles", ALL_LOG);
       affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
                       Name, joueur0, joueur1, 0, false);
       ActionPossible();
@@ -510,14 +584,15 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
       getchar();
     }
 
-    string mot;
-    int Joueur = 0;
-    int Tour = 0;
+    Joueur = 0;
+    Tour = 0;
     tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
                             PlayersHelper, Tour, LETTERS);
     Tour++;
     if (mot == "-STOP-") {
       cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+      writeToDebugFile("Fin du jeu, " + NamesHelper->Name2 + " a gagné.",
+                       INFO_DETAIL);
       return true;
     }
 
@@ -528,26 +603,47 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
     Tour++;
     if (mot == "-STOP-") {
       cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+      writeToDebugFile("Fin du jeu, " + NamesHelper->Name1 + " a gagné.",
+                       INFO_DETAIL);
       return true;
     }
-
+    writeToDebugFile("Fin du premier tour", ALL_LOG);
     while (mot == "") {
       Joueur = 1 - Joueur;
       // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
       // Name, joueur0, joueur1, Joueur,
       //                 false);
+      writeToDebugFile("Début du tour : " + to_string(Tour), ALL_LOG);
       tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
                               PlayersHelper, Tour, LETTERS);
       Tour++;
-
+      writeToDebugFile("Fin du tour : " + to_string(Tour), ALL_LOG);
       if (endGame(Board, Joueur)) {
+        writeToDebugFile("Sortie boucle jeu", ERROR);
+        break;
+      }
+      if (Board[0][0].length() > 10 or Board[1][0].length() > 10) {
+        writeToDebugFile("Sortie boucle jeu VRAC TROP LONG", ERROR);
         break;
       }
     }
+    writeToDebugFile("Fin de la partie N°" + to_string(NbPartie), 2);
     affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT, Name,
                     joueur0, joueur1, 0, false);
     cout << "Fin du jeu." << endl;
-    writeToDebugFile("Vrac : " + Board[0][0] + " " + Board[1][0]);
+
+    writeToDebugFile("Letters : ", ALL_LOG);
+    for (auto i : LETTERS->Letters) {
+      writeToDebugFile(i, ALL_LOG);
+    }
+    writeToDebugFile("Letters size : " + to_string(LETTERS->Len), ALL_LOG);
+    writeToDebugFile("Board : ", ALL_LOG);
+    for (auto i : Board) {
+      for (auto j : i) {
+        writeToDebugFile(j, ALL_LOG);
+      }
+    }
+    NbPartie++;
   }
   // if (mot[6] == '0')
   // {
@@ -557,10 +653,13 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   // {
   //     cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
   // }
+  writeToDebugFile("lanceLeJeu end", INFO_DETAIL);
   return true;
 }
 
 int main() {
+  flushDebug();
+  writeToDebugFile("main", INFO_DETAIL);
   string j1, j2;
   // cout << "Nom du premier joueur : ";
   // cin >> j1;
@@ -578,5 +677,6 @@ int main() {
   // }
 
   lanceLeJeu(j1, j2, "Jarnac", true, true);
+  writeToDebugFile("main end", INFO_DETAIL);
   return 0;
 }
