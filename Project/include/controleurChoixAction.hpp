@@ -16,6 +16,14 @@ using namespace std;
 
 using BOARD = vector<vector<string>>;
 
+// Debut definition des constantes
+#define NB_LIGNES_PLATEAU 8
+#define TAILLE_MAX_MOT 9
+#define NBJOUEUR 2
+#define TAILLE_VRAC 6
+#define TAILLES_CLEES_DICO 3
+// Fin definition des constantes
+
 /**
  * @brief Structure de données pour les noms à stocker
  *
@@ -40,6 +48,11 @@ struct StorePlayers {
   AI *AIS[2];
 };
 
+struct StoreLetters {
+  vector<string> Letters;
+  int Len;
+};
+
 /**
  * @brief Renvoie si une lettre est une voyelle ou non
  *
@@ -49,16 +62,19 @@ struct StorePlayers {
 bool isVowel(string Letter);
 
 /**
- * @brief Permet de vérifier s'il y a une voyelle entre les bornes
+ * @brief Permet de vérifier s'il y a une voyelle dans la pioche d'un joueur
+ * entre deux bornes
  *
+ * @param vector<string> vectorLetter - Lettres à vérifier
  * @param int Start - Début des bornes
  * @param int End - Fin des bornes
  * @return bool - S'il y a une voyelle entre les bornes
  */
-bool CheckVowel(int Start, int End);
+bool CheckVowel(vector<string> vectorLetter, int Start, int End);
 
 /**
- * @brief Permet de créer le sac de lettres
+ * @brief Initialisation d'un vecteur avec toutes les lettres disponibles
+ * avec le bon nombre d'occurance
  *
  * @return vector<string> - Sac de lettres
  */
@@ -67,16 +83,18 @@ vector<string> createLetters();
 /**
  * @brief Permet de mélanger le sac de lettres
  *
- * @param string Rep - Lettres à remettre dans le sac
+ * @param StoreLetters* LETTERS - Contenu du sac de lettre
+ * @param string Rep - Lettres à remettre dans le sac lors d'un échange
  */
-void shuffleBag(string Rep);
+void shuffleBag(StoreLetters *LETTERS, string Rep);
 
 /**
  * @brief Permet de piocher une lettre dans le sac
  *
+ * @param StoreLetters* LETTERS - Contenu du sac de lettre
  * @return string - Lettre piochée
  */
-string piocheLettre();
+string piocheLettre(StoreLetters *LETTERS);
 
 /**
  * @brief Permet d'afficher l'ensemble des actions possibles pour un joueur

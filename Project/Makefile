@@ -13,8 +13,8 @@ PROGS=Jarnac
 # TESTS=mCalculPoints-test mAnagrammes-test mEquivalence-test vueEnModeTexte-test
 
 
-objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mAnagrammes.o mDictionnaire.o loadIA.o vueEnModeTexte.o controleurChoixAction.o Debug.o)
-depend = $(addprefix $(INCDIR)/, mCalculPoints.hpp mAnagrammes.hpp mDictionnaire.hpp loadIA.hpp vueEnModeTexte.hpp controleurChoixAction.hpp Debug.hpp)
+objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mDictionnaire.o loadIA.o vueEnModeTexte.o controleurChoixAction.o Debug.o)
+depend = $(addprefix $(INCDIR)/, mCalculPoints.hpp mDictionnaire.hpp loadIA.hpp vueEnModeTexte.hpp controleurChoixAction.hpp Debug.hpp)
 
 # all: $(TESTS) $(PROGS)
 all: $(PROGS)
@@ -30,7 +30,7 @@ clean:
 # $(TESTS)
 
 Jarnac: $(objects)
-	@$(CXX) $(CXXFLAGS) $^ -o $@ 2> Error.txt
+	@$(CXX) $(CXXFLAGS) $^ -o $@
 	@echo "Compilation terminée"
 
 # ExempleInterface: ExempleInterface.cpp vueEnModeTexte.cpp mCalculPoints.o mDictionnaire.cpp

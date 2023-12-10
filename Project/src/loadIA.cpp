@@ -11,7 +11,7 @@ string Sort(string Mot) {
   return Sorted;
 }
 
-string fRetire(string Word, char Letter) {
+string chRetire(string Word, char Letter) {
   string newString = "";
   for (char character : Word) {
     if (character != Letter) {
@@ -39,7 +39,7 @@ set<string> DictPermutations(string Vrac, int Length) {
     }
   } else {
     for (char Letter : Vrac) {
-      string NewVrac = fRetire(Vrac, Letter);
+      string NewVrac = chRetire(Vrac, Letter);
       set<string> NewPermutations = DictPermutations(NewVrac, Length - 1);
       for (string Permutation : NewPermutations) {
         Permutations.insert(Sort(Letter + Permutation));
@@ -53,12 +53,15 @@ set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac) {
   set<string> FoundWords = {};
   string SortedWord;
   bool StopSearch = false;
-  int Len = Vrac.length();
+  int Len = min((int)Vrac.length(), 9);
+  int I;
   for (int i = 3; i <= Len; i++) {
     if (Jarnac) {
-      i = (Len + 3) - i;
+      I = (Len + 3) - i;
+    } else {
+      I = i;
     }
-    set<string> Permutations = DictPermutations(Vrac, i);
+    set<string> Permutations = DictPermutations(Vrac, I);
     for (string Permutation : Permutations) {
       if (Words.find(Permutation) != Words.end()) {
         FoundWords.insert(Words[Permutation]);
@@ -99,7 +102,7 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
         // Si on peut atteindre un enfant, on l'ajoute à la liste des
         // noeuds à analyser
         toAnalyze.insert(make_tuple(Word->Children[Letter],
-                                    fRetire(tVrac, Letter), Path + Letter,
+                                    chRetire(tVrac, Letter), Path + Letter,
                                     Origin));
       }
     }

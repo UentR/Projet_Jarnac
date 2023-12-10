@@ -11,7 +11,12 @@
 		"string_view": "cpp",
 		"string": "cpp",
 		"algorithm": "cpp",
-		"stdexcept": "cpp"
+		"stdexcept": "cpp",
+		"array": "cpp",
+		"initializer_list": "cpp",
+		"ranges": "cpp",
+		"utility": "cpp",
+		"deque": "cpp"
 	},
 	"C_Cpp.default.compilerPath": "/usr/bin/g++",
 	"cmake.configureOnOpen": true

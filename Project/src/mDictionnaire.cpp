@@ -126,6 +126,7 @@ void CreateHelper(ForDict *DictHelper, string adresseDico, int NBR) {
 
 //   CHECK(purifie(" Ou i¹") == "OUI");
 //   CHECK(purifie("NOM?") == "NOM");
+//   CHECK(purifieNbr("632JDZ4") = "6324");
 
 //   CHECK(trouve("ZYTHUMS", DictHelper));
 //   CHECK(trouve("non", DictHelper));

@@ -1,8 +1,8 @@
-#include <stdexcept>
-#include <iostream>
-#include <vector>
-#include <string>
 #include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -10,9 +10,10 @@ using namespace std;
 
 /***Infrastructure minimale de test **/
 
-#define CHECK(test) \
-    if (!(test))    \
-    cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ << ": " #test << endl
+#define CHECK(test)                                                  \
+  if (!(test))                                                       \
+  cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ \
+       << ": " #test << endl
 
 /******************************************************************
  *  TTTTTTT   EEEEEE    SSS    TTTTTTT    SSS
@@ -26,25 +27,21 @@ using namespace std;
  ******************************************************************
  */
 
-int main()
-{
-
-    CHECK(calculPoints({"essai", "tentative", "mots", "affichable"},
-                       8, 9) == 16);
-    CHECK(calculPoints({"essai", "c", "est", "trop", "court"},
-                       8, 9) == 50);
-    CHECK(calculPoints({"essai", "tentative", "mots", "affichable"},
-                       12, 6) == 197);
-    CHECK(calculPoints({"essai", "recursivement", "enumerable"},
-                       12, 6) == 100);
-    CHECK(calculPoints({"essai", "tentative", "mots", "affichable"},
-                       15, 3) == 197);
-    CHECK(calculPoints({"essai", "tentative", "mots", "affichable"},
-                       15, 1) == 81);
-    CHECK(calculPoints({"abcdefghijklmnopqrstuvwxyz", "affichable"},
-                       10, 8) == 100);
-    CHECK(calculPoints({"abcdefghijklmnopqrstuvwxyz", "trop", "de", "mots"},
-                       20, 2) == 16);
-    CHECK(calculPoints({"abcdefghijklmnopqrstuvwxyz", "mots", "trop", "long", "oui"},
-                       3, 10) == 9);
+int main() {
+  CHECK(calculPoints({"essai", "tentative", "mots", "affichable"}, 8, 9) == 16);
+  CHECK(calculPoints({"essai", "c", "est", "trop", "court"}, 8, 9) == 50);
+  CHECK(calculPoints({"essai", "tentative", "mots", "affichable"}, 12, 6) ==
+        197);
+  CHECK(calculPoints({"essai", "recursivement", "enumerable"}, 12, 6) == 100);
+  CHECK(calculPoints({"essai", "tentative", "mots", "affichable"}, 15, 3) ==
+        197);
+  CHECK(calculPoints({"essai", "tentative", "mots", "affichable"}, 15, 1) ==
+        81);
+  CHECK(calculPoints({"abcdefghijklmnopqrstuvwxyz", "affichable"}, 10, 8) ==
+        100);
+  CHECK(calculPoints({"abcdefghijklmnopqrstuvwxyz", "trop", "de", "mots"}, 20,
+                     2) == 16);
+  CHECK(calculPoints(
+            {"abcdefghijklmnopqrstuvwxyz", "", "mots", "trop", "long", "oui"},
+            3, 10) == 9);
 }

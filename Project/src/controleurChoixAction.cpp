@@ -5,15 +5,16 @@ struct Play;
 struct IA;
 struct Names;
 struct StorePlayers;
+struct StoreLetters;
 
 bool isVowel(string Letter) {
   return (Letter == "A" or Letter == "E" or Letter == "I" or Letter == "O" or
           Letter == "U" or Letter == "Y");
 }
 
-bool CheckVowel(int Start, int End) {
+bool CheckVowel(vector<string> vectorLetter, int Start, int End) {
   for (int i = Start; i > End; i--) {
-    if (isVowel(LETTERS[i])) {
+    if (isVowel(vectorLetter[i])) {
       return true;
     }
   }
@@ -22,6 +23,7 @@ bool CheckVowel(int Start, int End) {
 
 vector<string> createLetters() {
   // Toutes les lettres de base du jeu
+  // Les mettre dans un fichier texte ?
   map<string, int> usableLetter = {
       {"A", 14}, {"B", 4},  {"C", 7}, {"D", 5},  {"E", 19}, {"F", 2}, {"G", 4},
       {"H", 2},  {"I", 11}, {"J", 1}, {"K", 1},  {"L", 6},  {"M", 5}, {"N", 9},
@@ -44,29 +46,33 @@ vector<string> createLetters() {
     random_shuffle(vectorLetter.begin(), vectorLetter.end());
 
     // Verifier s'il y a bien une voyelle dans le vrac de chaque joueur
-    Vowel1 = CheckVowel(Size, Size - 6);
-    Vowel2 = CheckVowel(Size - 7, Size - 12);
+    Vowel1 = CheckVowel(vectorLetter, Size, Size - TAILLE_VRAC);
+    Vowel2 = CheckVowel(vectorLetter, Size - 1 - TAILLE_VRAC,
+                        Size - 2 * TAILLE_VRAC);
   }
   return vectorLetter;
 }
 
-vector<string> LETTERS = createLetters();
-int LEN = LETTERS.size();
-
-void shuffleBag(string Rep) {
+void shuffleBag(StoreLetters *LETTERS, string Rep) {
   for (auto i : Rep) {
-    LETTERS.push_back(string(1, i));
-    LEN++;
+    // On remet les lettres dans le sac
+    LETTERS->Letters.push_back(string(1, i));
+    LETTERS->Len++;
   }
-  random_shuffle(LETTERS.begin(), LETTERS.end());
+  // On mélange le sac
+  random_shuffle(LETTERS->Letters.begin(), LETTERS->Letters.end());
 }
 
-string piocheLettre() {
-  if (LEN != 0) {
-    LEN--;
-    LETTERS.pop_back();
-    return LETTERS[LEN];
+string piocheLettre(StoreLetters *LETTERS) {
+  if (LETTERS->Len != 0) {
+    // Si le sac n'est pas vide
+    LETTERS->Len--;
+    LETTERS->Letters.erase(LETTERS->Letters.begin() + LETTERS->Len);
+    return LETTERS->Letters[LETTERS->Len];
   }
+  cout << "Le sac est vide " << endl;
+  cout << "Appuyez sur 'enter' pour continuer" << endl;
+  getchar();
   return "";
 }
 
@@ -83,124 +89,149 @@ void ActionPossible() {
   cout << endl;
 }
 
-tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur) {
-  if (Board[Joueur][0].size() < 3) {
+#define NB_LETTRES_ECHANGE 3
+
+tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur,
+                                 StoreLetters *LETTERS) {
+  if (Board[Joueur][0].size() < NB_LETTRES_ECHANGE) {
     cout << "Vous n'avez pas assez de lettre pour en échanger." << endl;
     return make_tuple(Board, false);
   }
 
-  string VracEnleve = "";
+  string LettresAEchanger = "";
   string nouveauVrac = "";
-  while (VracEnleve == "") {
+  while (LettresAEchanger == "") {
     cout << "Votre vrac est actuellement : " << Board[Joueur][0] << endl
          << "De quelles lettres voulez-vous vous séparer ?" << endl;
-    cin >> VracEnleve;
-    VracEnleve = purifie(VracEnleve);
-    if (VracEnleve.size() != 3) {
-      cout << "Vous devez choisir exactement 3 lettres." << endl;
-      VracEnleve = "";
+    cin >> LettresAEchanger;
+    LettresAEchanger = purifie(LettresAEchanger);
+    if (LettresAEchanger.size() != NB_LETTRES_ECHANGE) {
+      cout << "Vous devez choisir exactement " << NB_LETTRES_ECHANGE
+           << " lettre(s)." << endl;
+      LettresAEchanger = "";
     }
 
-    nouveauVrac = Retire(Board[Joueur][0], VracEnleve);
+    nouveauVrac = Retire(Board[Joueur][0], LettresAEchanger);
     if (nouveauVrac == "-") {
       cout << "Vous ne disposez pas d'au moins une de ces lettres." << endl;
-      VracEnleve = "";
+      LettresAEchanger = "";
     }
   }
 
   Board[Joueur][0] = nouveauVrac;
-  for (int i = 0; i < 3; i++) {
-    Board[Joueur][0] += piocheLettre();
+  for (int i = 0; i < NB_LETTRES_ECHANGE; i++) {
+    Board[Joueur][0] += piocheLettre(LETTERS);
   }
-  shuffleBag(VracEnleve);
+  shuffleBag(LETTERS, LettresAEchanger);
   return make_tuple(Board, true);
 }
 
-BOARD piocheOuEchange(BOARD Board, int Joueur) {
-  string Rep;
-  bool state;
+BOARD piocheOuEchange(BOARD Board, int Joueur, StoreLetters *LETTERS) {
+  string RepJoueur;
+  bool EchangeReussi;
   while (true) {
-    cout << "Voulez-vous piocher une lettre ou échanger 3 lettres ?" << endl;
+    cout << "Voulez-vous piocher une lettre ou échanger " << NB_LETTRES_ECHANGE
+         << " lettres ?" << endl;
     cout << "    P : Piocher une lettre" << endl;
-    cout << "    E : Echanger 3 lettres" << endl;
-    cin >> Rep;
-    Rep = purifie(Rep);
-    if (Rep == "P") {
-      Board[Joueur][0] += piocheLettre();
+    cout << "    E : Echanger " << NB_LETTRES_ECHANGE << " lettres" << endl;
+    cin >> RepJoueur;
+    RepJoueur = purifie(RepJoueur);
+    if (RepJoueur == "P") {
+      Board[Joueur][0] += piocheLettre(LETTERS);
       return Board;
-    } else if (Rep == "E") {
-      tie(Board, state) = echangeLettre(Board, Joueur);
-      if (state) {
+    } else if (RepJoueur == "E") {
+      tie(Board, EchangeReussi) = echangeLettre(Board, Joueur, LETTERS);
+      if (EchangeReussi) {
         return Board;
       }
     } else {
       cout << "Choix invalide." << endl;
       cout << "    P : Piocher une lettre" << endl;
-      cout << "    E : Echanger 3 lettres" << endl;
+      cout << "    E : Echanger " << NB_LETTRES_ECHANGE << " lettres" << endl;
     }
   }
 }
 
-tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
-                           Names *NamesHelper, ForDict *DictHelper) {
+enum TentativeMotPlace {
+  // Etat du mot joué
+  EchecPlacementMot,
+  ReussitePlacementMot,
+  FinTourIA,
+};
+
+enum ChoixPossible {
+  // Etat du choix de l'action
+  PlacerUnMot = 'C',
+  TentativeJarnac = 'J',
+  FinTour = 'F',
+  VoirPlateau = 'P',
+  VoirMenu = 'M',
+  Abandonner = 'A',
+};
+
+tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
+                                         Names *NamesHelper,
+                                         ForDict *DictHelper,
+                                         StoreLetters *LETTERS) {
   if (Current->End) {
     // Si l'IA a fini son tour
-    return make_tuple(Board, 2);
+    return make_tuple(Board, FinTourIA);
   }
 
+  // Debut check si mot possible
   if (Current->DLetter == "") {
     // Si aucune lettre n'est ajoutée
-    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                    NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                    Current->Jarnac);
+    affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                    NamesHelper->NameGame, NamesHelper->Name1,
+                    NamesHelper->Name2, Joueur, Current->Jarnac);
     cout << "Vous devez ajouter au moins une lettre. Taper 'R' pour "
             "choisir une autre ligne. Taper 'Q' pour changer d'action."
          << endl;
-    return make_tuple(Board, 0);
+    return make_tuple(Board, EchecPlacementMot);
   }
-
   for (auto i : Current->DLetter) {
     // Si la lettre n'est pas dans le vrac
     if (Current->Jarnac) {
       if (Board[1 - Joueur][0].find(i) == string::npos) {
-        affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                        NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                        Current->Jarnac);
+        affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                        NamesHelper->NameGame, NamesHelper->Name1,
+                        NamesHelper->Name2, Joueur, Current->Jarnac);
         cout << "Mot impossible à jouer. Taper 'R' pour choisir une autre "
                 "ligne. Taper 'Q' pour changer d'action."
              << endl;
-        return make_tuple(Board, 0);
+        return make_tuple(Board, EchecPlacementMot);
       }
     } else {
       if (Board[Joueur][0].find(i) == string::npos) {
-        affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                        NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                        Current->Jarnac);
+        affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                        NamesHelper->NameGame, NamesHelper->Name1,
+                        NamesHelper->Name2, Joueur, Current->Jarnac);
         cout << "Mot impossible à jouer. Taper 'R' pour choisir une autre "
                 "ligne. Taper 'Q' pour changer d'action."
              << endl;
-        return make_tuple(Board, 0);
+        return make_tuple(Board, EchecPlacementMot);
       }
     }
   }
-
   if (!trouve(Current->Word, DictHelper)) {
     // Si le mot n'est pas dans le dictionnaire
-    affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                    NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                    Current->Jarnac);
+    affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                    NamesHelper->NameGame, NamesHelper->Name1,
+                    NamesHelper->Name2, Joueur, Current->Jarnac);
     cout << "Mot inexistant. Taper 'R' pour choisir une autre ligne. "
             "Taper 'Q' pour changer d'action."
          << endl;
     cout << Current->Word << endl;
-    return make_tuple(Board, 0);
+    return make_tuple(Board, EchecPlacementMot);
   }
+  // Fin check si mot possible
 
+  // Ici mots possibles
   if (!(Current->Jarnac)) {
     // Retire du vrac - Ajoute au plateau - Ajoute une lettre au vrac
     Board[Joueur][0] = Retire(Board[Joueur][0], Current->DLetter);
     Board[Joueur][Current->Ligne] = Current->Word;
-    Board[Joueur][0] += piocheLettre();
+    Board[Joueur][0] += piocheLettre(LETTERS);
   } else {
     // Retire du vrac de l'adversaire - (Retire du plateau adverse) - Ajoute à
     // notre plateau
@@ -210,14 +241,18 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
     }
     Board[Joueur][Current->Ligne] = Current->Word;
   }
-  affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                  NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                  Current->Jarnac);
-  return make_tuple(Board, 1);
+
+  writeToDebugFile(Current->Word);
+
+  // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+  // NamesHelper->NameGame,
+  //                 NamesHelper->Name1, NamesHelper->Name2, Joueur,
+  //                 Current->Jarnac);
+  return make_tuple(Board, ReussitePlacementMot);
 }
 
 BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
-               Names *NamesHelper) {
+               Names *NamesHelper, StoreLetters *LETTERS) {
   string Say = "Sur quelle ligne souhaitez-vous jouer ?";
   if (isJarnac) {
     Say = "Où pensez-vous voir un mot ?";
@@ -235,10 +270,11 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
   Current->Jarnac = isJarnac;
   Current->End = false;
 
-  affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                  NamesHelper->Name1, NamesHelper->Name2, Joueur, isJarnac);
-  int state = 0;
-  while (!state) {
+  affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                  NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2,
+                  Joueur, isJarnac);
+  TentativeMotPlace state = EchecPlacementMot;
+  while (state == EchecPlacementMot) {
     ligneTxt = "";
     // get line
     while (ligneTxt == "") {
@@ -284,50 +320,54 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
 
     // Jouer le mot
     tie(Board, state) =
-        JouerMot(Board, Joueur, Current, NamesHelper, DictHelper);
+        JouerMot(Board, Joueur, Current, NamesHelper, DictHelper, LETTERS);
   }
   return Board;
 }
 
 tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
-                                 Names *NamesHelper, int Tour) {
-  string coup;
+                                 Names *NamesHelper, int Tour,
+                                 StoreLetters *LETTERS) {
+  string ChoixUtilisateur;
   bool dejaJoue = false;
-  affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                  NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+  affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                  NamesHelper->NameGame, NamesHelper->Name1, NamesHelper->Name2,
+                  Joueur, false);
   while (true) {
     cout << "Quelle action souhaitez-vous effectuer ?" << endl;
-    cin >> coup;
-    coup = purifie(coup);
+    cin >> ChoixUtilisateur;
+    ChoixUtilisateur = purifie(ChoixUtilisateur);
     cout << endl;
-    if (coup == "C") {
+    if (ChoixUtilisateur[0] == PlacerUnMot) {
       // Si le joueur veut placer un mot
-      Board = PlaceMot(Board, Joueur, DictHelper, false, NamesHelper);
+      Board = PlaceMot(Board, Joueur, DictHelper, false, NamesHelper, LETTERS);
       dejaJoue = true;
-    } else if (coup == "J" and Tour != 0) {
+    } else if (ChoixUtilisateur[0] == TentativeJarnac and Tour != 0) {
       // Si le joueur veut crier Jarnac
       if (dejaJoue) {
         cout << "Vous avez déjà joué un mot." << endl;
       } else {
-        Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper);
+        Board = PlaceMot(Board, Joueur, DictHelper, true, NamesHelper, LETTERS);
       }
-    } else if (coup == "F") {
+    } else if (ChoixUtilisateur[0] == FinTour) {
       // Si le joueur veut finir son tour
       return make_tuple(Board, "");
-    } else if (coup == "P") {
+    } else if (ChoixUtilisateur[0] == VoirPlateau) {
       // Si le joueur veut voir le plateau
-      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                      NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
-    } else if (coup == "M") {
+      affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                      NamesHelper->NameGame, NamesHelper->Name1,
+                      NamesHelper->Name2, Joueur, false);
+    } else if (ChoixUtilisateur[0] == VoirMenu) {
       // Si le joueur veut voir les actions possibles
       ActionPossible();
-    } else if (coup == "A") {
+    } else if (ChoixUtilisateur[0] == Abandonner) {
       // Si le joueur veut abandonner
       return make_tuple(Board, "-STOP-");
     } else {
       // Si le joueur a fait un choix invalide
-      affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                      NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
+      affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                      NamesHelper->NameGame, NamesHelper->Name1,
+                      NamesHelper->Name2, Joueur, false);
       cout << "Choix invalide, tapez 'M' pour voir les actions possibles."
            << endl;
     }
@@ -337,27 +377,28 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
 
 tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
                            Names *NamesHelper, StorePlayers *PlayerHelper,
-                           int Tour) {
+                           int Tour, StoreLetters *LETTERS) {
   if (!(PlayerHelper->isAI[Joueur])) {
     // Si humain
     if (Tour >= 2) {
       // On ne pioche qu'à partir du 2e tour
-      Board = piocheOuEchange(Board, Joueur);
+      Board = piocheOuEchange(Board, Joueur, LETTERS);
     }
-    return choixAction(Board, Joueur, DictHelper, NamesHelper, Tour);
+    return choixAction(Board, Joueur, DictHelper, NamesHelper, Tour, LETTERS);
   } else {
     // Si IA
     if (Tour >= 2) {
       // On ne pioche qu'à partir du 2e tour
-      Board[Joueur][0] += piocheLettre();
+      Board[Joueur][0] += piocheLettre(LETTERS);
     }
 
     Play *IAMove = new Play;
     int nbPlay = 0;
     bool JarnacPossible = true;
-    int state;
+    TentativeMotPlace state = EchecPlacementMot;
     do {
-      // affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
+      // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+      // NamesHelper->NameGame,
       //                 NamesHelper->Name1, NamesHelper->Name2, Joueur, false);
 
       if (Tour == 0 or nbPlay > 0) {
@@ -366,15 +407,16 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
       }
       IAMove =
           BestMove(Board, Joueur, JarnacPossible, PlayerHelper->AIS[Joueur]);
+
       nbPlay++;
       tie(Board, state) =
-          JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper);
+          JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper, LETTERS);
 
       // Si l'IA a joué un mot impossible
-      if (state == 0) {
-        affichePlateaux(Board[0], Board[1], 8, 9, NamesHelper->NameGame,
-                        NamesHelper->Name1, NamesHelper->Name2, Joueur,
-                        IAMove->Jarnac);
+      if (state == EchecPlacementMot) {
+        affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                        NamesHelper->NameGame, NamesHelper->Name1,
+                        NamesHelper->Name2, Joueur, IAMove->Jarnac);
         cout << IAMove->Word << endl;
         cout << IAMove->DLetter << endl;
         cout << IAMove->Ligne << endl;
@@ -383,32 +425,35 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
 
         throw invalid_argument("L'IA a tenté de jouer un mot impossible.");
       }
-    } while (state == 1);
+    } while (state == ReussitePlacementMot);
     return make_tuple(Board, "");
   }
 }
 
 bool endGame(BOARD Board, int Joueur) {
-  bool AllEmpty = true;
+  // Si toutes les lignes sont commencées et aucun jarnac n'est possible
+  // alors fin de la partie
   for (int j = 1; j < Board[Joueur].size(); j++) {
-    // Si toutes les lignes sont commencées et aucun jarnac n'est possible
     if (Board[Joueur][j].length() == 0) {
-      AllEmpty = false;
-      break;
+      return false;
     }
   }
-  return AllEmpty;
+  return true;
 }
 
-BOARD initBoard(int W, int H) {
+BOARD initBoard(StoreLetters *LETTERS, int W, int H) {
+  // initialisation de la pioche de lettre pour les 2 joueurs
+  LETTERS->Letters = createLetters();
+  LETTERS->Len = LETTERS->Letters.size();
+  // initialisation du plateau
   BOARD Board = {{""}, {""}};
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < NBJOUEUR; i++) {  // Pour chaque joueur
     // Pioche lettre
-    for (int j = 0; j < 6; j++) {
-      Board[i][0] += piocheLettre();
+    for (int j = 0; j < TAILLE_VRAC; j++) {
+      Board[i][0] += piocheLettre(LETTERS);
     }
 
-    // Création du plateau
+    // Création des lignes
     for (int j = 1; j < H; j++) {
       Board[i].push_back("");
     }
@@ -427,16 +472,16 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
                 bool IA2) {
   ForDict *DictHelper = new ForDict;
   // string nomDico = choisirDictionnaire();
-  // CreateHelper(DictHelper, nomDico, 3);
-  CreateHelper(DictHelper, "Text/DictionnairePurified.txt", 3);
+  // CreateHelper(DictHelper, nomDico, TAILLES_CLEES_DICO);
+  CreateHelper(DictHelper, "Text/DictionnairePurified.txt", TAILLES_CLEES_DICO);
 
-  BOARD Board = initBoard(8, 9);
-
+  // Stockage des noms
   Names *NamesHelper = new Names;
   NamesHelper->Name1 = joueur0;
   NamesHelper->Name2 = joueur1;
   NamesHelper->NameGame = Name;
 
+  // Stockage des IA
   StorePlayers *PlayersHelper = new StorePlayers;
   if (IA1) {
     PlayersHelper->AIS[0] = new AI;
@@ -449,50 +494,61 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
     PlayersHelper->isAI[1] = true;
   }
 
-  // Affiche règle si pas IA
-  if (!IA1 or !IA2) {
-    affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, 0, false);
-    ActionPossible();
-    cout << "Appuyez sur 'enter' pour continuer" << endl;
-    getchar();
-  }
+  BOARD Board;
+  StoreLetters *LETTERS = new StoreLetters;
+  int NbPartie = 0;
+  while (true) {
+    // writeToDebugFile("Nouvelle partie N°" + to_string(NbPartie));
+    Board = initBoard(LETTERS, NB_LIGNES_PLATEAU, TAILLE_MAX_MOT);
 
-  string mot;
-  int Joueur = 0;
-  int Tour = 0;
-  tie(Board, mot) =
-      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
-  Tour++;
-  if (mot == "-STOP-") {
-    cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
-    return true;
-  }
-
-  Joueur = 1 - Joueur;
-
-  tie(Board, mot) =
-      Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
-  Tour++;
-  if (mot == "-STOP-") {
-    cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
-    return true;
-  }
-
-  while (mot == "") {
-    Joueur = 1 - Joueur;
-    affichePlateaux(Board[0], Board[1], 8, 9, Name, joueur0, joueur1, Joueur,
-                    false);
-    tie(Board, mot) =
-        Round(Board, Joueur, DictHelper, NamesHelper, PlayersHelper, Tour);
-    Tour++;
-
-    if (endGame(Board, Joueur)) {
-      break;
+    // Affiche règle si pas IA
+    if (!IA1 or !IA2) {
+      affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+                      Name, joueur0, joueur1, 0, false);
+      ActionPossible();
+      cout << "Appuyez sur 'enter' pour continuer" << endl;
+      getchar();
     }
+
+    string mot;
+    int Joueur = 0;
+    int Tour = 0;
+    tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
+                            PlayersHelper, Tour, LETTERS);
+    Tour++;
+    if (mot == "-STOP-") {
+      cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+      return true;
+    }
+
+    Joueur = 1 - Joueur;
+
+    tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
+                            PlayersHelper, Tour, LETTERS);
+    Tour++;
+    if (mot == "-STOP-") {
+      cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+      return true;
+    }
+
+    while (mot == "") {
+      Joueur = 1 - Joueur;
+      // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
+      // Name, joueur0, joueur1, Joueur,
+      //                 false);
+      tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
+                              PlayersHelper, Tour, LETTERS);
+      Tour++;
+
+      if (endGame(Board, Joueur)) {
+        break;
+      }
+    }
+    affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT, Name,
+                    joueur0, joueur1, 0, false);
+    cout << "Fin du jeu." << endl;
+    writeToDebugFile("Vrac : " + Board[0][0] + " " + Board[1][0]);
   }
-
-  cout << "Fin du jeu." << endl;
-
   // if (mot[6] == '0')
   // {
   //     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
@@ -521,6 +577,6 @@ int main() {
   //   j2 = Temp;
   // }
 
-  lanceLeJeu(j1, j2, "Jarnac", false, true);
+  lanceLeJeu(j1, j2, "Jarnac", true, true);
   return 0;
 }
