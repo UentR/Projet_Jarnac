@@ -26,3 +26,5 @@ void writeToDebugFile(string logInfo, int level);
  * @brief Vide le fichier de debug.
  */
 void flushDebug();
+
+void writeToStatsFile(string logInfo);

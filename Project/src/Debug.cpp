@@ -1,7 +1,8 @@
 #include "Debug.hpp"
 
-const DebugLevel LEVEL =
-    (DebugLevel)atoi(("0" + (string)getenv("DEBUG")).c_str());
+char* envDebugLevel = getenv("DEBUG");
+bool Empty = envDebugLevel == NULL;
+const DebugLevel LEVEL = (Empty) ? (DebugLevel)0 : (DebugLevel)atoi((envDebugLevel));
 
 // Use this function to log most commun words
 void writeToDebugFile(string logInfo, int level) {
@@ -17,6 +18,18 @@ void writeToDebugFile(string logInfo, int level) {
     strftime(Date, sizeof(Date), "%d/%m/%Y", localtime(&now));
     strftime(Heure, sizeof(Heure), "%H:%M:%S", localtime(&now));
     debugFile << Date << " : " << Heure << " : " << logInfo << endl;
+    debugFile.close();
+  } else {
+    cout << "Unable to open debug file." << endl;
+  }
+}
+
+void writeToStatsFile(string logInfo) {
+  ofstream debugFile;
+  debugFile.open("Text/WordsIA.txt", ios::app);
+  time_t now = time(0);
+  if (debugFile.is_open()) {
+    debugFile << logInfo << endl;
     debugFile.close();
   } else {
     cout << "Unable to open debug file." << endl;

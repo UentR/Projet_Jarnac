@@ -139,6 +139,7 @@ int getLine(BOARD Board, string Word, int Joueur) {
 }
 
 Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
+  writeToDebugFile("BestMove", ERROR);
   Play *Current = new Play;
   Current->Jarnac = Jarnac;
   Current->End = false;
@@ -150,7 +151,9 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   set<string> Playable = {};
 
   int Ligne = getLine(Board, "", Joueur);
+  writeToDebugFile("Jarnac :" + to_string(Jarnac), ERROR);
   if (Jarnac) {
+    writeToDebugFile("Jarnac", ERROR);
     // On regarde si on peut aggrandir les mots de l'adversaire
     for (int i = 1; i < Board[1 - Joueur].size(); i++) {
       if (Board[1 - Joueur][i].length() > 0) {
@@ -160,7 +163,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
     tie(Word, Path) = Analyze(Board[1 - Joueur][0], PlayerWords);
     if (Path.length() >= 1) {
       Current->Word = Word->Children[Path[0]]->Ana;
-      Current->Origin = getLine(Board, Word->Ana, Joueur);
+      Current->Origin = getLine(Board, Word->Ana, 1 - Joueur);
       Current->Ligne = Ligne;
       Current->DLetter = Path[0];
       return Current;
@@ -178,6 +181,8 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
       }
     }
   }
+
+  writeToDebugFile("End Jarnac", ERROR);
 
   Current->Jarnac = false;
   PlayerWords = {};

@@ -61,12 +61,24 @@ struct Play {
 string Sort(string Mot);
 
 /**
- * @brief Retire une lettre d'une chaîne de caractères.
- * @param string Word - La chaîne de caractères à modifier.
- * @param char Letter - La lettre à retirer.
- * @return string La chaîne de caractères modifiée.
+ * @brief retire une lettre
+ *
+ * @param string vrac: une suite de lettres
+ * @param char lettre: une lettre
+ * @return string: '-' si la lettre n'apparaît dans `vrac` et sinon
+ * `vrac` après avoir y retiré la première occurence de la lettre
  */
-string fRetire(string Word, char Letter);
+string retire(string mot, char lettre);
+
+/**
+ * @brief retire un mot
+ *
+ * @param string vrac: une suite de lettres
+ * @param string mot: un mot
+ * @return string après lui avoir retiré une occurence de chaque lettre du mot
+ * et la chaîne "-" si l'opération est impossible.
+ */
+string retire(string vrac, string mot);
 
 /**
  * @brief Retire une chaîne de caractères d'une chaîne de caractères.

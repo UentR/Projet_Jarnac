@@ -53,6 +53,23 @@ struct StoreLetters {
   int Len;
 };
 
+enum TentativeMotPlace {
+  // Etat du mot joué
+  EchecPlacementMot,
+  ReussitePlacementMot,
+  FinTourIA,
+};
+
+enum ChoixPossible {
+  // Etat du choix de l'action
+  PlacerUnMot = 'C',
+  TentativeJarnac = 'J',
+  FinTour = 'F',
+  VoirPlateau = 'P',
+  VoirMenu = 'M',
+  Abandonner = 'A',
+};
+
 /**
  * @brief Renvoie si une lettre est une voyelle ou non
  *
