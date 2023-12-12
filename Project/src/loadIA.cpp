@@ -154,7 +154,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   writeToDebugFile("Jarnac :" + to_string(Jarnac), ERROR);
   if (Jarnac) {
     writeToDebugFile("Jarnac", ERROR);
-    // On regarde si on peut aggrandir les mots de l'adversaire
+    // On regarde si on peut agrandir les mots de l'adversaire
     for (int i = 1; i < Board[1 - Joueur].size(); i++) {
       if (Board[1 - Joueur][i].length() > 0) {
         PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
@@ -188,7 +188,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   PlayerWords = {};
   Playable = {};
 
-  // On regarde si on peut aggrandir l'un de nos mots
+  // On regarde si on peut agrandir l'un de nos mots
   for (int i = 1; i < Ligne; i++) {
     PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[Joueur][i])]);
   }

@@ -9,28 +9,37 @@ INCDIR = include
 vpath %.cpp src
 vpath %.hpp include
 
-PROGS=Jarnac
-TEST = $(addprefix $(OBJDIR)/, test-dico.o, mDictionnaire.o)
-dependTest = $(addprefix $(INCDIR)/, test-dico.hpp mDictionnaire.hpp)
+PROGS=Jarnac Demo
 debug = $(addprefix $(OBJDIR)/, Debug.o)
 dependDebug = $(addprefix $(INCDIR)/, Debug.hpp)
-objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mDictionnaire.o loadIA.o vueEnModeTexte.o controleurChoixAction.o)
+objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mDictionnaire.o loadIA.o vueEnModeTexte.o controleurChoixAction.o )
 depend = $(addprefix $(INCDIR)/, mCalculPoints.hpp mDictionnaire.hpp loadIA.hpp vueEnModeTexte.hpp controleurChoixAction.hpp)
+
+jeu = $(addprefix $(OBJDIR)/, Jeu.o)
+jeudepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
+demo = $(addprefix $(OBJDIR)/, Demo.o)
+demodepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
+
+stats = $(addprefix $(OBJDIR)/, testDico.o, mDictionnaire.o)
+dependStats = $(addprefix $(INCDIR)/, testDico.hpp, mDictionnaire.hpp)
+
 
 all: $(PROGS)
 
 clean:
-	rm -rf $(OBJDIR)/*.o $(PROGS) Error.txt 
+	rm -rf $(OBJDIR)/*.o $(PROGS)
 
-Jarnac: $(objects) $(debug)
-	@echo "Start Compilation"
+Jarnac: $(objects) $(debug) $(jeu)
 	@$(CXX) $(CXXFLAGS) $^ -o $@
-	@echo "Compilation terminée"
+	@echo "Compilation jeu terminée"
 
-Test: $(TEST) $(debug)
-	echo "Start Compilation test"
-	$(CXX) $(CXXFLAGS) $^ -o $@
-	@echo "Compilation test terminée"
+Demo:  $(objects) $(debug) $(demo)
+	@$(CXX) $(CXXFLAGS) $^ -o $@
+	@echo "Compilation demo terminée"
+
+Stats: $(debug) $(stats)
+	@$(CXX) $(CXXFLAGS) $^ -o $@
+	@echo "Compilation stats terminée"
 
 $(OBJDIR)/%.o : %.cpp
 	@$(CXX) -c $(CXXFLAGS) $< -o $@

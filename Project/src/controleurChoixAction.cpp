@@ -100,8 +100,6 @@ void ActionPossible() {
   writeToDebugFile("ActionPossible end", INFO_DETAIL);
 }
 
-#define NB_LETTRES_ECHANGE 3
-
 string retire(string mot, char lettre) {
   string Rep = "";
   char Current;
@@ -659,52 +657,19 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
       writeToDebugFile(j, ALL_LOG);
     }
   }
-  // if (mot[6] == '0')
-  // {
-  //     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
-  // }
-  // else
-  // {
-  //     cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
-  // }
+  int Point1 = calculPoints(Board[0], TAILLE_MAX_MOT, NB_LIGNES_PLATEAU);
+  int Point2 = calculPoints(Board[1], TAILLE_MAX_MOT, NB_LIGNES_PLATEAU);
+
+  if (Point1 == Point2) {
+    cout << "Fin du jeu, égalité" << endl;
+  } else if (Point1 > Point2) {
+    cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+  } else {
+    cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
+  }
+  cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+
   writeToDebugFile("lanceLeJeu end", INFO_DETAIL);
   return true;
 }
 
-int main() {
-  flushDebug();
-  writeToDebugFile("main", INFO_DETAIL);
-  string j1, j2;
-  // cout << "Nom du premier joueur : ";
-  // cin >> j1;
-  // cout << "Nom du deuxième joueur : ";
-  // cin >> j2;
-
-  j1 = "Joueur 0";
-  j2 = "Joueur 1";
-
-  // srand(time(NULL));
-  // if (rand() % 2) {
-  //   string Temp = j1;
-  //   j1 = j2;
-  //   j2 = Temp;
-  // }
-
-  cout << "Quel mode de jeu voulez-vous :" << endl
-       << "    A: Player versus IA" << endl
-       << "    P: Player versus Player" << endl
-       << "    D: Demo des IA" << endl;
-  string Choixutilisateur;
-  cin >> Choixutilisateur;
-  Choixutilisateur = purifie(Choixutilisateur);
-
-  if (Choixutilisateur == "A") {
-    lanceLeJeu(j1, j2, "Jarnac", false, true);
-  } else if (Choixutilisateur == "P") {
-    lanceLeJeu(j1, j2, "Jarnac", false, false);
-  } else {
-    lanceLeJeu(j1, j2, "Jarnac", true, true);
-  }
-  writeToDebugFile("main end", INFO_DETAIL);
-  return 0;
-}

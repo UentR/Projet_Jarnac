@@ -71,10 +71,10 @@ string purifieNbr(string Nbr);
 bool trouve(string mot, ForDict *DictHelper);
 
 /**
- * @brief Calcule l'indexe d'un couple de NBR lettre
+ * @brief Calcule l'index d'un couple de NBR lettre
  * @note Convertisseur de la base 26 de l'alphabet en base 10
- * @param string Word - le mot dont on cherche l'indexe
- * @return int - l'indexe correspondant
+ * @param string Word - le mot dont on cherche l'index
+ * @return int - l'index correspondant
  */
 int CalcIdx(string Word, int NBR);
 

@@ -66,7 +66,7 @@ string Sort(string Mot);
  * @param string vrac: une suite de lettres
  * @param char lettre: une lettre
  * @return string: '-' si la lettre n'apparaît dans `vrac` et sinon
- * `vrac` après avoir y retiré la première occurence de la lettre
+ * `vrac` après avoir y retiré la première occurrence de la lettre
  */
 string retire(string mot, char lettre);
 
@@ -75,7 +75,7 @@ string retire(string mot, char lettre);
  *
  * @param string vrac: une suite de lettres
  * @param string mot: un mot
- * @return string après lui avoir retiré une occurence de chaque lettre du mot
+ * @return string après lui avoir retiré une occurrence de chaque lettre du mot
  * et la chaîne "-" si l'opération est impossible.
  */
 string retire(string vrac, string mot);
@@ -83,7 +83,7 @@ string retire(string vrac, string mot);
 /**
  * @brief Retire une chaîne de caractères d'une chaîne de caractères.
  * @param string Word - La chaîne de caractères à modifier.
- * @param string Duplicate - La chaine à retirer.
+ * @param string Duplicate - La chaîne à retirer.
  * @return string La chaîne de caractères modifiée.
  */
 string Retire(string Word, string Duplicate);

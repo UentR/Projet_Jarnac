@@ -10,6 +10,7 @@
 
 #include "Debug.hpp"
 #include "loadIA.hpp"
+#include "mCalculPoints.hpp"
 #include "vueEnModeTexte.hpp"
 
 using namespace std;
@@ -22,6 +23,7 @@ using BOARD = vector<vector<string>>;
 #define NBJOUEUR 2
 #define TAILLE_VRAC 6
 #define TAILLES_CLEES_DICO 3
+#define NB_LETTRES_ECHANGE 3
 // Fin definition des constantes
 
 /**
@@ -91,7 +93,7 @@ bool CheckVowel(vector<string> vectorLetter, int Start, int End);
 
 /**
  * @brief Initialisation d'un vecteur avec toutes les lettres disponibles
- * avec le bon nombre d'occurance
+ * avec le bon nombre d'occurrence
  *
  * @return vector<string> - Sac de lettres
  */
@@ -123,10 +125,12 @@ void ActionPossible();
  *
  * @param BOARD Board - Plateau de jeu
  * @param int Joueur - Joueur actuel
+ * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return tuple<BOARD,bool> - Plateau de jeu avec les lettres échangées et si
  * l'échange a été effectué
  */
-tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur);
+tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur,
+                                 StoreLetters *Letters);
 
 /**
  * @brief Permet à un humain de choisir entre piocher une lettre ou échanger des
@@ -134,9 +138,10 @@ tuple<BOARD, bool> echangeLettre(BOARD Board, int Joueur);
  *
  * @param BOARD Board - Plateau de jeu
  * @param int Joueur - Joueur actuel
+ * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return BOARD - Plateau de jeu avec la lettre piochée/les lettres échangées
  */
-BOARD piocheOuEchange(BOARD Board, int Joueur);
+BOARD piocheOuEchange(BOARD Board, int Joueur, StoreLetters *Letters);
 
 /**
  * @brief Permet de jouer un mot en suivant la structure Play
@@ -146,10 +151,13 @@ BOARD piocheOuEchange(BOARD Board, int Joueur);
  * @param Play* Current - Structure de données du mot à jouer
  * @param Names* NamesHelper - Noms des joueurs
  * @param ForDict* DictHelper - Structure de données du dictionnaire
- * @return tuple<BOARD,int> - Plateau de jeu et état du mot joué
+ * @param StoreLetters* Letters - Contenu du sac de lettre
+ * @return tuple<BOARD,TentativeMotPlace> - Plateau de jeu et état du mot joué
  */
-tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
-                           Names *NamesHelper, ForDict *DictHelper);
+tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
+                                         Names *NamesHelper,
+                                         ForDict *DictHelper,
+                                         StoreLetters *Letters);
 
 /**
  * @brief Permet à un humain de choisir un mot à jouer en suivant la structure
@@ -160,10 +168,11 @@ tuple<BOARD, int> JouerMot(BOARD Board, int Joueur, Play *Current,
  * @param ForDict* DictHelper - Structure de données du dictionnaire
  * @param bool isJarnac - Si le jeu est en mode Jarnac
  * @param Names* NamesHelper - Noms des joueurs
+ * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return BOARD - Le plateau de jeu avec le mot joué
  */
 BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
-               Names *NamesHelper);
+               Names *NamesHelper, StoreLetters *Letters);
 
 /**
  * @brief Permet à un humain de choisir une action
@@ -173,10 +182,12 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
  * @param ForDict* DictHelper - Structure de données du dictionnaire
  * @param Names* NamesHelper - Noms des joueurs
  * @param int Tour - Tour actuel
+ * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return tuple<BOARD,string> - Plateau de jeu et état du jeu
  */
 tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
-                                 Names *NamesHelper, int Tour);
+                                 Names *NamesHelper, int Tour,
+                                 StoreLetters *Letters);
 
 /**
  * @brief Permet de jouer un tour, que ce soit un tour d'IA ou de joueur
@@ -187,11 +198,12 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
  * @param Names* NamesHelper - Noms des joueurs
  * @param StorePlayers* PlayerHelper - Structure de données pour l'IA
  * @param int Tour - Tour actuel
+ * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return tuple<BOARD,string> - Plateau de jeu et état du jeu
  */
 tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
                            Names *NamesHelper, StorePlayers *PlayerHelper,
-                           int Tour);
+                           int Tour, StoreLetters *Letters);
 
 /**
  * @brief Check si la partie doit se terminer
@@ -205,11 +217,12 @@ bool endGame(BOARD Board, int Joueur);
 /**
  * @brief Permet de créer le plateau de jeu
  *
+ * @param StoreLetters* Letters - Contenu du sac de lettre
  * @param int W - Largeur du plateau
  * @param int H - Hauteur du plateau
  * @return BOARD - Plateau de jeu
  */
-BOARD initBoard(int W, int H);
+BOARD initBoard(StoreLetters *Letters, int W, int H);
 
 /**
  * @brief Permet de choisir le dictionnaire
@@ -223,7 +236,7 @@ string choisirDictionnaire();
  *
  * @param string joueur0 - Nom du joueur 1
  * @param string joueur1 - Nom du joueur 2
- * @param strin Name - Nom du jeu
+ * @param string Name - Nom du jeu
  * @param bool IA1 - Si le joueur 1 est une IA
  * @param bool IA2 - Si le joueur 2 est une IA
  * @return true

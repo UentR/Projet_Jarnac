@@ -17,8 +17,8 @@ enum DebugLevel {
 #endif
 
 /**
- * @brief Ecrit un messge log vers un fichier de debug.
- * @param {string} logInfo - Le message a écrire.
+ * @brief Ecrit un message log vers un fichier de debug.
+ * @param string logInfo - Le message a écrire.
  */
 void writeToDebugFile(string logInfo, int level);
 
@@ -27,4 +27,8 @@ void writeToDebugFile(string logInfo, int level);
  */
 void flushDebug();
 
+/**
+ * @brief Ecrit un message log vers un fichier de stats.
+ * @param string logInfo - Le message a écrire.
+ */
 void writeToStatsFile(string logInfo);

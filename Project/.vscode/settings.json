@@ -2,5 +2,6 @@
 	"files.associations": {
 		"*.py": "python",
 		"iosfwd": "cpp"
-	}
+	},
+	"cSpell.words": ["Jarnac"]
 }
