@@ -15848,3 +15848,766 @@
 10/12/2023 : 21:59:54 : endGame end avec false
 10/12/2023 : 21:59:54 : Round
 10/12/2023 : 21:59:54 : piocheLettre
+10/12/2023 : 21:59:55 : JouerMot
+10/12/2023 : 21:59:55 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:55 : Round end
+10/12/2023 : 21:59:55 : endGame
+10/12/2023 : 21:59:55 : endGame end avec false
+10/12/2023 : 21:59:55 : Round
+10/12/2023 : 21:59:55 : piocheLettre
+10/12/2023 : 21:59:55 : JouerMot
+10/12/2023 : 21:59:55 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:55 : Round end
+10/12/2023 : 21:59:55 : endGame
+10/12/2023 : 21:59:55 : endGame end avec false
+10/12/2023 : 21:59:55 : Round
+10/12/2023 : 21:59:55 : piocheLettre
+10/12/2023 : 21:59:55 : JouerMot
+10/12/2023 : 21:59:55 : Debut test
+10/12/2023 : 21:59:55 : Fin test
+10/12/2023 : 21:59:55 : Jarnac :0
+10/12/2023 : 21:59:55 : Origin :1279804483
+10/12/2023 : 21:59:55 : Jarnac false
+10/12/2023 : 21:59:55 : Ligne :6
+10/12/2023 : 21:59:55 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 21:59:55 : Current->Word :ILS
+10/12/2023 : 21:59:55 : piocheLettre
+10/12/2023 : 21:59:55 : JouerMot end avec mot joué : ILS
+10/12/2023 : 21:59:55 : JouerMot
+10/12/2023 : 21:59:55 : Debut test
+10/12/2023 : 21:59:55 : Fin test
+10/12/2023 : 21:59:55 : Jarnac :0
+10/12/2023 : 21:59:55 : Origin :22569
+10/12/2023 : 21:59:55 : Jarnac false
+10/12/2023 : 21:59:55 : Ligne :6
+10/12/2023 : 21:59:55 : Board[Joueur][Current->Ligne] :ILS
+10/12/2023 : 21:59:55 : Current->Word :SLIM
+10/12/2023 : 21:59:55 : piocheLettre
+10/12/2023 : 21:59:55 : JouerMot end avec mot joué : SLIM
+10/12/2023 : 21:59:55 : JouerMot
+10/12/2023 : 21:59:55 : Debut test
+10/12/2023 : 21:59:55 : Fin test
+10/12/2023 : 21:59:55 : Jarnac :0
+10/12/2023 : 21:59:55 : Origin :1279804483
+10/12/2023 : 21:59:55 : Jarnac false
+10/12/2023 : 21:59:55 : Ligne :6
+10/12/2023 : 21:59:55 : Board[Joueur][Current->Ligne] :SLIM
+10/12/2023 : 21:59:55 : Current->Word :SLIMS
+10/12/2023 : 21:59:55 : piocheLettre
+10/12/2023 : 21:59:55 : JouerMot end avec mot joué : SLIMS
+10/12/2023 : 21:59:55 : JouerMot
+10/12/2023 : 21:59:55 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:55 : Round end
+10/12/2023 : 21:59:55 : endGame
+10/12/2023 : 21:59:55 : endGame end avec false
+10/12/2023 : 21:59:55 : Round
+10/12/2023 : 21:59:55 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :22569
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :5
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 21:59:56 : Current->Word :FIA
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : FIA
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:56 : Round end
+10/12/2023 : 21:59:56 : endGame
+10/12/2023 : 21:59:56 : endGame end avec false
+10/12/2023 : 21:59:56 : Round
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :22528
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :6
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :SLIMS
+10/12/2023 : 21:59:56 : Current->Word :MUSLIS
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : MUSLIS
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:56 : Round end
+10/12/2023 : 21:59:56 : endGame
+10/12/2023 : 21:59:56 : endGame end avec false
+10/12/2023 : 21:59:56 : Round
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :1313818962
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :5
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :FIA
+10/12/2023 : 21:59:56 : Current->Word :FAIM
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : FAIM
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :22569
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :5
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :FAIM
+10/12/2023 : 21:59:56 : Current->Word :MAFIA
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : MAFIA
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :22569
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :6
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 21:59:56 : Current->Word :EGO
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : EGO
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :22569
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :5
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :MAFIA
+10/12/2023 : 21:59:56 : Current->Word :MAFIAS
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : MAFIAS
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:56 : Round end
+10/12/2023 : 21:59:56 : endGame
+10/12/2023 : 21:59:56 : endGame end avec false
+10/12/2023 : 21:59:56 : Round
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:56 : Round end
+10/12/2023 : 21:59:56 : endGame
+10/12/2023 : 21:59:56 : endGame end avec false
+10/12/2023 : 21:59:56 : Round
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot
+10/12/2023 : 21:59:56 : Debut test
+10/12/2023 : 21:59:56 : Fin test
+10/12/2023 : 21:59:56 : Jarnac :0
+10/12/2023 : 21:59:56 : Origin :1279804483
+10/12/2023 : 21:59:56 : Jarnac false
+10/12/2023 : 21:59:56 : Ligne :6
+10/12/2023 : 21:59:56 : Board[Joueur][Current->Ligne] :EGO
+10/12/2023 : 21:59:56 : Current->Word :TOGE
+10/12/2023 : 21:59:56 : piocheLettre
+10/12/2023 : 21:59:56 : JouerMot end avec mot joué : TOGE
+10/12/2023 : 21:59:57 : JouerMot
+10/12/2023 : 21:59:57 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:57 : Round end
+10/12/2023 : 21:59:57 : endGame
+10/12/2023 : 21:59:57 : endGame end avec false
+10/12/2023 : 21:59:57 : Round
+10/12/2023 : 21:59:57 : piocheLettre
+10/12/2023 : 21:59:57 : JouerMot
+10/12/2023 : 21:59:57 : Debut test
+10/12/2023 : 21:59:57 : Fin test
+10/12/2023 : 21:59:57 : Jarnac :0
+10/12/2023 : 21:59:57 : Origin :22569
+10/12/2023 : 21:59:57 : Jarnac false
+10/12/2023 : 21:59:57 : Ligne :6
+10/12/2023 : 21:59:57 : Board[Joueur][Current->Ligne] :MUSLIS
+10/12/2023 : 21:59:57 : Current->Word :SIMULES
+10/12/2023 : 21:59:57 : piocheLettre
+10/12/2023 : 21:59:57 : JouerMot end avec mot joué : SIMULES
+10/12/2023 : 21:59:57 : JouerMot
+10/12/2023 : 21:59:57 : Debut test
+10/12/2023 : 21:59:57 : Fin test
+10/12/2023 : 21:59:57 : Jarnac :0
+10/12/2023 : 21:59:57 : Origin :22569
+10/12/2023 : 21:59:57 : Jarnac false
+10/12/2023 : 21:59:57 : Ligne :6
+10/12/2023 : 21:59:57 : Board[Joueur][Current->Ligne] :SIMULES
+10/12/2023 : 21:59:57 : Current->Word :ULMISTES
+10/12/2023 : 21:59:57 : piocheLettre
+10/12/2023 : 21:59:57 : JouerMot end avec mot joué : ULMISTES
+10/12/2023 : 21:59:57 : JouerMot
+10/12/2023 : 21:59:57 : Debut test
+10/12/2023 : 21:59:57 : Fin test
+10/12/2023 : 21:59:57 : Jarnac :0
+10/12/2023 : 21:59:57 : Origin :22569
+10/12/2023 : 21:59:57 : Jarnac false
+10/12/2023 : 21:59:57 : Ligne :6
+10/12/2023 : 21:59:57 : Board[Joueur][Current->Ligne] :ULMISTES
+10/12/2023 : 21:59:57 : Current->Word :CULTISMES
+10/12/2023 : 21:59:57 : piocheLettre
+10/12/2023 : 21:59:57 : JouerMot end avec mot joué : CULTISMES
+10/12/2023 : 21:59:57 : JouerMot
+10/12/2023 : 21:59:57 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:57 : Round end
+10/12/2023 : 21:59:57 : endGame
+10/12/2023 : 21:59:57 : endGame end avec false
+10/12/2023 : 21:59:57 : Round
+10/12/2023 : 21:59:57 : piocheLettre
+10/12/2023 : 21:59:57 : JouerMot
+10/12/2023 : 21:59:57 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:57 : Round end
+10/12/2023 : 21:59:57 : endGame
+10/12/2023 : 21:59:57 : endGame end avec false
+10/12/2023 : 21:59:57 : Round
+10/12/2023 : 21:59:57 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:58 : Round end
+10/12/2023 : 21:59:58 : endGame
+10/12/2023 : 21:59:58 : endGame end avec false
+10/12/2023 : 21:59:58 : Round
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :22569
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 21:59:58 : Current->Word :ECO
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : ECO
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :22569
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :ECO
+10/12/2023 : 21:59:58 : Current->Word :ETOC
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : ETOC
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :22569
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :ETOC
+10/12/2023 : 21:59:58 : Current->Word :ECOTA
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : ECOTA
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :22569
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :ECOTA
+10/12/2023 : 21:59:58 : Current->Word :OCTALE
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : OCTALE
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:58 : Round end
+10/12/2023 : 21:59:58 : endGame
+10/12/2023 : 21:59:58 : endGame end avec false
+10/12/2023 : 21:59:58 : Round
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :22569
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 21:59:58 : Current->Word :BEL
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : BEL
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :22569
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :BEL
+10/12/2023 : 21:59:58 : Current->Word :BELA
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : BELA
+10/12/2023 : 21:59:58 : JouerMot
+10/12/2023 : 21:59:58 : Debut test
+10/12/2023 : 21:59:58 : Fin test
+10/12/2023 : 21:59:58 : Jarnac :0
+10/12/2023 : 21:59:58 : Origin :1279804483
+10/12/2023 : 21:59:58 : Jarnac false
+10/12/2023 : 21:59:58 : Ligne :7
+10/12/2023 : 21:59:58 : Board[Joueur][Current->Ligne] :BELA
+10/12/2023 : 21:59:58 : Current->Word :HABLE
+10/12/2023 : 21:59:58 : piocheLettre
+10/12/2023 : 21:59:58 : JouerMot end avec mot joué : HABLE
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : Debut test
+10/12/2023 : 21:59:59 : Fin test
+10/12/2023 : 21:59:59 : Jarnac :0
+10/12/2023 : 21:59:59 : Origin :1347307333
+10/12/2023 : 21:59:59 : Jarnac false
+10/12/2023 : 21:59:59 : Ligne :7
+10/12/2023 : 21:59:59 : Board[Joueur][Current->Ligne] :HABLE
+10/12/2023 : 21:59:59 : Current->Word :HABILE
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot end avec mot joué : HABILE
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:59 : Round end
+10/12/2023 : 21:59:59 : endGame
+10/12/2023 : 21:59:59 : endGame end avec false
+10/12/2023 : 21:59:59 : Round
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : Debut test
+10/12/2023 : 21:59:59 : Fin test
+10/12/2023 : 21:59:59 : Jarnac :0
+10/12/2023 : 21:59:59 : Origin :22569
+10/12/2023 : 21:59:59 : Jarnac false
+10/12/2023 : 21:59:59 : Ligne :7
+10/12/2023 : 21:59:59 : Board[Joueur][Current->Ligne] :OCTALE
+10/12/2023 : 21:59:59 : Current->Word :COLLETA
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot end avec mot joué : COLLETA
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : Debut test
+10/12/2023 : 21:59:59 : Fin test
+10/12/2023 : 21:59:59 : Jarnac :0
+10/12/2023 : 21:59:59 : Origin :22569
+10/12/2023 : 21:59:59 : Jarnac false
+10/12/2023 : 21:59:59 : Ligne :4
+10/12/2023 : 21:59:59 : Board[Joueur][Current->Ligne] :DZO
+10/12/2023 : 21:59:59 : Current->Word :DZOS
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot end avec mot joué : DZOS
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : Debut test
+10/12/2023 : 21:59:59 : Fin test
+10/12/2023 : 21:59:59 : Jarnac :0
+10/12/2023 : 21:59:59 : Origin :22569
+10/12/2023 : 21:59:59 : Jarnac false
+10/12/2023 : 21:59:59 : Ligne :4
+10/12/2023 : 21:59:59 : Board[Joueur][Current->Ligne] :DZOS
+10/12/2023 : 21:59:59 : Current->Word :DOSEZ
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot end avec mot joué : DOSEZ
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : Debut test
+10/12/2023 : 21:59:59 : Fin test
+10/12/2023 : 21:59:59 : Jarnac :0
+10/12/2023 : 21:59:59 : Origin :22569
+10/12/2023 : 21:59:59 : Jarnac false
+10/12/2023 : 21:59:59 : Ligne :7
+10/12/2023 : 21:59:59 : Board[Joueur][Current->Ligne] :COLLETA
+10/12/2023 : 21:59:59 : Current->Word :ENCOLLAT
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot end avec mot joué : ENCOLLAT
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:59 : Round end
+10/12/2023 : 21:59:59 : endGame
+10/12/2023 : 21:59:59 : endGame end avec false
+10/12/2023 : 21:59:59 : Round
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 21:59:59 : JouerMot
+10/12/2023 : 21:59:59 : JouerMot end avec FinTourIA
+10/12/2023 : 21:59:59 : Round end
+10/12/2023 : 21:59:59 : endGame
+10/12/2023 : 21:59:59 : endGame end avec false
+10/12/2023 : 21:59:59 : Round
+10/12/2023 : 21:59:59 : piocheLettre
+10/12/2023 : 22:00:00 : JouerMot
+10/12/2023 : 22:00:00 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:00 : Round end
+10/12/2023 : 22:00:00 : endGame
+10/12/2023 : 22:00:00 : endGame end avec false
+10/12/2023 : 22:00:00 : Round
+10/12/2023 : 22:00:00 : piocheLettre
+10/12/2023 : 22:00:00 : JouerMot
+10/12/2023 : 22:00:00 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:00 : Round end
+10/12/2023 : 22:00:00 : endGame
+10/12/2023 : 22:00:00 : endGame end avec false
+10/12/2023 : 22:00:00 : Round
+10/12/2023 : 22:00:00 : piocheLettre
+10/12/2023 : 22:00:00 : JouerMot
+10/12/2023 : 22:00:00 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:00 : Round end
+10/12/2023 : 22:00:00 : endGame
+10/12/2023 : 22:00:00 : endGame end avec false
+10/12/2023 : 22:00:00 : Round
+10/12/2023 : 22:00:00 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :1279804483
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :8
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 22:00:01 : Current->Word :DOM
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : DOM
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:01 : Round end
+10/12/2023 : 22:00:01 : endGame
+10/12/2023 : 22:00:01 : endGame end avec true
+10/12/2023 : 22:00:01 : Sortie boucle jeu
+10/12/2023 : 22:00:01 : Fin de la partie N°14
+10/12/2023 : 22:00:01 : Nouvelle partie N°15
+10/12/2023 : 22:00:01 : initBoard
+10/12/2023 : 22:00:01 : createLetters
+10/12/2023 : 22:00:01 : CheckVowel
+10/12/2023 : 22:00:01 : isVowel
+10/12/2023 : 22:00:01 : isVowel
+10/12/2023 : 22:00:01 : isVowel
+10/12/2023 : 22:00:01 : CheckVowel
+10/12/2023 : 22:00:01 : isVowel
+10/12/2023 : 22:00:01 : createLetters end
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : initBoard end
+10/12/2023 : 22:00:01 : Round
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 22:00:01 : Current->Word :AIR
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : AIR
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :AIR
+10/12/2023 : 22:00:01 : Current->Word :RANI
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : RANI
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :RANI
+10/12/2023 : 22:00:01 : Current->Word :RENIA
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : RENIA
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :1397968453
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :RENIA
+10/12/2023 : 22:00:01 : Current->Word :RAINEE
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : RAINEE
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :RAINEE
+10/12/2023 : 22:00:01 : Current->Word :RENIERA
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : RENIERA
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :RENIERA
+10/12/2023 : 22:00:01 : Current->Word :SERINERA
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : SERINERA
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :1442857728
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :SERINERA
+10/12/2023 : 22:00:01 : Current->Word :ENRAIERAS
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : ENRAIERAS
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:01 : Round end
+10/12/2023 : 22:00:01 : Round
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 22:00:01 : Current->Word :AID
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : AID
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :AID
+10/12/2023 : 22:00:01 : Current->Word :AIDA
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : AIDA
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :AIDA
+10/12/2023 : 22:00:01 : Current->Word :BADAI
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : BADAI
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :BADAI
+10/12/2023 : 22:00:01 : Current->Word :DAUBAI
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : DAUBAI
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :1
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :DAUBAI
+10/12/2023 : 22:00:01 : Current->Word :ADOUBAI
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : ADOUBAI
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:01 : Round end
+10/12/2023 : 22:00:01 : Round
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :1431523151
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :2
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 22:00:01 : Current->Word :EUT
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : EUT
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :22569
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :2
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :EUT
+10/12/2023 : 22:00:01 : Current->Word :GUET
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : GUET
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :1279804483
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :2
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :GUET
+10/12/2023 : 22:00:01 : Current->Word :GRUTE
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:01 : JouerMot end avec mot joué : GRUTE
+10/12/2023 : 22:00:01 : JouerMot
+10/12/2023 : 22:00:01 : Debut test
+10/12/2023 : 22:00:01 : Fin test
+10/12/2023 : 22:00:01 : Jarnac :0
+10/12/2023 : 22:00:01 : Origin :1380731204
+10/12/2023 : 22:00:01 : Jarnac false
+10/12/2023 : 22:00:01 : Ligne :2
+10/12/2023 : 22:00:01 : Board[Joueur][Current->Ligne] :GRUTE
+10/12/2023 : 22:00:01 : Current->Word :URGENT
+10/12/2023 : 22:00:01 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : URGENT
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :2
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :URGENT
+10/12/2023 : 22:00:02 : Current->Word :GRUGENT
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : GRUGENT
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:02 : Round end
+10/12/2023 : 22:00:02 : endGame
+10/12/2023 : 22:00:02 : endGame end avec false
+10/12/2023 : 22:00:02 : Round
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :2
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 22:00:02 : Current->Word :ALE
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : ALE
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :2
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :ALE
+10/12/2023 : 22:00:02 : Current->Word :GELA
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : GELA
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :2
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :GELA
+10/12/2023 : 22:00:02 : Current->Word :LEGAL
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : LEGAL
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :1
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :ADOUBAI
+10/12/2023 : 22:00:02 : Current->Word :ADOUBAIS
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : ADOUBAIS
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :5701717
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :2
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :LEGAL
+10/12/2023 : 22:00:02 : Current->Word :GALLEC
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : GALLEC
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : JouerMot end avec FinTourIA
+10/12/2023 : 22:00:02 : Round end
+10/12/2023 : 22:00:02 : endGame
+10/12/2023 : 22:00:02 : endGame end avec false
+10/12/2023 : 22:00:02 : Round
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :2
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :GRUGENT
+10/12/2023 : 22:00:02 : Current->Word :GRUGEANT
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : GRUGEANT
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :3
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :
+10/12/2023 : 22:00:02 : Current->Word :CAP
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : CAP
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :3
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :CAP
+10/12/2023 : 22:00:02 : Current->Word :CAMP
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : CAMP
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :1414680576
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :3
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :CAMP
+10/12/2023 : 22:00:02 : Current->Word :CAMPA
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : CAMPA
+10/12/2023 : 22:00:02 : JouerMot
+10/12/2023 : 22:00:02 : Debut test
+10/12/2023 : 22:00:02 : Fin test
+10/12/2023 : 22:00:02 : Jarnac :0
+10/12/2023 : 22:00:02 : Origin :22569
+10/12/2023 : 22:00:02 : Jarnac false
+10/12/2023 : 22:00:02 : Ligne :3
+10/12/2023 : 22:00:02 : Board[Joueur][Current->Ligne] :CAMPA
+10/12/2023 : 22:00:02 : Current->Word :CAMPAI
+10/12/2023 : 22:00:02 : piocheLettre
+10/12/2023 : 22:00:02 : JouerMot end avec mot joué : CAMPAI
