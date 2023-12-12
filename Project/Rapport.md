@@ -24,8 +24,8 @@ kernelspec:
 
 J’ai réalisé le projet Jarnac seul en environ 35/40h de travail, à raison de 15h par semaine en grande partie le weekend. Afin d’assurer la gestion des versions de mon projet j’ai utilisé Github.
 
-J’ai développé mon projet en plusieurs étapes en priorisant certaines fonctionnalités. En premier lieu je me suis concentré sur la partie de gestion d’un dictionnaire qui est selon moi le cœur du jeu. Après suffisamment de tests, j’ai créé une première version du jeu : joueur contre joueur. Puis je me suis attaqué à la création et l’implémentation d’une IA pour créer un mode joueur contre IA. Enfin j’ai enrichi cette version avec un mode IA contre IA.
-À chaque étape j’ai consigné dans un carnet, avec divers dessins et descriptions, les idées que je souhaitais implémenter et les optimisations que je pouvais mettre en œuvre.
+J’ai développé mon projet en plusieurs étapes en priorisant certaines fonctionnalités. En premier lieu je me suis concentré sur la partie de gestion d’un dictionnaire qui est selon moi le coeur du jeu. Après suffisamment de tests, j’ai créé une première version du jeu : joueur contre joueur. Puis je me suis attaqué à la création et l’implémentation d’une IA pour créer un mode joueur contre IA. Enfin j’ai enrichi cette version avec un mode IA contre IA.
+À chaque étape j’ai consigné dans un carnet, avec divers dessins et descriptions, les idées que je souhaitais implémenter et les optimisations que je pouvais mettre en oeuvre.
 
 À la fin du projet, bien que ne connaissant pas le C++, mon père m’a proposé une revue de code pour vérifier la lisibilité et maintenabilité de mon développement, il a notamment mit l’accent sur les points suivants, :
 
@@ -49,7 +49,7 @@ J’ai développé mon projet en plusieurs étapes en priorisant certaines fonct
 ## Approfondissement de certaines fonctionnalités
 
 Pour chercher dans le [dictionnaire](DocDictionnaire.md#création-des-bornes-de-recherche), le programme crée dès son lancement, un vecteur constitué des bornes inférieures et supérieures dans le dictionnaire de toutes les combinaisons de 3 lettres afin de pouvoir accéder directement à la plage de mots débutant par les 3 lettres données ce qui évite un recherche dans tout le dictionnaire.
-Pour que l’IA choisisse son meilleur coup beaucoup d’étapes sont intervenues. En premier lieu j’ai supprimé les mots qui étaient des anagrammes l’un de l’autre (par exemple pour NIER RIEN et RENI seulement RIEN a été conservé) car ils permettent d’atteindre les mêmes mots par la suite. Une fois cette partie finie, j'ai analysé l'entièreté du dictionnaire pour voir quels mots chaque mots pouvaient atteindre en ajoutant seulement une lettre. Grâce à ces informations j’ai pu créer un structure en arbre où chaque nœud correspond à un mot et les branches qui en partent correspondent aux mots qu’il est possible d’atteindre en ajoutant une lettre. Afin de ne pas avoir à parcourir tout l’arbre afin de retrouver un mot j’ai une map qui fait correspondre les mots à leur nœud correspondant. De plus, j’ai également une map qui fait correspondre les mots “triés” vers les mots que l’IA connaît (comme l’IA ne connaît que RIEN je trie NIER et RENI afin d’obtenir EINR puis faire correspondre cela avec RIEN). (PAS ENCORE FAIT) Finalement j’ai simulé des milliers de parties afin d’obtenir les mots les plus fréquents et les lettres qui apparaissent le plus souvent dans les vracs en fin de partie. Avec ces informations j’ai pu permettre à l’IA d’échanger des lettres lorsqu’elle a depuis trop longtemps de lettres qu’elle ne peut pas placer.
+Pour que l’IA choisisse son meilleur coup [beaucoup d’étapes](DocIA.md#recherche-de-mot-à-allonger) sont intervenues. En premier lieu j’ai supprimé les mots qui étaient des anagrammes l’un de l’autre (par exemple pour NIER RIEN et RENI seulement RIEN a été conservé) car ils permettent d’atteindre les mêmes mots par la suite. Une fois cette partie finie, j'ai analysé l'entièreté du dictionnaire pour voir quels mots chaque mots pouvaient atteindre en ajoutant seulement une lettre. Grâce à ces informations j’ai pu créer un structure en arbre où chaque noeud correspond à un mot et les branches qui en partent correspondent aux mots qu’il est possible d’atteindre en ajoutant une lettre. Afin de ne pas avoir à parcourir tout l’arbre afin de retrouver un mot j’ai une map qui fait correspondre les mots à leur noeud correspondant. De plus, j’ai également une map qui fait correspondre les mots “triés” vers les mots que l’IA connaît (comme l’IA ne connaît que RIEN je trie NIER et RENI afin d’obtenir EINR puis faire correspondre cela avec RIEN).
 
 +++
 
@@ -69,7 +69,7 @@ Après de nombreux tests, j'ai décidé
 ##### Difficultés rencontrées
 
 La première difficulté rencontrée concerne l’optimisation de la recherche dans le dictionnaire via un vecteur indexé comprenant pour chaque combinaison de trois lettres la plage de recherche dans le dictionnaire. Les [bornes](DocDictionnaire.md#création-des-bornes-de-recherche) de cette plage ont été encodées dans un entier de type long.
-La seconde difficulté fut la création de la structure en arbre pour l’IA. En effet, bien que je sois très familier avec la programmation objet, la nouveauté des pointeurs en C++ fut sujette à de nombreuses recherches.
+La seconde difficulté fut la création de la [structure en arbre](DocIA.md#création-de-la-structure-en-arbre) pour l’IA. En effet, bien que je sois très familier avec la programmation objet, la nouveauté des pointeurs en C++ fut sujette à de nombreuses recherches.
 
 ##### Pour aller plus loin
 

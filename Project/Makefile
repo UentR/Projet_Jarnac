@@ -20,10 +20,6 @@ jeudepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
 demo = $(addprefix $(OBJDIR)/, Demo.o)
 demodepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
 
-stats = $(addprefix $(OBJDIR)/, testDico.o, mDictionnaire.o)
-dependStats = $(addprefix $(INCDIR)/, testDico.hpp, mDictionnaire.hpp)
-
-
 all: $(PROGS)
 
 clean:
@@ -36,10 +32,6 @@ Jarnac: $(objects) $(debug) $(jeu)
 Demo:  $(objects) $(debug) $(demo)
 	@$(CXX) $(CXXFLAGS) $^ -o $@
 	@echo "Compilation demo terminée"
-
-Stats: $(debug) $(stats)
-	@$(CXX) $(CXXFLAGS) $^ -o $@
-	@echo "Compilation stats terminée"
 
 $(OBJDIR)/%.o : %.cpp
 	@$(CXX) -c $(CXXFLAGS) $< -o $@
