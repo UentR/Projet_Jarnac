@@ -2,10 +2,10 @@
 
 #### Création des bornes de recherche :
 
-```C++
-int SHIFT = ceil( log(Dico.size()) / log(2) );
-long Borne = (BorneSup << SHIFT) + (BorneInf);
-```
+> ```C++
+> int SHIFT = ceil( log(Dico.size()) / log(2) );
+> long Borne = (BorneSup << SHIFT) + (BorneInf);
+> ```
 
 <br>
 
@@ -45,11 +45,11 @@ long Borne = (BorneSup << SHIFT) + (BorneInf);
 
 ### Décodage des bornes :
 
-```C++
-long Borne = BORNES[Idx];
-int BorneInf = Borne & int(pow(2, SHIFT) - 1);
-int BorneSup = Borne >> SHIFT;
-```
+> ```C++
+> long Borne = BORNES[Idx];
+> int BorneInf = Borne & int(pow(2, SHIFT) - 1);
+> int BorneSup = Borne >> SHIFT;
+> ```
 
 <br>
 

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int main() {
+int main2() {
   ForDict *DictHelper = new ForDict;
   CreateHelper(DictHelper, "Text/DictionnairePurified.txt", TAILLES_CLEES_DICO);
 
@@ -70,5 +70,14 @@ int main() {
       cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
     }
     cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
+  }
+}
+
+
+int main() {
+  int NbPartie = 0;
+  while (true) {
+    lanceLeJeu("IA 1","IA 2", "Jarnac N"+to_string(NbPartie), true, true);
+    NbPartie++;
   }
 }

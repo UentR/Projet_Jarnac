@@ -5,25 +5,25 @@
 Un [fichier](./Text/Arbre.txt) contenant l'ensemble des mots disponibles pour l'IA a été créé avec d'un côté le mot et de l'autre les lettres qu'il est possible d'ajouter à ce mot pour en créer un nouveau.
 On peut ensuite facilement charger ce fichier dans une structure en arbre pour optimiser la recherche par la suite.
 
-```C++
-void LoadTree(AI *AIHelper, string FileName) {
-	ifstream File;
-	Node *T;
-	string letter;
-	File.open(FileName);
-	T = new Node;
-	while (File >> T->Ana) {
-		File >> letter;
-		while (letter != ";") {
-			T->Children[letter[0]] = AIHelper->NodeDict[Sort((T->Ana + letter))];
-			File >> letter;
-		}
-		AIHelper->NodeDict[Sort(T->Ana)] = T;
-		T = new Node;
-	}
-	File.close();
-}
-```
+> ```C++
+> void LoadTree(AI *AIHelper, string FileName) {
+> 	ifstream File;
+> 	Node *T;
+> 	string letter;
+> 	File.open(FileName);
+> 	T = new Node;
+> 	while (File >> T->Ana) {
+> 		File >> letter;
+> 		while (letter != ";") {
+> 			T->Children[letter[0]] = AIHelper->NodeDict[Sort((T->Ana + letter))];
+> 			File >> letter;
+> 		}
+> 		AIHelper->NodeDict[Sort(T->Ana)] = T;
+> 		T = new Node;
+> 	}
+> 	File.close();
+> }
+> ```
 
 <br>
 
@@ -74,26 +74,26 @@ void LoadTree(AI *AIHelper, string FileName) {
 
 La première étape de chaque tour de l'IA est de regarder les mots qu'elle peut allonger. C'est un choix arbitraire que j'ai fait après avoir comparé différentes versions d'IA. Pour ça nous allons créer un set de tous les mots à analyser que nous agrandirons à chaque noeud enfant que l'on peut atteindre avec notre vrac.
 
-```C++
-set<tuple<Node *, string, string, Node *> > toAnalyze = {};
-for (Node *Word : PlayerWords) {
-	toAnalyze.insert(make_tuple(Word, Vrac, "", Word));
-}
-while (!toAnalyze.empty()) {
-	tie(Word, tVrac, Path, Origin) = *toAnalyze.begin();
-	toAnalyze.erase(toAnalyze.begin());
-	Child = false;
-	for (char Letter : tVrac) {
-		if (Word->Children.find(Letter) != Word->Children.end()) {
-			Child = true;
-			toAnalyze.insert(make_tuple(Word->Children[Letter], chRetire(tVrac, Letter), Path + Letter, Origin));
-		}
-	}
-	if (!Child) {
-	End.insert(make_tuple(Origin, Path));
-	}
-}
-```
+> ```C++
+> set<tuple<Node *, string, string, Node *> > toAnalyze = {};
+> for (Node *Word : PlayerWords) {
+> 	toAnalyze.insert(make_tuple(Word, Vrac, "", Word));
+> }
+> while (!toAnalyze.empty()) {
+> 	tie(Word, tVrac, Path, Origin) = *toAnalyze.begin();
+> 	toAnalyze.erase(toAnalyze.begin());
+> 	Child = false;
+> 	for (char Letter : tVrac) {
+> 		if (Word->Children.find(Letter) != Word->Children.end()) {
+> 			Child = true;
+> 			toAnalyze.insert(make_tuple(Word->Children[Letter], chRetire(tVrac, Letter), Path + Letter, Origin));
+> 		}
+> 	}
+> 	if (!Child) {
+> 	End.insert(make_tuple(Origin, Path));
+> 	}
+> }
+> ```
 
 <br>
 
@@ -142,34 +142,34 @@ while (!toAnalyze.empty()) {
 
 On va regarder toutes les permutations de notre vrac dans un ordre croissant d'éléments afin de trouver le plus petit mot que l'on peut placer sur le plateau (ou dans un ordre décroissant d'élément en cas de Jarnac pour trouver le plus grand mot que l'on peut voler).
 
-```C++
-set<string> FoundWords = {};
-string SortedWord;
-bool StopSearch = false;
-
-// Cas très rare mais si le vrac fait plus de 9 lettres cela ne sert à rien
-// de chercher les permutations de 10 lettres car aucun mot de 10 lettres
-// ne pourra être placer
-int Len = min((int)Vrac.length(), 9);
-int I;
-for (int i = 3; i <= Len; i++) {
-	if (Jarnac) {
-		I = (Len + 3) - i;
-	} else {
-		I = i;
-	}
-	set<string> Permutations = DictPermutations(Vrac, I);
-	for (string Permutation : Permutations) {
-		if (Words.find(Permutation) != Words.end()) {
-		FoundWords.insert(Words[Permutation]);
-		StopSearch = true;
-		}
-	}
-	if (StopSearch) {
-		break;
-	}
-}
-```
+> ```C++
+> set<string> FoundWords = {};
+> string SortedWord;
+> bool StopSearch = false;
+>
+> // Cas très rare mais si le vrac fait plus de 9 lettres cela ne sert à rien
+> // de chercher les permutations de 10 lettres car aucun mot de 10 lettres
+> // ne pourra être placer
+> int Len = min((int)Vrac.length(), 9);
+> int I;
+> for (int i = 3; i <= Len; i++) {
+> 	if (Jarnac) {
+> 		I = (Len + 3) - i;
+> 	} else {
+> 		I = i;
+> 	}
+> 	set<string> Permutations = DictPermutations(Vrac, I);
+> 	for (string Permutation : Permutations) {
+> 		if (Words.find(Permutation) != Words.end()) {
+> 		FoundWords.insert(Words[Permutation]);
+> 		StopSearch = true;
+> 		}
+> 	}
+> 	if (StopSearch) {
+> 		break;
+> 	}
+> }
+> ```
 
 <br>
 
