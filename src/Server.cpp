@@ -6,7 +6,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <iostream>
+
 #define PORT 4000
+
+using namespace std;
 
 void error(char *msg) {
   perror(msg);
@@ -31,9 +35,15 @@ int main() {
 
   // Port number
   portno = PORT;
+  int opt = 1;
+
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
+                 sizeof(opt))) {
+    perror("setsockopt");
+    exit(EXIT_FAILURE);
+  }
 
   // Set up the server adress
-
   serv_addr.sin_port =
       htons(portno);               // Convert port number to network byte order
   serv_addr.sin_family = AF_INET;  // Symbolic constant for the address family
@@ -46,9 +56,11 @@ int main() {
   // Listen for connections
   listen(sockfd, 1);
 
+  clilen = sizeof(cli_addr);
+
   for (int i = 0; i < 5; i++) {
     // Accept a connection
-    clilen = sizeof(cli_addr);
+
     newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
     if (newsockfd < 0) error("ERROR on accept");
     // Empty buffer
@@ -64,7 +76,7 @@ int main() {
     if (n < 0) error("ERROR writing to socket");
 
     // Close the socket
-    close(newsockfd);
+    // close(newsockfd);
     close(sockfd);
   }
   return 0;

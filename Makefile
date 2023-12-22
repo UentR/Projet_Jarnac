@@ -2,7 +2,7 @@
 .SUFFIXES: .o .cpp
 
 CXX = g++
-CXXFLAGS = -O2 -Iinclude -g 
+CXXFLAGS = -O2 -Iinclude -g -w
 OBJDIR = obj
 INCDIR = include
 vpath %.cpp src
