@@ -11,10 +11,10 @@ vpath %.hpp include
 PROGS=Server Client
 
 objClient = $(addprefix $(OBJDIR)/, Client.o)
-dependClient = $(addprefix $(INCDIR)/, Client.hpp)
+dependClient = $(addprefix $(INCDIR)/, Struct.hpp)
 
 objServ = $(addprefix $(OBJDIR)/, Server.o)
-dependServ = $(addprefix $(INCDIR)/, Server.hpp)
+dependServ = $(addprefix $(INCDIR)/, Struct.hpp)
 
 all: $(PROGS)
 
