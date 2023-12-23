@@ -10,8 +10,8 @@ using namespace std;
 struct item;
 
 int main() {
-  int PlayStruct = shmget(0x1234, sizeof(item), 0660 | IPC_EXCL);
-  int ShouldPlay = shmget(0x1235, sizeof(bool), 0660 | IPC_EXCL);
+  int PlayStruct = shmget(0x1234, sizeof(item), 0640 | IPC_EXCL);
+  int ShouldPlay = shmget(0x1235, sizeof(bool), 0640 | IPC_EXCL);
 
   if ((PlayStruct < 0) || (ShouldPlay < 0)) {
     cout << "Error: Shared memory segment not found." << endl;

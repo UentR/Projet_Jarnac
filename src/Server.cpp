@@ -9,8 +9,8 @@ using namespace std;
 struct item;
 
 int main() {
-  int PlayStruct = shmget(0x1234, sizeof(item), 0660 | IPC_CREAT);
-  int ShouldPlay = shmget(0x1235, sizeof(bool), 0660 | IPC_CREAT);
+  int PlayStruct = shmget(0x1234, sizeof(item), 0640 | IPC_CREAT);
+  int ShouldPlay = shmget(0x1235, sizeof(bool), 0640 | IPC_CREAT);
   item* p = (item*)shmat(PlayStruct, 0, 0);
   p->Played = false;
   p->PlayerID = 1;
