@@ -22,7 +22,10 @@ int main() {
     usleep(100000);
   }
   p->Played = true;
-  p->PlayerID = 198765;
+  int T;
+  cout << "Enter a number: ";
+  cin >> T;
+  p->PlayerID = T;
 
   cout << "Player 1: " << p->Played << endl;
   cout << "Player ID " << p->PlayerID << endl;

@@ -20,16 +20,17 @@ int main() {
 
   bool* s = (bool*)shmat(ShouldPlay, 0, 0);
 
-  cout << "Waiting for player 2..." << endl;
+  for (int i = 0; i < 3; i++) {
+    cout << "Waiting for player 2..." << endl;
 
-  *s = true;
+    *s = true;
 
-  while ((*s)) {
-    // Wait for the server to set the flag
-    usleep(100000);
+    while ((*s)) {
+      // Wait for the server to set the flag
+      usleep(100000);
+    }
+    cout << "Player 1: " << p->Played << endl;
+    cout << "Player ID " << p->PlayerID << endl;
   }
-  cout << "Player 1: " << p->Played << endl;
-  cout << "Player ID " << p->PlayerID << endl;
-
   return 0;
 }
