@@ -10,10 +10,16 @@ using namespace std;
 struct item;
 
 int main() {
-  int PlayStruct = shmget(0x1234, sizeof(item), 0666 | IPC_CREAT);
-  int ShouldPlay = shmget(0x1235, sizeof(bool), 0666 | IPC_CREAT);
-  item* p = (item*)shmat(PlayStruct, NULL, 0);
-  bool* s = (bool*)shmat(ShouldPlay, NULL, 0);
+  int PlayStruct = shmget(0x1234, sizeof(item), 0660 | IPC_EXCL);
+  int ShouldPlay = shmget(0x1235, sizeof(bool), 0660 | IPC_EXCL);
+
+  if ((PlayStruct < 0) || (ShouldPlay < 0)) {
+    cout << "Error: Shared memory segment not found." << endl;
+    return 1;
+  }
+
+  item* p = (item*)shmat(PlayStruct, 0, 0);
+  bool* s = (bool*)shmat(ShouldPlay, 0, 0);
 
   cout << *s << endl;
 

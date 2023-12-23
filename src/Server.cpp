@@ -9,8 +9,8 @@ using namespace std;
 struct item;
 
 int main() {
-  int PlayStruct = shmget(0x1234, sizeof(item), 0666 | IPC_CREAT);
-  int ShouldPlay = shmget(0x1235, sizeof(bool), 0666 | IPC_CREAT);
+  int PlayStruct = shmget(0x1234, sizeof(item), 0660 | IPC_CREAT);
+  int ShouldPlay = shmget(0x1235, sizeof(bool), 0660 | IPC_CREAT);
   item* p = (item*)shmat(PlayStruct, 0, 0);
   p->Played = false;
   p->PlayerID = 1;
@@ -26,11 +26,13 @@ int main() {
     *s = true;
 
     while ((*s)) {
-      // Wait for the server to set the flag
+      // Wait for the client to set the flag
       usleep(100000);
     }
     cout << "Player 1: " << p->Played << endl;
     cout << "Player ID " << p->PlayerID << endl;
   }
+  shmctl(PlayStruct, IPC_RMID, 0);
+  shmctl(ShouldPlay, IPC_RMID, 0);
   return 0;
 }
