@@ -1,3 +1,4 @@
+#include <string.h>
 #include <sys/shm.h>
 #include <time.h>
 #include <unistd.h>
@@ -11,8 +12,9 @@
 #include <vector>
 
 #include "Debug.hpp"
-#include "loadIA.hpp"
+// #include "loadIA.hpp"
 #include "mCalculPoints.hpp"
+#include "mDictionnaire.hpp"
 #include "vueEnModeTexte.hpp"
 
 using namespace std;
@@ -49,20 +51,52 @@ struct Names {
  * @param bool* AIPlay[2] - Si les IA doivent jouer
  * @param Play* IAMove - Le mot à jouer pour l'IA
  */
+
+struct Play {
+  string Word;
+  string DLetter;
+  int Ligne;
+  int Origin;
+  bool Jarnac;
+  bool End;
+};
+
 struct StorePlayers {
   bool isAI[2] = {false, false};
-  AI *AIS[2];
+  // AI *AIS[2];
 
-  bool *AIPlay[2];
-  bool *AIExchange[2];
+  bool AIPlay[2];
+  bool AIExchange[2];
   Play *IAMove;
-  char AILetters[3];
-  bool *AIJarnac;
+  char *AILetters;
+  bool AIJarnac;
 };
 
 struct StoreLetters {
   vector<string> Letters;
   int Len;
+};
+
+struct Keys {
+  int keyPlay[2];
+  int keyExchange[2];
+  int keyJarnac;
+  int keyLetters;
+  int keyPlayMove;
+  int keyReady[2];
+  int keyBoard;
+  int keyVrac[2];
+};
+
+struct Adresses {
+  bool *CanPlay[2];
+  bool *CanExchange[2];
+  bool *CanJarnac;
+  char *ExchangeLetters;
+  Play *Move;
+  bool *Ready[2];
+  char *Board;
+  char *Vrac[2];
 };
 
 enum TentativeMotPlace {
@@ -81,6 +115,22 @@ enum ChoixPossible {
   VoirMenu = 'M',
   Abandonner = 'A',
 };
+
+/**
+ * @brief Trie une chaîne de caractères.
+ * @param string Word - La chaîne de caractères à trier.
+ * @return string La chaîne de caractères triée.
+ */
+string Sort(string Mot);
+
+/**
+ * @brief Retourne la ligne sur laquelle se trouve un mot.
+ * @param BOARD Board - Le plateau de jeu.
+ * @param string Word - Le mot à rechercher.
+ * @param int Joueur - Le joueur qui joue.
+ * @return int La ligne sur laquelle se trouve le mot.
+ */
+int getLine(BOARD Board, string Word, int Joueur);
 
 /**
  * @brief Renvoie si une lettre est une voyelle ou non

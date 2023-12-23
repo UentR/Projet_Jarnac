@@ -12,12 +12,12 @@ vpath %.hpp include
 PROGS=Jarnac Demo
 debug = $(addprefix $(OBJDIR)/, Debug.o)
 dependDebug = $(addprefix $(INCDIR)/, Debug.hpp)
-objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mDictionnaire.o loadIA.o vueEnModeTexte.o controleurChoixAction.o )
+objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mDictionnaire.o vueEnModeTexte.o )
 depend = $(addprefix $(INCDIR)/, mCalculPoints.hpp mDictionnaire.hpp loadIA.hpp vueEnModeTexte.hpp controleurChoixAction.hpp)
 
-jeu = $(addprefix $(OBJDIR)/, Jeu.o)
+jeu = $(addprefix $(OBJDIR)/, Jeu.o controleurChoixAction.o )
 jeudepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
-demo = $(addprefix $(OBJDIR)/, Demo.o)
+demo = $(addprefix $(OBJDIR)/, Temp.o)
 demodepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
 
 all: $(PROGS)
@@ -29,7 +29,7 @@ Jarnac: $(objects) $(debug) $(jeu)
 	@$(CXX) $(CXXFLAGS) $^ -o $@
 	@echo "Compilation jeu terminée"
 
-Demo:  $(objects) $(debug) $(demo)
+Demo:  $(debug) $(demo)
 	@$(CXX) $(CXXFLAGS) $^ -o $@
 	@echo "Compilation demo terminée"
 

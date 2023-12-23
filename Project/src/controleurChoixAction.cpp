@@ -7,6 +7,21 @@ struct Names;
 struct StorePlayers;
 struct StoreLetters;
 
+string Sort(string Mot) {
+  string Sorted = Mot;
+  sort(Sorted.begin(), Sorted.end());
+  return Sorted;
+}
+
+int getLine(BOARD Board, string Word, int Joueur) {
+  for (int i = 1; i < Board[Joueur].size(); i++) {
+    if (Sort(Board[Joueur][i]) == Sort(Word)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 bool isVowel(string Letter) {
   writeToDebugFile("isVowel", INFO_DETAIL);
   return (Letter == "A" or Letter == "E" or Letter == "I" or Letter == "O" or
@@ -459,10 +474,10 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
     TentativeMotPlace state = EchecPlacementMot;
 
     if (Tour > 0) {
-      *(PlayerHelper->AIJarnac) = true;
+      PlayerHelper->AIJarnac = true;
       do {
-        *(PlayerHelper->AIPlay[Joueur]) = true;
-        while (*(PlayerHelper->AIPlay[Joueur])) {
+        PlayerHelper->AIPlay[Joueur] = true;
+        while (PlayerHelper->AIPlay[Joueur]) {
           usleep(100000);
         }
         // IAMove = BestMove(Board, Joueur, true, PlayerHelper->AIS[Joueur]);
@@ -472,26 +487,26 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
     }
 
     if (Tour >= 2) {
-      *(PlayerHelper->AIExchange[Joueur]) = true;
-      while (*(PlayerHelper->AIExchange[Joueur])) {
+      PlayerHelper->AIExchange[Joueur] = true;
+      while (PlayerHelper->AIExchange[Joueur]) {
         usleep(100000);
       }
       // On ne pioche qu'à partir du 2e tour
       // string LettreIA = PiocheEchange(Board, Joueur);
-      if (*(PlayerHelper->AILetters) == "") {
+      if (PlayerHelper->AILetters[0] == '\0') {
         Board[Joueur][0] += piocheLettre(LETTERS);
       } else {
-        shuffleBag(LETTERS, *(PlayerHelper->AILetters));
+        shuffleBag(LETTERS, PlayerHelper->AILetters);
       }
     }
-    *(PlayerHelper->AIJarnac) = false;
+    PlayerHelper->AIJarnac = false;
     do {
       // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
       //                 NamesHelper->NameGame, NamesHelper->Name1,
       //                 NamesHelper->Name2, Joueur, false);
 
-      *(PlayerHelper->AIPlay[Joueur]) = true;
-      while (*(PlayerHelper->AIPlay[Joueur])) {
+      PlayerHelper->AIPlay[Joueur] = true;
+      while (PlayerHelper->AIPlay[Joueur]) {
         usleep(100000);
       }
       // IAMove = BestMove(Board, Joueur, true, PlayerHelper->AIS[Joueur]);
@@ -580,33 +595,62 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   NamesHelper->NameGame = Name;
 
   // Stockage des IA
+
+  int adrrAdrr = shmget(0x1233, sizeof(Adresses), 0666 | IPC_CREAT);
+  cout << adrrAdrr << endl;
+  Adresses *adrr = (Adresses *)shmat(adrrAdrr, NULL, 0);
+
   StorePlayers *PlayersHelper = new StorePlayers;
   if (IA1) {
     writeToDebugFile("IA1 loading", ALL_LOG);
-    PlayersHelper->AIS[0] = new AI;
-    StartUpAI(PlayersHelper->AIS[0]);
+    // PlayersHelper->AIS[0] = new AI;
+    // StartUpAI(PlayersHelper->AIS[0]);
     PlayersHelper->isAI[0] = true;
     int adrrPlay = shmget(0x1234, sizeof(bool), 0666 | IPC_CREAT);
-    *(PlayersHelper->AIPlay[0]) = (bool *)shmat(adrrPlay, 0, 0);
-    *(PlayersHelper->AIPlay[0]) = false;
-    int adrrExchange = shmget(0x1235, sizeof(bool), 0666 | IPC_CREAT);
-    *(PlayersHelper->AIExchange[0]) = (bool *)shmat(adrrExchange, 0, 0);
-    *(PlayersHelper->AIExchange[0]) = false;
-    int adrrJarnac = shmget(0x1236, sizeof(bool), 0666 | IPC_CREAT);
-    *(PlayersHelper->AIJarnac) = (bool *)shmat(adrrJarnac, 0, 0);
-    *(PlayersHelper->AIJarnac) = false;
-    int adrrLetters = shmget(0x1237, sizeof(char[3]), 0666 | IPC_CREAT);
-    *(PlayersHelper->AILetters) = (char *)shmat(adrrLetters, NULL, 0);
-    *(PlayersHelper->AILetters) = "";
+    adrr->adrrPlay[0] = adrrPlay;
+    PlayersHelper->AIPlay[0] = (bool *)shmat(adrrPlay, 0, 0);
+    PlayersHelper->AIPlay[0] = false;
+    int adrrExchange = shmget(0x1235, sizeof(bool *), 0666 | IPC_CREAT);
+    adrr->adrrExchange[0] = adrrExchange;
+    PlayersHelper->AIExchange[0] = (bool *)shmat(adrrExchange, 0, 0);
+    PlayersHelper->AIExchange[0] = false;
+    adrr->Ready[0] = false;
   }
   if (IA2) {
     writeToDebugFile("IA2 loading", ALL_LOG);
-    PlayersHelper->AIS[1] = new AI;
-    StartUpAI(PlayersHelper->AIS[1]);
+    // PlayersHelper->AIS[1] = new AI;
+    // StartUpAI(PlayersHelper->AIS[1]);
     PlayersHelper->isAI[1] = true;
-    *(PlayersHelper->AIPlay[1]) = false;
+    int adrrPlay = shmget(0x1236, sizeof(bool *), 0666 | IPC_CREAT);
+    adrr->adrrPlay[1] = adrrPlay;
+    PlayersHelper->AIPlay[1] = (bool *)shmat(adrrPlay, 0, 0);
+    PlayersHelper->AIPlay[1] = false;
+    int adrrExchange = shmget(0x1237, sizeof(bool *), 0666 | IPC_CREAT);
+    adrr->adrrExchange[1] = adrrExchange;
+    PlayersHelper->AIExchange[1] = (bool *)shmat(adrrExchange, 0, 0);
+    PlayersHelper->AIExchange[1] = false;
+    adrr->Ready[1] = false;
+  }
+  if (IA1 or IA2) {
+    int adrrJarnac = shmget(0x1238, sizeof(bool *), 0666 | IPC_CREAT);
+    adrr->adrrJarnac = adrrJarnac;
+    PlayersHelper->AIJarnac = (bool *)shmat(adrrJarnac, 0, 0);
+    PlayersHelper->AIJarnac = false;
+    int adrrLetters = shmget(0x1239, 3, 0666 | IPC_CREAT);
+    adrr->adrrLetters = adrrLetters;
+    PlayersHelper->AILetters = (char *)shmat(adrrLetters, NULL, 0);
+    PlayersHelper->AILetters[0] = '\0';
+    int adrrPlayStruct = shmget(0x123A, sizeof(Play), 0666 | IPC_CREAT);
+    adrr->adrrPlayMove = adrrPlayStruct;
+    PlayersHelper->IAMove = (Play *)shmat(adrrPlayStruct, NULL, 0);
   }
 
+  cout << "Waiting for AIs..." << endl;
+  while (!adrr->Ready[0] or !adrr->Ready[1]) {
+    usleep(100000);
+  }
+  cout << "AIs ready" << endl;
+  exit(1);
   BOARD Board;
   StoreLetters *LETTERS;
   int NbPartie = 0;
