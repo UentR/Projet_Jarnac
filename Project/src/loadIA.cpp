@@ -5,6 +5,10 @@ struct Node;
 struct AI;
 struct Play;
 
+char *envIALevel = getenv("LEVEL");
+bool EmptyIALevel = envIALevel == NULL;
+const int LevelIA = (EmptyIALevel) ? 60 : atoi(envIALevel);
+
 string Sort(string Mot) {
   string Sorted = Mot;
   sort(Sorted.begin(), Sorted.end());
@@ -63,7 +67,8 @@ set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac) {
     }
     set<string> Permutations = DictPermutations(Vrac, I);
     for (string Permutation : Permutations) {
-      if (Words.find(Permutation) != Words.end()) {
+      if (Words.find(Permutation) != Words.end() and
+          ((rand() % 100) < LevelIA)) {
         FoundWords.insert(Words[Permutation]);
         StopSearch = true;
       }
@@ -97,7 +102,8 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
     toAnalyze.erase(toAnalyze.begin());
     Child = false;
     for (char Letter : tVrac) {
-      if (Word->Children.find(Letter) != Word->Children.end()) {
+      if ((Word->Children.find(Letter) != Word->Children.end()) and
+          ((rand() % 100) < LevelIA)) {
         Child = true;
         // Si on peut atteindre un enfant, on l'ajoute à la liste des
         // noeuds à analyser
@@ -116,7 +122,6 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
   // On cherche le mot qui permet d'ajouter le plus de lettres
   int Longest = 0;
   string BestPath;
-  Node *BestStart;
   for (tuple<Node *, string> EndWord : End) {
     tie(Word, Path) = EndWord;
     if (Path.length() > Longest) {
@@ -127,7 +132,7 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
   return BaseCase;
 }
 
-bool PiocheEchange(BOARD Board, int Joueur, bool Jarnac) { return true; }
+string PiocheEchange(BOARD Board, int Joueur) { return ""; }
 
 int getLine(BOARD Board, string Word, int Joueur) {
   for (int i = 1; i < Board[Joueur].size(); i++) {
@@ -151,25 +156,25 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   set<string> Playable = {};
 
   int Ligne = getLine(Board, "", Joueur);
-  writeToDebugFile("Jarnac :" + to_string(Jarnac), ERROR);
+  writeToDebugFile("Jarnac : " + to_string(Jarnac), ERROR);
   if (Jarnac) {
-    writeToDebugFile("Jarnac", ERROR);
-    // On regarde si on peut agrandir les mots de l'adversaire
-    for (int i = 1; i < Board[1 - Joueur].size(); i++) {
-      if (Board[1 - Joueur][i].length() > 0) {
-        PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
-      }
-    }
-    tie(Word, Path) = Analyze(Board[1 - Joueur][0], PlayerWords);
-    if (Path.length() >= 1) {
-      Current->Word = Word->Children[Path[0]]->Ana;
-      Current->Origin = getLine(Board, Word->Ana, 1 - Joueur);
-      Current->Ligne = Ligne;
-      Current->DLetter = Path[0];
-      return Current;
-    }
-
     if (Ligne != -1) {
+      writeToDebugFile("Jarnac", ERROR);
+      // On regarde si on peut agrandir les mots de l'adversaire
+      for (int i = 1; i < Board[1 - Joueur].size(); i++) {
+        if (Board[1 - Joueur][i].length() > 0) {
+          PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
+        }
+      }
+      tie(Word, Path) = Analyze(Board[1 - Joueur][0], PlayerWords);
+      if (Path.length() >= 1) {
+        Current->Word = Word->Children[Path[0]]->Ana;
+        Current->Origin = getLine(Board, Word->Ana, 1 - Joueur);
+        Current->Ligne = Ligne;
+        Current->DLetter = Path[0];
+        return Current;
+      }
+
       // On regarde si on peut placer un mot avec le vrac de l'adversaire
       Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict, true);
       if (Playable.size() > 0) {
@@ -180,42 +185,47 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
         return Current;
       }
     }
-  }
 
-  writeToDebugFile("End Jarnac", ERROR);
-
-  Current->Jarnac = false;
-  PlayerWords = {};
-  Playable = {};
-
-  // On regarde si on peut agrandir l'un de nos mots
-  for (int i = 1; i < Ligne; i++) {
-    PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[Joueur][i])]);
-  }
-  tie(Word, Path) = Analyze(Board[Joueur][0], PlayerWords);
-  if (Path.length() >= 1) {
-    Current->Word = Word->Children[Path[0]]->Ana;
-    Current->Ligne = getLine(Board, Word->Ana, Joueur);
-    Current->DLetter = Path[0];
+    Current->End = true;
+    Current->DLetter = "";
     return Current;
-  }
-
-  // On regarde si on peut placer un mot avec notre vrac
-  // Ne pas chercher si tableau complet
-  if (Ligne != -1) {
-    Playable = FindWords(Board[Joueur][0], AIHelper->Dict, false);
-    if (Playable.size() > 0) {
-      Current->Word = *Playable.begin();
-      Current->Ligne = Ligne;
-      Current->DLetter = *Playable.begin();
+  } else {
+    writeToDebugFile("Ligne : " + to_string(Ligne), ERROR);
+    // On regarde si on peut agrandir l'un de nos mots
+    for (int i = 1; i < Board[Joueur].size(); i++) {
+      if (Board[Joueur][i].length() > 0) {
+        writeToDebugFile(
+            "Board[Joueur][" + to_string(i) + "] : " + Board[Joueur][i], ERROR);
+        PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[Joueur][i])]);
+      }
+    }
+    tie(Word, Path) = Analyze(Board[Joueur][0], PlayerWords);
+    writeToDebugFile("Path : " + Path, ERROR);
+    writeToDebugFile("Path length : " + to_string(Path.length()), ERROR);
+    if (Path.length() >= 1) {
+      Current->Word = Word->Children[Path[0]]->Ana;
+      Current->Ligne = getLine(Board, Word->Ana, Joueur);
+      Current->DLetter = Path[0];
       return Current;
     }
-  }
 
-  // Si on n'a toujours pas trouvé de mot on fini notre tour
-  Current->End = true;
-  Current->DLetter = "";
-  return Current;
+    // On regarde si on peut placer un mot avec notre vrac
+    // Ne pas chercher si tableau complet
+    if (Ligne != -1) {
+      Playable = FindWords(Board[Joueur][0], AIHelper->Dict, false);
+      if (Playable.size() > 0) {
+        Current->Word = *Playable.begin();
+        Current->Ligne = Ligne;
+        Current->DLetter = *Playable.begin();
+        return Current;
+      }
+    }
+
+    // Si on n'a toujours pas trouvé de mot on fini notre tour
+    Current->End = true;
+    Current->DLetter = "";
+    return Current;
+  }
 }
 
 void LoadDict(AI *AIHelper, string FileName) {
@@ -265,11 +275,11 @@ void TEST() {
   cout << "Tree loaded" << endl;
   vector<string> WORDS = {};
   int NBR;
-  cout << "Combien de mots déjà placé :" << endl;
+  cout << "Combien de mots déjà placé : " << endl;
   cin >> NBR;
   string TT;
   for (int i = 0; i < NBR; i++) {
-    cout << "Mot numéro " << i + 1 << " :" << endl;
+    cout << "Mot numéro " << i + 1 << " : " << endl;
     cin >> TT;
     WORDS.push_back(TT);
   }
@@ -291,7 +301,7 @@ void TEST() {
   cout << "Longest path length: " << Path.length() << endl;
   cout << "Origin: " << Origin->Ana << endl;
 
-  cout << "To place:" << endl;
+  cout << "To place: " << endl;
   Node *Temp = Origin;
   cout << Temp->Ana << endl;
   for (char Letter : Path) {

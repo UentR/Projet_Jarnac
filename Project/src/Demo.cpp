@@ -2,7 +2,8 @@
 
 using namespace std;
 
-int main2() {
+int main() {
+  writeToDebugFile("lanceLeJeu", INFO_DETAIL);
   ForDict *DictHelper = new ForDict;
   CreateHelper(DictHelper, "Text/DictionnairePurified.txt", TAILLES_CLEES_DICO);
 
@@ -13,11 +14,12 @@ int main2() {
 
   // Stockage des IA
   StorePlayers *PlayersHelper = new StorePlayers;
+  AI *AIDemo = new AI;
+  StartUpAI(AIDemo);
+  PlayersHelper->AIS[0] = AIDemo;
+  PlayersHelper->AIS[1] = AIDemo;
   PlayersHelper->isAI[0] = true;
   PlayersHelper->isAI[1] = true;
-  AI *Both = new AI;
-  PlayersHelper->AIS[0] = Both;
-  PlayersHelper->AIS[1] = Both;
 
   BOARD Board;
   StoreLetters *LETTERS;
@@ -25,9 +27,12 @@ int main2() {
   int Joueur;
   int Tour;
   string mot;
-  int Count;
-  Count = 0;
+  int Point1;
+  int Point2;
   while (true) {
+    *(PlayersHelper->AIPlay[0]) = false;
+    *(PlayersHelper->AIPlay[1]) = false;
+    NamesHelper->NameGame = "Jarnac N" + to_string(NbPartie);
     LETTERS = new StoreLetters;
     Board = initBoard(LETTERS, NB_LIGNES_PLATEAU, TAILLE_MAX_MOT);
 
@@ -36,13 +41,12 @@ int main2() {
     tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
                             PlayersHelper, Tour, LETTERS);
     Tour++;
-
     Joueur = 1 - Joueur;
     tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
                             PlayersHelper, Tour, LETTERS);
     Tour++;
 
-    while (true) {
+    while (!endGame(Board, Joueur)) {
       Joueur = 1 - Joueur;
       affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
                       NamesHelper->NameGame, NamesHelper->Name1,
@@ -50,17 +54,13 @@ int main2() {
       tie(Board, mot) = Round(Board, Joueur, DictHelper, NamesHelper,
                               PlayersHelper, Tour, LETTERS);
       Tour++;
-      if (endGame(Board, Joueur)) {
-        break;
-      }
     }
-    cout << "Fin de la partie N°" << NbPartie << endl;
     affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
                     NamesHelper->NameGame, NamesHelper->Name1,
-                    NamesHelper->Name2, 0, false);
+                    NamesHelper->Name2, Joueur, false);
 
-    int Point1 = calculPoints(Board[0], TAILLE_MAX_MOT, NB_LIGNES_PLATEAU);
-    int Point2 = calculPoints(Board[1], TAILLE_MAX_MOT, NB_LIGNES_PLATEAU);
+    Point1 = calculPoints(Board[0], TAILLE_MAX_MOT, NB_LIGNES_PLATEAU);
+    Point2 = calculPoints(Board[1], TAILLE_MAX_MOT, NB_LIGNES_PLATEAU);
 
     if (Point1 == Point2) {
       cout << "Fin du jeu, égalité" << endl;
@@ -69,15 +69,8 @@ int main2() {
     } else {
       cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
     }
-    cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
-  }
-}
-
-
-int main() {
-  int NbPartie = 0;
-  while (true) {
-    lanceLeJeu("IA 1","IA 2", "Jarnac N"+to_string(NbPartie), true, true);
     NbPartie++;
+    LETTERS->Letters.clear();
+    delete LETTERS;
   }
 }

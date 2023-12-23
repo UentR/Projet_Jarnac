@@ -1,4 +1,6 @@
+#include <sys/shm.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <algorithm>
 #include <iostream>
@@ -44,10 +46,18 @@ struct Names {
  *
  * @param bool isAI[2] - Si les joueurs sont des IA
  * @param AI* AIS[2] - Les IA à charger
+ * @param bool* AIPlay[2] - Si les IA doivent jouer
+ * @param Play* IAMove - Le mot à jouer pour l'IA
  */
 struct StorePlayers {
   bool isAI[2] = {false, false};
   AI *AIS[2];
+
+  bool *AIPlay[2];
+  bool *AIExchange[2];
+  Play *IAMove;
+  char AILetters[3];
+  bool *AIJarnac;
 };
 
 struct StoreLetters {

@@ -1,13 +1,13 @@
-## Documentation dictionnaire
+# Documentation dictionnaire
 
-#### Création des bornes de recherche :
+
+### Création des bornes de recherche :
 
 > ```C++
 > int SHIFT = ceil( log(Dico.size()) / log(2) );
 > long Borne = (BorneSup << SHIFT) + (BorneInf);
 > ```
 
-<br>
 
 **Regardons étapes par étapes**
 
@@ -36,12 +36,11 @@
 
     - Si BorneSup est 169080 et BorneInf est 169030 comme cela est le cas pour le couple **ZY** on a :
         > ```C++
-        >   BorneSup = |1|0|1|0|0|1|0|1|0|0|0|1|1|1|1|0|0|0|                        		= 169080
+        >   BorneSup = |1|0|1|0|0|1|0|1|0|0|0|1|1|1|1|0|0|0|                        				= 169080
         >   BorneInf =                                     |1|0|1|0|0|1|0|1|0|0|0|1|0|0|0|1|1|0| 	= 169030
         >   Borne    = |1|0|1|0|0|1|0|1|0|0|0|1|1|1|1|0|0|0|1|0|1|0|0|1|0|1|0|0|0|1|0|0|0|1|1|0| 	= (169080 << 18) + (169030)
         > ```
 
-<br>
 
 ### Décodage des bornes :
 
@@ -51,7 +50,6 @@
 > int BorneSup = Borne >> SHIFT;
 > ```
 
-<br>
 
 **Regardons étapes par étapes**
 

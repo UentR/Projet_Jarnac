@@ -1,0 +1,91 @@
+23/12/2023 : 18:47:55 : Board[Joueur][1] : ASE
+23/12/2023 : 18:47:55 : Board[Joueur][2] : TER
+23/12/2023 : 18:47:55 : Path : 
+23/12/2023 : 18:47:55 : Path length : 0
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : JouerMot end avec FinTourIA
+23/12/2023 : 18:47:55 : Round end
+23/12/2023 : 18:47:55 : endGame
+23/12/2023 : 18:47:55 : endGame end avec false
+23/12/2023 : 18:47:55 : Round
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :1
+23/12/2023 : 18:47:55 : Jarnac
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : Debut test
+23/12/2023 : 18:47:55 : Fin test
+23/12/2023 : 18:47:55 : Jarnac :1
+23/12/2023 : 18:47:55 : Origin :1
+23/12/2023 : 18:47:55 : JouerMot end avec mot joué : SATE
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :1
+23/12/2023 : 18:47:55 : Jarnac
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : JouerMot end avec FinTourIA
+23/12/2023 : 18:47:55 : piocheLettre
+23/12/2023 : 18:47:55 : piocheLettre end letter
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :0
+23/12/2023 : 18:47:55 : Ligne : 3
+23/12/2023 : 18:47:55 : Board[Joueur][1] : AVE
+23/12/2023 : 18:47:55 : Board[Joueur][2] : SATE
+23/12/2023 : 18:47:55 : Path : 
+23/12/2023 : 18:47:55 : Path length : 0
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : Debut test
+23/12/2023 : 18:47:55 : Fin test
+23/12/2023 : 18:47:55 : Jarnac :0
+23/12/2023 : 18:47:55 : Origin :23397
+23/12/2023 : 18:47:55 : Jarnac false
+23/12/2023 : 18:47:55 : Ligne :3
+23/12/2023 : 18:47:55 : Board[Joueur][Current->Ligne] :
+23/12/2023 : 18:47:55 : Current->Word :OIE
+23/12/2023 : 18:47:55 : piocheLettre
+23/12/2023 : 18:47:55 : piocheLettre end letter
+23/12/2023 : 18:47:55 : JouerMot end avec mot joué : OIE
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :0
+23/12/2023 : 18:47:55 : Ligne : 4
+23/12/2023 : 18:47:55 : Board[Joueur][1] : AVE
+23/12/2023 : 18:47:55 : Board[Joueur][2] : SATE
+23/12/2023 : 18:47:55 : Board[Joueur][3] : OIE
+23/12/2023 : 18:47:55 : Path : 
+23/12/2023 : 18:47:55 : Path length : 0
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : Debut test
+23/12/2023 : 18:47:55 : Fin test
+23/12/2023 : 18:47:55 : Jarnac :0
+23/12/2023 : 18:47:55 : Origin :23397
+23/12/2023 : 18:47:55 : Jarnac false
+23/12/2023 : 18:47:55 : Ligne :4
+23/12/2023 : 18:47:55 : Board[Joueur][Current->Ligne] :
+23/12/2023 : 18:47:55 : Current->Word :OTE
+23/12/2023 : 18:47:55 : piocheLettre
+23/12/2023 : 18:47:55 : piocheLettre end letter
+23/12/2023 : 18:47:55 : JouerMot end avec mot joué : OTE
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :0
+23/12/2023 : 18:47:55 : Ligne : 5
+23/12/2023 : 18:47:55 : Board[Joueur][1] : AVE
+23/12/2023 : 18:47:55 : Board[Joueur][2] : SATE
+23/12/2023 : 18:47:55 : Board[Joueur][3] : OIE
+23/12/2023 : 18:47:55 : Board[Joueur][4] : OTE
+23/12/2023 : 18:47:55 : Path : 
+23/12/2023 : 18:47:55 : Path length : 0
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : JouerMot end avec FinTourIA
+23/12/2023 : 18:47:55 : Round end
+23/12/2023 : 18:47:55 : endGame
+23/12/2023 : 18:47:55 : endGame end avec false
+23/12/2023 : 18:47:55 : Round
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :1
+23/12/2023 : 18:47:55 : Jarnac
+23/12/2023 : 18:47:55 : JouerMot
+23/12/2023 : 18:47:55 : JouerMot end avec FinTourIA
+23/12/2023 : 18:47:55 : piocheLettre
+23/12/2023 : 18:47:55 : piocheLettre end letter
+23/12/2023 : 18:47:55 : BestMove
+23/12/2023 : 18:47:55 : Jarnac :0
+23/12/2023 : 18:47:55 : Ligne : 1
+23/12/2023 : 18:47:55 : Board[Joueur][2] : TER

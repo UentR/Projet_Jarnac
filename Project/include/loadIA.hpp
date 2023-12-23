@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <random>
 #include <set>
 #include <string>
 #include <tuple>
@@ -122,10 +123,9 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords);
  * @brief Laisse l'IA choisir si elle veut piocher ou échanger 3 lettres
  * @param BOARD Board - Le plateau de jeu.
  * @param int Joueur - Le joueur qui joue.
- * @param bool Jarnac - Si le mode Jarnac est activé.
  * @return true
  */
-bool PiocheEchange(BOARD Board, int Joueur, bool Jarnac);
+string PiocheEchange(BOARD Board, int Joueur);
 
 /**
  * @brief Retourne la ligne sur laquelle se trouve un mot.

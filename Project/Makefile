@@ -3,7 +3,7 @@
 
 CXX = g++
 # CXXFLAGS = -W -Wall -std=c++11 -O2 -g -Wno-sign-compare -Wno-narrowing
-CXXFLAGS = -O2 -Iinclude -g -Wno-sign-compare -Wno-narrowing
+CXXFLAGS = -O2 -w -Wall -Iinclude -g -Wno-sign-compare -Wno-narrowing
 OBJDIR = object
 INCDIR = include
 vpath %.cpp src
@@ -34,4 +34,4 @@ Demo:  $(objects) $(debug) $(demo)
 	@echo "Compilation demo terminée"
 
 $(OBJDIR)/%.o : %.cpp
-	@$(CXX) -c $(CXXFLAGS) $< -o $@
+	$(CXX) -c $(CXXFLAGS) $< -o $@

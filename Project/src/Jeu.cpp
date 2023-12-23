@@ -9,9 +9,6 @@ int main() {
   cout << "Nom du deuxième joueur : ";
   cin >> j2;
 
-  j1 = "Joueur 0";
-  j2 = "Joueur 1";
-
   srand(time(NULL));
   bool shuffle = false;
   if (rand() % 2) {

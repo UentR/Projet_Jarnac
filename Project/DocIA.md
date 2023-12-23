@@ -1,6 +1,7 @@
 ## Documentation de l'IA
 
-#### Création de la structure en arbre :
+
+### Création de la structure en arbre :
 
 Un [fichier](./Text/Arbre.txt) contenant l'ensemble des mots disponibles pour l'IA a été créé avec d'un côté le mot et de l'autre les lettres qu'il est possible d'ajouter à ce mot pour en créer un nouveau.
 On peut ensuite facilement charger ce fichier dans une structure en arbre pour optimiser la recherche par la suite.
@@ -25,7 +26,6 @@ On peut ensuite facilement charger ce fichier dans une structure en arbre pour o
 > }
 > ```
 
-<br>
 
 **Regardons étapes par étapes**
 
@@ -68,9 +68,8 @@ On peut ensuite facilement charger ce fichier dans une structure en arbre pour o
         > AIHelper->NodeDict[Sort(T->Ana)] = T // Pour placer notre noeud dans le dictionnaire
         > ```
 
-<br>
 
-#### Recherche de mot à allonger :
+### Recherche de mot à allonger :
 
 La première étape de chaque tour de l'IA est de regarder les mots qu'elle peut allonger. C'est un choix arbitraire que j'ai fait après avoir comparé différentes versions d'IA. Pour ça nous allons créer un set de tous les mots à analyser que nous agrandirons à chaque noeud enfant que l'on peut atteindre avec notre vrac.
 
@@ -95,7 +94,6 @@ La première étape de chaque tour de l'IA est de regarder les mots qu'elle peut
 > }
 > ```
 
-<br>
 
 **Regardons étapes par étapes**
 
@@ -136,9 +134,8 @@ La première étape de chaque tour de l'IA est de regarder les mots qu'elle peut
 3. **Choix du noeud :**
     - Il s'agit finalement simplement de trouver le chemin le plus long dans notre set final et de renvoyer le mot correspondant sur le plateau et ce chemin.
 
-<br>
 
-#### Recherche de mot à créer :
+### Recherche de mot à créer :
 
 On va regarder toutes les permutations de notre vrac dans un ordre croissant d'éléments afin de trouver le plus petit mot que l'on peut placer sur le plateau (ou dans un ordre décroissant d'élément en cas de Jarnac pour trouver le plus grand mot que l'on peut voler).
 
@@ -171,7 +168,6 @@ On va regarder toutes les permutations de notre vrac dans un ordre croissant d'�
 > }
 > ```
 
-<br>
 
 **Regardons étapes par étape**
 
@@ -186,7 +182,7 @@ On va regarder toutes les permutations de notre vrac dans un ordre croissant d'�
         > 	} else {
         > 		I = i;
         > 	}
-        > 	set<string> Permutations = DictPermutations(Vrac, I);
+        > 	set<string> Permutations = DictPermutations(Vrac, I); // Toutes les permutations de longeur I
         > }
         > ```
 
@@ -196,7 +192,7 @@ On va regarder toutes les permutations de notre vrac dans un ordre croissant d'�
         > for (string Permutation : Permutations) { // Parcours des permutations
         > 	if (Words.find(Permutation) != Words.end()) { // Verification de la validité du mot dans notre dictionnaire
         > 		FoundWords.insert(Words[Permutation]); // S'il existe l'ajouter à notre set
-        > 		StopSearch = true; // On n'a pas à regarder des permutations de taille différente, on a déjà notre solution optimale
+        > 		StopSearch = true; // On n'a pas à regarder des permutations de taille différente si on a déjà notre solution optimale
         > 	}
         > }
         > ```

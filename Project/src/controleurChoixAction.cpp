@@ -266,16 +266,16 @@ tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
   // Fin check si mot possible
 
   // Ici mot possible
-  writeToDebugFile("Jarnac :" + to_string(Current->Jarnac), ERROR);
-  writeToDebugFile("Origin :" + to_string(Current->Origin), ERROR);
+  writeToDebugFile("Jarnac : " + to_string(Current->Jarnac), ERROR);
+  writeToDebugFile("Origin : " + to_string(Current->Origin), ERROR);
   writeToStatsFile(Current->Word);
   if (!(Current->Jarnac)) {
     writeToDebugFile("Jarnac false", ERROR);
-    writeToDebugFile("Ligne :" + to_string(Current->Ligne), ERROR);
+    writeToDebugFile("Ligne : " + to_string(Current->Ligne), ERROR);
     writeToDebugFile(
-        "Board[Joueur][Current->Ligne] :" + Board[Joueur][Current->Ligne],
+        "Board[Joueur][Current->Ligne] : " + Board[Joueur][Current->Ligne],
         ERROR);
-    writeToDebugFile("Current->Word :" + Current->Word, ERROR);
+    writeToDebugFile("Current->Word : " + Current->Word, ERROR);
     // Retire du vrac - Ajoute au plateau - Ajoute une lettre au vrac
     Board[Joueur][0] = retire(Board[Joueur][0], Current->DLetter);
     Board[Joueur][Current->Ligne] = Current->Word;
@@ -305,13 +305,11 @@ BOARD PlaceMot(BOARD Board, int Joueur, ForDict *DictHelper, bool isJarnac,
   if (isJarnac) {
     Say = "Où pensez-vous voir un mot ?";
   }
-  bool Joue = true;
   string ligneTxt;
   string mot;
   string CurrentLigne = "";
   string diffLetter;
   string Vrac = Board[Joueur][0];
-  bool Continue;
   int NumLigne;
 
   Play *Current = new Play;
@@ -457,30 +455,48 @@ tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
   } else {
     writeToDebugFile("IA", ALL_LOG);
     // Si IA
-    if (Tour >= 2) {
-      // On ne pioche qu'à partir du 2e tour
-      Board[Joueur][0] += piocheLettre(LETTERS);
+    Play *IAMove = new Play;
+    TentativeMotPlace state = EchecPlacementMot;
+
+    if (Tour > 0) {
+      *(PlayerHelper->AIJarnac) = true;
+      do {
+        *(PlayerHelper->AIPlay[Joueur]) = true;
+        while (*(PlayerHelper->AIPlay[Joueur])) {
+          usleep(100000);
+        }
+        // IAMove = BestMove(Board, Joueur, true, PlayerHelper->AIS[Joueur]);
+        tie(Board, state) = JouerMot(Board, Joueur, PlayerHelper->IAMove,
+                                     NamesHelper, DictHelper, LETTERS);
+      } while (state == ReussitePlacementMot);
     }
 
-    Play *IAMove = new Play;
-    int nbPlay = 0;
-    bool JarnacPossible = true;
-    TentativeMotPlace state = EchecPlacementMot;
+    if (Tour >= 2) {
+      *(PlayerHelper->AIExchange[Joueur]) = true;
+      while (*(PlayerHelper->AIExchange[Joueur])) {
+        usleep(100000);
+      }
+      // On ne pioche qu'à partir du 2e tour
+      // string LettreIA = PiocheEchange(Board, Joueur);
+      if (*(PlayerHelper->AILetters) == "") {
+        Board[Joueur][0] += piocheLettre(LETTERS);
+      } else {
+        shuffleBag(LETTERS, *(PlayerHelper->AILetters));
+      }
+    }
+    *(PlayerHelper->AIJarnac) = false;
     do {
       // affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT,
       //                 NamesHelper->NameGame, NamesHelper->Name1,
       //                 NamesHelper->Name2, Joueur, false);
 
-      if (Tour == 0 or nbPlay > 0) {
-        // Verifier si jarnac possible
-        JarnacPossible = false;
+      *(PlayerHelper->AIPlay[Joueur]) = true;
+      while (*(PlayerHelper->AIPlay[Joueur])) {
+        usleep(100000);
       }
-      IAMove =
-          BestMove(Board, Joueur, JarnacPossible, PlayerHelper->AIS[Joueur]);
-
-      nbPlay++;
-      tie(Board, state) =
-          JouerMot(Board, Joueur, IAMove, NamesHelper, DictHelper, LETTERS);
+      // IAMove = BestMove(Board, Joueur, true, PlayerHelper->AIS[Joueur]);
+      tie(Board, state) = JouerMot(Board, Joueur, PlayerHelper->IAMove,
+                                   NamesHelper, DictHelper, LETTERS);
 
       // Si l'IA a joué un mot impossible
       if (state == EchecPlacementMot) {
@@ -552,6 +568,7 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
                 bool IA2) {
   writeToDebugFile("lanceLeJeu", INFO_DETAIL);
   ForDict *DictHelper = new ForDict;
+  // Demander à l'utilisateur de choisir le PATH vers dico (pas pratique)
   // string nomDico = choisirDictionnaire();
   // CreateHelper(DictHelper, nomDico, TAILLES_CLEES_DICO);
   CreateHelper(DictHelper, "Text/DictionnairePurified.txt", TAILLES_CLEES_DICO);
@@ -569,12 +586,25 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
     PlayersHelper->AIS[0] = new AI;
     StartUpAI(PlayersHelper->AIS[0]);
     PlayersHelper->isAI[0] = true;
+    int adrrPlay = shmget(0x1234, sizeof(bool), 0666 | IPC_CREAT);
+    *(PlayersHelper->AIPlay[0]) = (bool *)shmat(adrrPlay, 0, 0);
+    *(PlayersHelper->AIPlay[0]) = false;
+    int adrrExchange = shmget(0x1235, sizeof(bool), 0666 | IPC_CREAT);
+    *(PlayersHelper->AIExchange[0]) = (bool *)shmat(adrrExchange, 0, 0);
+    *(PlayersHelper->AIExchange[0]) = false;
+    int adrrJarnac = shmget(0x1236, sizeof(bool), 0666 | IPC_CREAT);
+    *(PlayersHelper->AIJarnac) = (bool *)shmat(adrrJarnac, 0, 0);
+    *(PlayersHelper->AIJarnac) = false;
+    int adrrLetters = shmget(0x1237, sizeof(char[3]), 0666 | IPC_CREAT);
+    *(PlayersHelper->AILetters) = (char *)shmat(adrrLetters, NULL, 0);
+    *(PlayersHelper->AILetters) = "";
   }
   if (IA2) {
     writeToDebugFile("IA2 loading", ALL_LOG);
     PlayersHelper->AIS[1] = new AI;
     StartUpAI(PlayersHelper->AIS[1]);
     PlayersHelper->isAI[1] = true;
+    *(PlayersHelper->AIPlay[1]) = false;
   }
 
   BOARD Board;
@@ -583,8 +613,6 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   int Joueur;
   int Tour;
   string mot;
-  int Count;
-  Count = 0;
   writeToDebugFile("Nouvelle partie N°" + to_string(NbPartie), INFO);
   LETTERS = new StoreLetters;
   // writeToDebugFile("Nouvelle partie N°" + to_string(NbPartie));
@@ -624,7 +652,7 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
     return true;
   }
   writeToDebugFile("Fin du premier tour", ALL_LOG);
-  while (mot == "") {
+  while (!endGame(Board, Joueur) and mot != "-STOP-") {
     Joueur = 1 - Joueur;
     affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT, Name,
                     joueur0, joueur1, Joueur, false);
@@ -633,16 +661,11 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
                             PlayersHelper, Tour, LETTERS);
     Tour++;
     writeToDebugFile("Fin du tour : " + to_string(Tour), ALL_LOG);
-    if (endGame(Board, Joueur)) {
-      writeToDebugFile("Sortie boucle jeu", ERROR);
-      break;
-    }
   }
   cout << "Fin de la partie N°" << NbPartie << endl;
   writeToDebugFile("Fin de la partie N°" + to_string(NbPartie), 2);
   affichePlateaux(Board[0], Board[1], NB_LIGNES_PLATEAU, TAILLE_MAX_MOT, Name,
                   joueur0, joueur1, 0, false);
-  // cout << "Fin du jeu." << endl;
 
   writeToStatsFile("Vrac: " + Board[0][0] + " " + Board[1][0]);
 
@@ -667,9 +690,6 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   } else {
     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
   }
-  cout << "Fin du jeu, " << NamesHelper->Name1 << " a gagné." << endl;
-
   writeToDebugFile("lanceLeJeu end", INFO_DETAIL);
   return true;
 }
-
