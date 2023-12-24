@@ -1,3 +1,4 @@
+#include <string.h>
 #include <sys/shm.h>
 
 #include <iostream>
@@ -53,24 +54,41 @@ int main(int argc, char const *argv[]) {
   *MyExchange = true;
   *MyTurn = true;
 
+  int Ligne = 1;
+  // int Idx = 0;
+  // char *CHAR = "BEST     ";
+  // for (auto *t = Board + Joueur * 8 * 9 + Ligne * 9;
+  //      t < Board + Joueur * 8 * 9 + (Ligne + 1) * 9; t++) {
+  //   *t = CHAR[Idx];
+  //   Idx++;
+  // }
+  string Word = string(argv[3]) + "         ";
+  strncpy(Board + Joueur * 8 * 10 + (Ligne - 1) * 10, Word.c_str(), 9);
+
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 2; j++) {
       cout << "| ";
       for (int k = 0; k < 9; k++) {
-        cout << Board[j * 8 * 9 + i * 8 + k] << " | ";
+        cout << Board[j * 8 * 10 + i * 10 + k] << " | ";
       }
-      cout << " |||";
+      cout << "|||";
     }
     cout << endl;
   }
 
-  Board[130] = '3';
+  // strcpy(Vracs[0], "Vrac0");
+  strcat(Vracs[0], "TesT");  // Append to char*
+
+  memmove(&Vracs[0][1], &Vracs[0][2], 144 - 1 - 1);  // Remove index
 
   for (int j = 0; j < 2; j++) {
     cout << "Vrac " << j << ": ";
-    for (int i = 0; i < 8; i++) {
-      cout << Vracs[j][i] << " ";
+    // Go through the char * array
+    for (char *t = Vracs[j]; *t != '\0'; t++) {
+      cout << *t << " ";
     }
+    cout << " Oui ";
+
     cout << endl;
   }
 

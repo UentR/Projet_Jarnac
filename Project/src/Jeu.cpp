@@ -42,7 +42,7 @@ int main2() {
 }
 
 int main() {
-  int keyAdrr = shmget(0x1240, sizeof(Keys), 0666 | IPC_CREAT);
+  int keyAdrr = shmget(ftok("Jarnac", 1), sizeof(Keys), 0666 | IPC_CREAT);
   if (keyAdrr < 0) {
     cout << "Erreur de shmget" << endl;
     exit(1);
@@ -52,13 +52,13 @@ int main() {
 
   cout << "keyAdrr: " << keyAdrr << endl;
 
-  int keyReady1 = shmget(0x1242, sizeof(bool), 0666 | IPC_CREAT);
+  int keyReady1 = shmget(ftok("Jarnac", 2), sizeof(bool), 0666 | IPC_CREAT);
   if (keyReady1 < 0) {
     cout << "Erreur de shmget Ready1" << endl;
     exit(1);
   }
   key->keyReady[0] = keyReady1;
-  int keyReady2 = shmget(0x1243, sizeof(bool), 0666 | IPC_CREAT);
+  int keyReady2 = shmget(ftok("Jarnac", 3), sizeof(bool), 0666 | IPC_CREAT);
   if (keyReady2 < 0) {
     cout << "Erreur de shmget Ready2" << endl;
     exit(1);
@@ -71,15 +71,13 @@ int main() {
   *(Adrr->Ready[0]) = true;
   *(Adrr->Ready[1]) = true;
 
-  cout << "here" << endl;
-
   StorePlayers *PlayersHelper = new StorePlayers;
-  if (false) {
+  if (true) {
     writeToDebugFile("IA1 loading", ALL_LOG);
     // PlayersHelper->AIS[0] = new AI;
     // StartUpAI(PlayersHelper->AIS[0]);
     PlayersHelper->isAI[0] = true;
-    int keyPlay = shmget(0x1244, sizeof(bool), 0666 | IPC_CREAT);
+    int keyPlay = shmget(ftok("Jarnac", 4), sizeof(bool), 0666 | IPC_CREAT);
     if (keyPlay < 0) {
       cout << "Erreur de shmget keyPlay 1" << endl;
       exit(1);
@@ -87,7 +85,8 @@ int main() {
     key->keyPlay[0] = keyPlay;
     Adrr->CanPlay[0] = (bool *)shmat(keyPlay, 0, 0);
     *(Adrr->CanPlay[0]) = false;
-    int keyExchange = shmget(0x1245, sizeof(bool *), 0666 | IPC_CREAT);
+    int keyExchange =
+        shmget(ftok("Jarnac", 5), sizeof(bool *), 0666 | IPC_CREAT);
     if (keyExchange < 0) {
       cout << "Erreur de shmget keyExchange 1" << endl;
       exit(1);
@@ -102,7 +101,7 @@ int main() {
     // PlayersHelper->AIS[1] = new AI;
     // StartUpAI(PlayersHelper->AIS[1]);
     PlayersHelper->isAI[1] = true;
-    int keyPlay = shmget(0x1246, sizeof(bool *), 0666 | IPC_CREAT);
+    int keyPlay = shmget(ftok("Jarnac", 6), sizeof(bool *), 0666 | IPC_CREAT);
     if (keyPlay < 0) {
       cout << "Erreur de shmget keyPlay 2" << endl;
       exit(1);
@@ -110,7 +109,8 @@ int main() {
     key->keyPlay[1] = keyPlay;
     Adrr->CanPlay[1] = (bool *)shmat(keyPlay, 0, 0);
     *(Adrr->CanPlay[1]) = false;
-    int keyExchange = shmget(0x1247, sizeof(bool *), 0666 | IPC_CREAT);
+    int keyExchange =
+        shmget(ftok("Jarnac", 7), sizeof(bool *), 0666 | IPC_CREAT);
     if (keyExchange < 0) {
       cout << "Erreur de shmget keyExchange 2" << endl;
       exit(1);
@@ -121,7 +121,7 @@ int main() {
     *(Adrr->Ready[1]) = false;
   }
   if (false or true) {
-    int keyJarnac = shmget(0x1248, sizeof(bool *), 0666 | IPC_CREAT);
+    int keyJarnac = shmget(ftok("Jarnac", 8), sizeof(bool *), 0666 | IPC_CREAT);
     if (keyJarnac < 0) {
       cout << "Erreur de shmget keyJarnac" << endl;
       exit(1);
@@ -129,7 +129,7 @@ int main() {
     key->keyJarnac = keyJarnac;
     Adrr->CanJarnac = (bool *)shmat(keyJarnac, 0, 0);
     *(Adrr->CanJarnac) = false;
-    int keyLetters = shmget(0x1249, 3, 0666 | IPC_CREAT);
+    int keyLetters = shmget(ftok("Jarnac", 9), 3, 0666 | IPC_CREAT);
     if (keyLetters < 0) {
       cout << "Erreur de shmget keyLetters" << endl;
       exit(1);
@@ -137,7 +137,8 @@ int main() {
     key->keyLetters = keyLetters;
     Adrr->ExchangeLetters = (char *)shmat(keyLetters, NULL, 0);
     strcpy(Adrr->ExchangeLetters, "   ");
-    int keyPlayStruct = shmget(0x1250, sizeof(Play), 0666 | IPC_CREAT);
+    int keyPlayStruct =
+        shmget(ftok("Jarnac", 10), sizeof(Play), 0666 | IPC_CREAT);
     if (keyPlayStruct < 0) {
       cout << "Erreur de shmget keyPlayStruct" << endl;
       exit(1);
@@ -146,7 +147,7 @@ int main() {
     Adrr->Move = (Play *)shmat(keyPlayStruct, NULL, 0);
   }
 
-  int keyBoard = shmget(0x1251, 8 * 9 * 2 + 1, 0666 | IPC_CREAT);
+  int keyBoard = shmget(ftok("Jarnac", 11), 8 * 10 * 2, 0666 | IPC_CREAT);
   if (keyBoard < 0) {
     cout << "Erreur de shmget keyBoard" << endl;
     exit(1);
@@ -156,31 +157,25 @@ int main() {
   strcpy(Adrr->Board,
          "                                                                     "
          "                                                                     "
-         "      ");
-
-  int keyVrac1 = shmget(0x1252, 145, 0666 | IPC_CREAT);
+         "                      ");
+  int keyVrac1 = shmget(ftok("Jarnac", 12), 145, 0666 | IPC_CREAT);
   if (keyVrac1 < 0) {
     cout << "Erreur de shmget keyVrac 1" << endl;
     exit(1);
   }
   key->keyVrac[0] = keyVrac1;
   Adrr->Vrac[0] = (char *)shmat(keyVrac1, NULL, 0);
-  strcpy(Adrr->Vrac[0],
-         "                                                                     "
-         "                                                                     "
-         "      ");
+  strcpy(Adrr->Vrac[0], "\0");
 
-  int keyVrac2 = shmget(0x1253, 145, 0666 | IPC_CREAT);
+  int keyVrac2 = shmget(ftok("Jarnac", 13), 145, 0666 | IPC_CREAT);
   if (keyVrac2 < 0) {
     cout << "Erreur de shmget keyVrac 2" << endl;
     exit(1);
   }
   key->keyVrac[1] = keyVrac2;
   Adrr->Vrac[1] = (char *)shmat(keyVrac2, NULL, 0);
-  strcpy(Adrr->Vrac[1],
-         "                                                                     "
-         "                                                                     "
-         "      ");
+  strcpy(Adrr->Vrac[1], "\0");
+
   cout << "Waiting for AIs..." << endl;
   cout << "Ready 1 : " << *(Adrr->Ready[0]) << endl;
   cout << "Ready 2 : " << *(Adrr->Ready[1]) << endl;
