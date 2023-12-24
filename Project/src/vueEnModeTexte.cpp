@@ -6,6 +6,7 @@ using namespace std;
 // #include "vueEnModeTexte.hpp"
 #include "mCalculPoints.hpp"
 #include "mDictionnaire.hpp"
+#include "vueEnModeTexte.hpp"
 
 /*****************************************************
 ******************************************************
@@ -83,15 +84,11 @@ void afficheSeparateur(int nbMaxLettres, int largeurCase) {
 /***
  * Affiche chaque lettre du mots dans les case de la bonne largeur
  */
-void afficheMots(string mot, int nbMaxLettres, int largeurCase) {
+void afficheMots(char* mot, int nbMaxLettres, int largeurCase) {
   for (int lettre = 0; lettre < nbMaxLettres; lettre++) {
     cout << "|";
     afficheSymbolesRepete((largeurCase - 1) / 2, " ");
-    if (lettre < mot.size()) {
-      cout << majuscule(mot[lettre]);
-    } else {
-      cout << " ";
-    }
+    cout << majuscule(mot[lettre]);
     afficheSymbolesRepete(largeurCase - 2 - ((largeurCase - 1) / 2), " ");
   }
 }
@@ -114,10 +111,9 @@ string filtre(string mot, int nbMaxLettres) {
  *
  */
 // ajouter espace dans le vrac
-void affichePlateaux(vector<string> plateauJoueurA,
-                     vector<string> plateauJoueurB, int nbMots,
-                     int nbMaxLettres, string titreJeu, string prenomA,
-                     string prenomB, int Joueur, bool Jarnac) {
+void affichePlateaux(BOARD* Board, int nbMots, int nbMaxLettres,
+                     string titreJeu, string prenomA, string prenomB,
+                     int Joueur, bool Jarnac) {
   system("clear");
 
   vector<string> Perso = {" ", " "};
@@ -199,19 +195,21 @@ void affichePlateaux(vector<string> plateauJoueurA,
   // entete des joueurs
   cout << "|";
   cout << prenomA;
-  int nbAffiche = calculPoints(plateauJoueurA, nbMaxLettres, nbMots);
+  int* NbAffiche = calculPoints(Board->Board, nbMaxLettres, nbMots);
+  int nbAffiche1 = NbAffiche[0];
+  int nbAffiche2 = NbAffiche[1];
   afficheSymbolesRepete(
       largeurCase * nbMaxLettres - (size(prenomA) + size(" points ") + 4), " ");
-  if (nbAffiche < 10) {
+  if (nbAffiche1 < 10) {
     cout << " ";
   }
-  if (nbAffiche < 100) {
+  if (nbAffiche1 < 100) {
     cout << " ";
   }
   cout << SCORE;
-  cout << nbAffiche << " point";
+  cout << nbAffiche1 << " point";
 
-  if (nbAffiche > 1) {
+  if (nbAffiche1 > 1) {
     cout << "s";
   } else {
     cout << " ";
@@ -222,19 +220,18 @@ void affichePlateaux(vector<string> plateauJoueurA,
   cout << "|";
 
   cout << prenomB;
-  nbAffiche = calculPoints(plateauJoueurB, nbMaxLettres, nbMots);
   afficheSymbolesRepete(
       largeurCase * nbMaxLettres - (size(prenomB) + size(" points ") + 4), " ");
-  if (nbAffiche < 10) {
+  if (nbAffiche2 < 10) {
     cout << " ";
   }
-  if (nbAffiche < 100) {
+  if (nbAffiche2 < 100) {
     cout << " ";
   }
   cout << SCORE;
-  cout << nbAffiche << " point";
+  cout << nbAffiche2 << " point";
 
-  if (nbAffiche > 1) {
+  if (nbAffiche2 > 1) {
     cout << "s";
   } else {
     cout << " ";
@@ -273,17 +270,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
   string motA = " ";
   string motB = " ";
   for (int ligne = 1; ligne <= nbMots; ligne++) {
-    if (ligne < plateauJoueurA.size()) {
-      motA = filtre(plateauJoueurA[ligne], nbMaxLettres);
-    } else {
-      motA = "";
-    }
-    if (ligne < plateauJoueurB.size()) {
-      motB = filtre(plateauJoueurB[ligne], nbMaxLettres);
-    } else {
-      motB = "";
-    }
-    afficheMots(motA, nbMaxLettres, largeurCase);
+    afficheMots(Board->Board + ligne * 10, nbMaxLettres, largeurCase);
     cout << "|";
 
     afficheSymbolesRepete((largeurDecor - grec[ligne - 1].size()) / 2, " ");
@@ -294,7 +281,7 @@ void affichePlateaux(vector<string> plateauJoueurA,
                               ((largeurDecor - grec[ligne - 1].size()) / 2),
                           " ");
 
-    afficheMots(motB, nbMaxLettres, largeurCase);
+    afficheMots(Board->Board + 80 + ligne * 10, nbMaxLettres, largeurCase);
     cout << "|";
     cout << endl;
 
@@ -326,31 +313,33 @@ void affichePlateaux(vector<string> plateauJoueurA,
 
   cout << "|";
 
-  if (plateauJoueurA[0].size() < largeurCase * nbMaxLettres) {
-    afficheSymbolesRepete(
-        (largeurCase * nbMaxLettres - plateauJoueurA[0].size()) / 2, " ");
+  int SizeV0 = strlen(Board->Vracs[0]);
+  int SizeV1 = strlen(Board->Vracs[1]);
+  if (SizeV0 < largeurCase * nbMaxLettres) {
+    afficheSymbolesRepete((largeurCase * nbMaxLettres - SizeV0) / 2, " ");
     cout << VRAC;
-    cout << plateauJoueurA[0];
+    for (auto* c = Board->Vracs[0]; *c != '\0'; c++) {
+      cout << *c;
+    }
     cout << End;
-    afficheSymbolesRepete(
-        largeurCase * nbMaxLettres - plateauJoueurA[0].size() - 1 -
-            (largeurCase * nbMaxLettres - plateauJoueurA[0].size()) / 2,
-        " ");
+    afficheSymbolesRepete(largeurCase * nbMaxLettres - SizeV0 - 1 -
+                              (largeurCase * nbMaxLettres - SizeV0) / 2,
+                          " ");
   }
   cout << "|";
   afficheSymbolesRepete(largeurDecor, " ");
   cout << "|";
 
-  if (plateauJoueurB[0].size() < largeurCase * nbMaxLettres) {
-    afficheSymbolesRepete(
-        (largeurCase * nbMaxLettres - plateauJoueurB[0].size()) / 2, " ");
+  if (SizeV1 < largeurCase * nbMaxLettres) {
+    afficheSymbolesRepete((largeurCase * nbMaxLettres - SizeV1) / 2, " ");
     cout << VRAC;
-    cout << plateauJoueurB[0];
+    for (auto* c = Board->Vracs[1]; *c != '\0'; c++) {
+      cout << *c;
+    }
     cout << End;
-    afficheSymbolesRepete(
-        largeurCase * nbMaxLettres - plateauJoueurB[0].size() - 1 -
-            (largeurCase * nbMaxLettres - plateauJoueurB[0].size()) / 2,
-        " ");
+    afficheSymbolesRepete(largeurCase * nbMaxLettres - SizeV1 - 1 -
+                              (largeurCase * nbMaxLettres - SizeV1) / 2,
+                          " ");
   }
   cout << "|";
   cout << endl;

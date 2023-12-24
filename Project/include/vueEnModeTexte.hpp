@@ -1,14 +1,22 @@
-#include <stdexcept>
+#include <string.h>
+
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 using namespace std;
 
 // #include "mDictionnaire.hpp"
 /***Infrastructure minimale de test **/
 
-#define CHECK(test) \
-    if (!(test))    \
-    cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ << ": " #test << endl
+struct BOARD {
+  char Board[160];
+  char Vracs[2][145] = {"", ""};
+};
+
+#define CHECK(test)                                                  \
+  if (!(test))                                                       \
+  cerr << "Test failed in file " << __FILE__ << " line " << __LINE__ \
+       << ": " #test << endl
 
 /*****************************************************
 ******************************************************
@@ -32,9 +40,9 @@ using namespace std;
  * pour un affichage optimal.
  *
  */
-void affichePlateaux(vector<string> plateauJoueurA,
-                     vector<string> plateauJoueurB, int nbMots, int nbMaxLettres, string titreJeu,
-                     string prenomA, string prenomB, int Joueur, bool Jarnac);
+void affichePlateaux(BOARD* Board, int nbMots, int nbMaxLettres,
+                     string titreJeu, string prenomA, string prenomB,
+                     int Joueur, bool Jarnac);
 
 /**
  *

@@ -1,17 +1,18 @@
 #include "mCalculPoints.hpp"
 
-int calculPoints(vector<string> plateauJoueur, int nbMaxLettres,
-                 int nbFinalMots) {
-  int Points = 0;
-  int Len;
-  string Word;
-  int Size = plateauJoueur.size();
-  for (int i = 1; i < min(Size, nbFinalMots + 1); i++) {
-    Word = plateauJoueur[i];
-    Len = Word.length();
-    if (Len <= nbMaxLettres && Len >= 3) {
-      Points += Len * Len;
+int* calculPoints(char* Board, int nbMaxLettres, int nbFinalMots) {
+  int Points[2] = {0, 0};
+  for (int j = 0; j < 2; j++) {
+    for (int i = 0; i < 8; i++) {
+      int Len = 0;
+      for (int k = 0; k < 9; k++) {
+        if (Board[j * 8 * 10 + i * 10 + k] != '\0') {
+          Len++;
+        }
+      }
+      Points[j] += Len * Len;
     }
   }
+
   return Points;
 }

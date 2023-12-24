@@ -19,8 +19,6 @@
 
 using namespace std;
 
-using BOARD = vector<vector<string>>;
-
 // Debut definition des constantes
 #define NB_LIGNES_PLATEAU 8
 #define TAILLE_MAX_MOT 9
@@ -83,9 +81,8 @@ struct Keys {
   int keyJarnac;
   int keyLetters;
   int keyPlayMove;
-  int keyReady[2];
+  int keyConnected[2];
   int keyBoard;
-  int keyVrac[2];
 };
 
 struct Adresses {
@@ -94,9 +91,8 @@ struct Adresses {
   bool *CanJarnac;
   char *ExchangeLetters;
   Play *Move;
-  bool *Ready[2];
-  char *Board;
-  char *Vrac[2];
+  bool *Connected[2];
+  BOARD *Board;
 };
 
 enum TentativeMotPlace {
@@ -123,6 +119,8 @@ enum ChoixPossible {
  */
 string Sort(string Mot);
 
+void Error(char *msg);
+
 /**
  * @brief Retourne la ligne sur laquelle se trouve un mot.
  * @param BOARD Board - Le plateau de jeu.
@@ -138,7 +136,7 @@ int getLine(BOARD Board, string Word, int Joueur);
  * @param string Letter - Lettre à vérifier
  * @return bool - Si la lettre est une voyelle
  */
-bool isVowel(string Letter);
+bool isVowel(char Letter);
 
 /**
  * @brief Permet de vérifier s'il y a une voyelle dans la pioche d'un joueur
@@ -149,7 +147,7 @@ bool isVowel(string Letter);
  * @param int End - Fin des bornes
  * @return bool - S'il y a une voyelle entre les bornes
  */
-bool CheckVowel(vector<string> vectorLetter, int Start, int End);
+bool CheckVowel(char *vectorLetter, int Start, int End);
 
 /**
  * @brief Initialisation d'un vecteur avec toutes les lettres disponibles
@@ -157,7 +155,7 @@ bool CheckVowel(vector<string> vectorLetter, int Start, int End);
  *
  * @return vector<string> - Sac de lettres
  */
-vector<string> createLetters();
+char *createLetters();
 
 /**
  * @brief Permet de mélanger le sac de lettres
@@ -173,7 +171,7 @@ void shuffleBag(StoreLetters *LETTERS, string Rep);
  * @param StoreLetters* LETTERS - Contenu du sac de lettre
  * @return string - Lettre piochée
  */
-string piocheLettre(StoreLetters *LETTERS);
+char piocheLettre(char *LETTERS);
 
 /**
  * @brief Permet d'afficher l'ensemble des actions possibles pour un joueur
@@ -214,10 +212,9 @@ BOARD piocheOuEchange(BOARD Board, int Joueur, StoreLetters *Letters);
  * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return tuple<BOARD,TentativeMotPlace> - Plateau de jeu et état du mot joué
  */
-tuple<BOARD, TentativeMotPlace> JouerMot(BOARD Board, int Joueur, Play *Current,
-                                         Names *NamesHelper,
-                                         ForDict *DictHelper,
-                                         StoreLetters *Letters);
+TentativeMotPlace JouerMot(BOARD *Board, int Joueur, Play *Current,
+                           Names *NamesHelper, ForDict *DictHelper,
+                           char *Letters);
 
 /**
  * @brief Permet à un humain de choisir un mot à jouer en suivant la structure
@@ -261,9 +258,8 @@ tuple<BOARD, string> choixAction(BOARD Board, int Joueur, ForDict *DictHelper,
  * @param StoreLetters* Letters - Contenu du sac de lettre
  * @return tuple<BOARD,string> - Plateau de jeu et état du jeu
  */
-tuple<BOARD, string> Round(BOARD Board, int Joueur, ForDict *DictHelper,
-                           Names *NamesHelper, StorePlayers *PlayerHelper,
-                           int Tour, StoreLetters *Letters);
+string Round(Adresses *Adrr, int Joueur, ForDict *DictHelper,
+             Names *NamesHelper, int Tour, StoreLetters *Letters);
 
 /**
  * @brief Check si la partie doit se terminer

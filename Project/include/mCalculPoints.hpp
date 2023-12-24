@@ -1,5 +1,5 @@
 #include <string>
-#include <vector>
+#include <tuple>
 using namespace std;
 
 /*******************************************************
@@ -14,9 +14,8 @@ using namespace std;
 /**
  * @brief Calcule le nombre de points rapportés par l'ensemble des mots du
  * plateau d'un joueur
- * @param vector<string> plateauJoueur - un plateau de jeu
- * @return int Points - le nombre de points rapportés par l'ensemble des mots du
- * plateau
+ * @param char* plateauJoueur - un plateau de jeu
+ * @return int* Points - le nombre de points rapportés par l'ensemble des mots
+ * du plateau
  */
-int calculPoints(vector<string> plateauJoueur, int nbMaxLettres,
-                 int nbFinalMots);
+int* calculPoints(char* plateauJoueur, int nbMaxLettres, int nbFinalMots);
