@@ -51,45 +51,28 @@ char *createLetters() {
   writeToDebugFile("createLetters", INFO_DETAIL);
   // Toutes les lettres de base du jeu
   // Les mettre dans un fichier texte ?
-  map<char *, int> usableLetter = {
-      {"A", 14}, {"B", 4},  {"C", 7}, {"D", 5},  {"E", 19}, {"F", 2}, {"G", 4},
-      {"H", 2},  {"I", 11}, {"J", 1}, {"K", 1},  {"L", 6},  {"M", 5}, {"N", 9},
-      {"O", 8},  {"P", 4},  {"Q", 1}, {"R", 10}, {"S", 7},  {"T", 9}, {"U", 8},
-      {"V", 2},  {"W", 1},  {"X", 1}, {"Y", 1},  {"Z", 2}};
-
-  char *Letters =
+  char *Letters = new char[145];
+  strcpy(
+      Letters,
       "AAAAAAAAAAAAAABBBBCCCCCCCDDDDDEEEEEEEEEEEEEEEEEEEFFGGGGHHIIIIIIIIIIIJKLL"
       "LLLLMMMMMNNNNNNNNNOOOOOOOOPPPPQRRRRRRRRRRSSSSSSSTTTTTTTTTUUUUUUUUVVWXYZ"
-      "Z";
-
-  for (auto *t = Letters; t < Letters + 144; t++) {
-    cout << *t << " ";
-  }
-  cout << endl << strlen(Letters) << endl;
+      "Z");
 
   srand(time(NULL));
   bool Vowel1 = false;
   bool Vowel2 = false;
   int Size = strlen(Letters);
-  cout << Size << endl;
-  cout << "UHBNK" << endl;
-  random_device rd;
-  mt19937 generator(rd());
-
   do {
-    cout << "Here" << endl;
     // Shuffle Letters
-
-    shuffle(Letters, Letters + Size - 10, generator);
-    cout << "Here" << endl;
+    random_shuffle(Letters, Letters + strlen(Letters));
 
     // Verifier s'il y a bien une voyelle dans le vrac de chaque joueur
     Vowel1 = CheckVowel(Letters, Size, Size - TAILLE_VRAC);
     Vowel2 =
         CheckVowel(Letters, Size - 1 - TAILLE_VRAC, Size - 2 * TAILLE_VRAC);
   } while ((!Vowel1) || (!Vowel2));
-  cout << "Here12";
   writeToDebugFile("createLetters end", INFO_DETAIL);
+
   return Letters;
 }
 
@@ -131,7 +114,7 @@ void Exchange(char *LETTERS, Adresses *Adrr, int Joueur) {
 char piocheLettre(char *LETTERS) {
   writeToDebugFile("piocheLettre", INFO_DETAIL);
   int Size = strlen(LETTERS) - 1;
-  if (Size > 0) {
+  if (Size >= 0) {
     // Si le sac n'est pas vide
     char Letter = LETTERS[Size];
     LETTERS[Size] = '\0';
@@ -400,7 +383,7 @@ void initGame(Adresses *Adrr) {
   if (keyAdrr < 0) Error("Erreur de shmget keyAdrr");
   Keys *key = (Keys *)shmat(keyAdrr, NULL, 0);
 
-  cout << "keyAdrr: " << keyAdrr << endl;
+  cout << "keyAdrr : " << keyAdrr << endl;
 
   // Loading key to tell if players are connected
   int keyConnected1 = shmget(ftok("Jarnac", 2), sizeof(bool), 0666 | IPC_CREAT);
@@ -475,9 +458,6 @@ void initGame(Adresses *Adrr) {
 
   // Init of the Board
   BOARD *Board = new BOARD;
-  Board->Board;
-  Board->Vracs[0];
-  Board->Vracs[1];
 
   // Load key for the board
   int keyBoard = shmget(ftok("Jarnac", 11), sizeof(BOARD), 0666 | IPC_CREAT);
@@ -485,12 +465,17 @@ void initGame(Adresses *Adrr) {
   key->keyBoard = keyBoard;
   // Load/Set
   Adrr->Board = (BOARD *)shmat(keyBoard, NULL, 0);
+  // Board->Board = new char[2 * 8 * 10 + 1];
+  // Board->Vracs[0] = new char[145];
+  // Board->Vracs[1] = new char[145];
+  cout << "Here" << endl;
   strcpy(Adrr->Board->Board,
          "                                                                 "
          "    "
          "                                                                 "
          "    "
          "                      ");
+  cout << "Hre" << endl;
   writeToDebugFile("initGame end", INFO_DETAIL);
 }
 
@@ -498,7 +483,9 @@ void SetupVracs(Adresses *Adrr, char *Letters) {
   for (int j = 0; j < 2; j++) {
     for (int i = 0; i < 6; i++) {
       char Letter = piocheLettre(Letters);
-      strcat(Adrr->Board->Vracs[j], &Letter);
+      int Size = strlen(Adrr->Board->Vracs[j]);
+      Adrr->Board->Vracs[j][Size] = Letter;
+      Adrr->Board->Vracs[j][Size + 1] = '\0';
     }
   }
 }
@@ -524,9 +511,12 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   // Loading players variables
   Adresses *Adrr = new Adresses;
   initGame(Adrr);
+
   SetupVracs(Adrr, LETTERS);
 
   // Waiting for players to connect
+  cout << Adrr->Board->Vracs[0] << endl;
+  cout << Adrr->Board->Vracs[1] << endl;
   cout << "Waiting for AIs..." << endl;
   while (!(*Adrr->Connected[0]) or !(*Adrr->Connected[1])) {
     usleep(100000);

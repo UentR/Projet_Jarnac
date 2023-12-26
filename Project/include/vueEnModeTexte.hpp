@@ -10,7 +10,7 @@ using namespace std;
 
 struct BOARD {
   char Board[160];
-  char Vracs[2][145] = {"", ""};
+  char Vracs[2][145];
 };
 
 #define CHECK(test)                                                  \
@@ -40,7 +40,7 @@ struct BOARD {
  * pour un affichage optimal.
  *
  */
-void affichePlateaux(BOARD* Board, int nbMots, int nbMaxLettres,
+void affichePlateaux(BOARD *Board, int nbMots, int nbMaxLettres,
                      string titreJeu, string prenomA, string prenomB,
                      int Joueur, bool Jarnac);
 

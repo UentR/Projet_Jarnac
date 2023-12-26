@@ -67,6 +67,8 @@ int main(int argc, char const *argv[]) {
   string Word = string(argv[3]) + "         ";
   strncpy(Board->Board + Joueur * 8 * 10 + (Ligne - 1) * 10, Word.c_str(), 9);
 
+  cout << "Board: " << endl;
+
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 2; j++) {
       cout << "| ";
