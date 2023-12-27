@@ -88,7 +88,7 @@ void afficheMots(char* mot, int nbMaxLettres, int largeurCase) {
   for (int lettre = 0; lettre < nbMaxLettres; lettre++) {
     cout << "|";
     afficheSymbolesRepete((largeurCase - 1) / 2, " ");
-    cout << majuscule(mot[lettre]);
+    cout << majuscule(*(mot + lettre));
     afficheSymbolesRepete(largeurCase - 2 - ((largeurCase - 1) / 2), " ");
   }
 }
@@ -195,9 +195,10 @@ void affichePlateaux(BOARD* Board, int nbMots, int nbMaxLettres,
   // entete des joueurs
   cout << "|";
   cout << prenomA;
+
   int* NbAffiche = calculPoints(Board->Board, nbMaxLettres, nbMots);
-  int nbAffiche1 = NbAffiche[0];
-  int nbAffiche2 = NbAffiche[1];
+  int nbAffiche1 = *NbAffiche;
+  int nbAffiche2 = *(NbAffiche + 1);
   afficheSymbolesRepete(
       largeurCase * nbMaxLettres - (size(prenomA) + size(" points ") + 4), " ");
   if (nbAffiche1 < 10) {
@@ -269,16 +270,16 @@ void affichePlateaux(BOARD* Board, int nbMots, int nbMaxLettres,
   // affichage des mots
   string motA = " ";
   string motB = " ";
-  for (int ligne = 1; ligne <= nbMots; ligne++) {
+  for (int ligne = 0; ligne < nbMots; ligne++) {
     afficheMots(Board->Board + ligne * 10, nbMaxLettres, largeurCase);
     cout << "|";
 
-    afficheSymbolesRepete((largeurDecor - grec[ligne - 1].size()) / 2, " ");
+    afficheSymbolesRepete((largeurDecor - grec[ligne].size()) / 2, " ");
     cout << NBR;
-    cout << grec[ligne - 1];
+    cout << grec[ligne];
     cout << End;
-    afficheSymbolesRepete(largeurDecor - grec[ligne - 1].size() -
-                              ((largeurDecor - grec[ligne - 1].size()) / 2),
+    afficheSymbolesRepete(largeurDecor - grec[ligne].size() -
+                              ((largeurDecor - grec[ligne].size()) / 2),
                           " ");
 
     afficheMots(Board->Board + 80 + ligne * 10, nbMaxLettres, largeurCase);

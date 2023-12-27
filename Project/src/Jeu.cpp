@@ -4,7 +4,7 @@ int main() {
   flushDebug();
   writeToDebugFile("main", INFO_DETAIL);
 
-  lanceLeJeu("Jarnac", "1", "2", true, true);
+  lanceLeJeu("1", "2", "Jarnac", true, true);
 
   string j1, j2;
   cout << "Nom du premier joueur : ";

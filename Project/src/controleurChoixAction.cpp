@@ -468,14 +468,12 @@ void initGame(Adresses *Adrr) {
   // Board->Board = new char[2 * 8 * 10 + 1];
   // Board->Vracs[0] = new char[145];
   // Board->Vracs[1] = new char[145];
-  cout << "Here" << endl;
   strcpy(Adrr->Board->Board,
          "                                                                 "
          "    "
          "                                                                 "
          "    "
          "                      ");
-  cout << "Hre" << endl;
   writeToDebugFile("initGame end", INFO_DETAIL);
 }
 
@@ -515,15 +513,11 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   SetupVracs(Adrr, LETTERS);
 
   // Waiting for players to connect
-  cout << Adrr->Board->Vracs[0] << endl;
-  cout << Adrr->Board->Vracs[1] << endl;
   cout << "Waiting for AIs..." << endl;
   while (!(*Adrr->Connected[0]) or !(*Adrr->Connected[1])) {
     usleep(100000);
   }
   cout << "AIs ready" << endl;
-
-  exit(1);
 
   int Joueur;
   int Tour;
@@ -532,18 +526,17 @@ bool lanceLeJeu(string joueur0, string joueur1, string Name, bool IA1,
   // writeToDebugFile("Nouvelle partie N°" + to_string(NbPartie));
 
   // Affiche règle si pas IA
-  if (!IA1 or !IA2) {
-    writeToDebugFile("Affichage des règles", ALL_LOG);
-    affichePlateaux(Adrr->Board, NB_LIGNES_PLATEAU, TAILLE_MAX_MOT, Name,
-                    joueur0, joueur1, 0, false);
-    ActionPossible();
-    cout << "Appuyez sur 'enter' pour continuer" << endl;
-    getchar();
-  }
+  writeToDebugFile("Affichage des règles", ALL_LOG);
+  affichePlateaux(Adrr->Board, NB_LIGNES_PLATEAU, TAILLE_MAX_MOT, Name, joueur0,
+                  joueur1, 0, false);
+  ActionPossible();
+  cout << "Appuyez sur 'enter' pour continuer" << endl;
+  getchar();
 
   Joueur = 0;
   Tour = 0;
   mot = Round(Adrr, Joueur, DictHelper, NamesHelper, Tour, LETTERS);
+  exit(0);
   Tour++;
   if (mot == "-STOP-") {
     cout << "Fin du jeu, " << NamesHelper->Name2 << " a gagné." << endl;
