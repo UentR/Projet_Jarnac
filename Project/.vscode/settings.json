@@ -6,7 +6,8 @@
 		"tuple": "cpp",
 		"new": "cpp",
 		"iostream": "cpp",
-		"stdexcept": "cpp"
+		"stdexcept": "cpp",
+		"ctime": "cpp"
 	},
 	"cSpell.words": ["Jarnac"]
 }

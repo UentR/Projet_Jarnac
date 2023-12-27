@@ -30,6 +30,38 @@ struct Play {
   bool End;
 };
 
+#include <unistd.h>
+
+#include "loadIA.hpp"
+
+struct Adresses {
+  bool *CanPlay[2];
+  bool *CanExchange[2];
+  bool *CanJarnac;
+  char *ExchangeLetters;
+  Play *Move;
+  bool *Connected[2];
+  BOARD *Board;
+};
+
+int WaitForPlay(Adresses *Adrr, int Joueur, AI *AIHelper) {
+  while (*Adrr->Connected[Joueur]) {
+    if (*Adrr->CanPlay[Joueur]) {
+      Play *Move = new Play;
+      BestMove(Adrr->Board, Joueur, *Adrr->Jarnac, AIHelper);
+      Adrr->Move = Move;
+      *Adrr->CanPlay[Joueur] = false;
+    }
+    usleep(100000);
+  }
+  return 0;
+}
+
+int Played() {
+  AI *AIDemo = new AI;
+  StartUpAI(AIDemo);
+}
+
 int main(int argc, char const *argv[]) {
   int keyAdrr = atoi(argv[1]);
   int Joueur = atoi(argv[2]);

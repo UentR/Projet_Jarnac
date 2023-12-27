@@ -12,8 +12,10 @@
 
 using namespace std;
 
-using BOARD = vector<vector<string> >;
-
+struct BOARD {
+  char Board[160];
+  char Vracs[2][145] = {"", ""};
+};
 /**
  * @brief Structure de données contenant les informations d'un noeud d'arbre.
  * @param string Ana - Le mot correspondant au noeud.

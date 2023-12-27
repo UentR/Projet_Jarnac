@@ -134,10 +134,19 @@ tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
 
 string PiocheEchange(BOARD Board, int Joueur) { return ""; }
 
-int getLine(BOARD Board, string Word, int Joueur) {
-  for (int i = 1; i < Board[Joueur].size(); i++) {
-    if (Sort(Board[Joueur][i]) == Sort(Word)) {
-      return i;
+int getLine(char *Board, char *Word, int Joueur) {
+  bool Same = true;
+  for (int ligne = 0; ligne < 8; ligne++) {
+    char *BoardLine = Board + Joueur * 80 + ligne * 10;
+    Same = true;
+    for (int i = 0; i < strlen(Word); i++) {
+      if (BoardLine[i] != Word[i]) {
+        Same = false;
+        break;
+      }
+    }
+    if (Same) {
+      return ligne;
     }
   }
   return -1;
@@ -155,77 +164,53 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   vector<Node *> PlayerWords = {};
   set<string> Playable = {};
 
-  int Ligne = getLine(Board, "", Joueur);
+  int Ligne = getLine(Board->Board, "", Joueur);
   writeToDebugFile("Jarnac : " + to_string(Jarnac), ERROR);
+
+  int CurrJoueur = Joueur;
   if (Jarnac) {
-    if (Ligne != -1) {
-      writeToDebugFile("Jarnac", ERROR);
-      // On regarde si on peut agrandir les mots de l'adversaire
-      for (int i = 1; i < Board[1 - Joueur].size(); i++) {
-        if (Board[1 - Joueur][i].length() > 0) {
-          PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[1 - Joueur][i])]);
-        }
-      }
-      tie(Word, Path) = Analyze(Board[1 - Joueur][0], PlayerWords);
-      if (Path.length() >= 1) {
-        Current->Word = Word->Children[Path[0]]->Ana;
-        Current->Origin = getLine(Board, Word->Ana, 1 - Joueur);
-        Current->Ligne = Ligne;
-        Current->DLetter = Path[0];
-        return Current;
-      }
+    CurrJoueur = 1 - Joueur;
+  }
 
-      // On regarde si on peut placer un mot avec le vrac de l'adversaire
-      Playable = FindWords(Board[1 - Joueur][0], AIHelper->Dict, true);
-      if (Playable.size() > 0) {
-        Current->Word = *Playable.begin();
-        Current->Ligne = Ligne;
-        Current->Origin = getLine(Board, "", 1 - Joueur);
-        Current->DLetter = *Playable.begin();
-        return Current;
+  if (Ligne != -1) {
+    for (int i = 0; i < 8; i++) {
+      if (*(Board->Board + CurrJoueur * 80 + i * 10) != '\0') {
+        PlayerWords.push_back(
+            AIHelper->NodeDict[Sort(*(Board + CurrJoueur * 80 + i * 10))]);
       }
     }
-
-    Current->End = true;
-    Current->DLetter = "";
-    return Current;
-  } else {
-    writeToDebugFile("Ligne : " + to_string(Ligne), ERROR);
-    // On regarde si on peut agrandir l'un de nos mots
-    for (int i = 1; i < Board[Joueur].size(); i++) {
-      if (Board[Joueur][i].length() > 0) {
-        writeToDebugFile(
-            "Board[Joueur][" + to_string(i) + "] : " + Board[Joueur][i], ERROR);
-        PlayerWords.push_back(AIHelper->NodeDict[Sort(Board[Joueur][i])]);
-      }
-    }
-    tie(Word, Path) = Analyze(Board[Joueur][0], PlayerWords);
-    writeToDebugFile("Path : " + Path, ERROR);
-    writeToDebugFile("Path length : " + to_string(Path.length()), ERROR);
+    tie(Word, Path) = Analyze(Board->Vracs[CurrJoueur], PlayerWords);
     if (Path.length() >= 1) {
       Current->Word = Word->Children[Path[0]]->Ana;
-      Current->Ligne = getLine(Board, Word->Ana, Joueur);
+      if (Jarnac) {
+        Current->Origin = getLine(Board, Word->Ana, CurrJoueur);
+        Current->Ligne = Ligne;
+      } else {
+        Current->Ligne = getLine(Board, Word->Ana, Joueur);
+      }
       Current->DLetter = Path[0];
       return Current;
     }
 
-    // On regarde si on peut placer un mot avec notre vrac
-    // Ne pas chercher si tableau complet
-    if (Ligne != -1) {
-      Playable = FindWords(Board[Joueur][0], AIHelper->Dict, false);
-      if (Playable.size() > 0) {
-        Current->Word = *Playable.begin();
+    // On regarde si on peut placer un mot avec le vrac de l'adversaire
+    Playable = FindWords(Board->Vracs[CurrJoueur], AIHelper->Dict, true);
+    if (Playable.size() > 0) {
+      Current->Word = *Playable.begin();
+      if (Jarnac) {
+        Current->Origin = getLine(Board, Word->Ana, CurrJoueur);
         Current->Ligne = Ligne;
-        Current->DLetter = *Playable.begin();
-        return Current;
+      } else {
+        Current->Ligne = Ligne;
       }
+      Current->DLetter = *Playable.begin();
+      return Current;
     }
-
-    // Si on n'a toujours pas trouvé de mot on fini notre tour
-    Current->End = true;
-    Current->DLetter = "";
-    return Current;
   }
+
+  Current->End = true;
+  Current->DLetter = "";
+  Current->Jarnac = false;
+  return Current;
 }
 
 void LoadDict(AI *AIHelper, string FileName) {
