@@ -6,11 +6,6 @@
 
 using namespace std;
 
-struct BOARD {
-  char Board[160];
-  char Vracs[2][145] = {"", ""};
-};
-
 struct Keys {
   int keyPlay[2];
   int keyExchange[2];
@@ -19,15 +14,6 @@ struct Keys {
   int keyPlayMove;
   int keyConnected[2];
   int keyBoard;
-};
-
-struct Play {
-  string Word;
-  string DLetter;
-  int Ligne;
-  int Origin;
-  bool Jarnac;
-  bool End;
 };
 
 #include <unistd.h>
@@ -44,25 +30,25 @@ struct Adresses {
   BOARD *Board;
 };
 
-int WaitForPlay(Adresses *Adrr, int Joueur, AI *AIHelper) {
-  while (*Adrr->Connected[Joueur]) {
-    if (*Adrr->CanPlay[Joueur]) {
-      Play *Move = new Play;
-      BestMove(Adrr->Board, Joueur, *Adrr->Jarnac, AIHelper);
-      Adrr->Move = Move;
-      *Adrr->CanPlay[Joueur] = false;
-    }
-    usleep(100000);
-  }
-  return 0;
-}
+// int WaitForPlay(Adresses *Adrr, int Joueur, AI *AIHelper) {
+//   while (*Adrr->Connected[Joueur]) {
+//     if (*Adrr->CanPlay[Joueur]) {
+//       Play *Move = new Play;
+//       BestMove(Adrr->Board, Joueur, *Adrr->CanJarnac, AIHelper);
+//       Adrr->Move = Move;
+//       *Adrr->CanPlay[Joueur] = false;
+//     }
+//     usleep(100000);
+//   }
+//   return 0;
+// }
 
-int Played() {
+int main() {
   AI *AIDemo = new AI;
   StartUpAI(AIDemo);
 }
 
-int main(int argc, char const *argv[]) {
+int main2(int argc, char const *argv[]) {
   int keyAdrr = atoi(argv[1]);
   int Joueur = atoi(argv[2]);
   Keys *key = (Keys *)shmat(keyAdrr, NULL, 0);

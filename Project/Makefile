@@ -13,12 +13,12 @@ PROGS=Jarnac Demo
 debug = $(addprefix $(OBJDIR)/, Debug.o)
 dependDebug = $(addprefix $(INCDIR)/, Debug.hpp)
 objects = $(addprefix $(OBJDIR)/, mCalculPoints.o mDictionnaire.o vueEnModeTexte.o )
-depend = $(addprefix $(INCDIR)/, mCalculPoints.hpp mDictionnaire.hpp loadIA.hpp vueEnModeTexte.hpp controleurChoixAction.hpp)
+depend = $(addprefix $(INCDIR)/, mCalculPoints.hpp mDictionnaire.hpp vueEnModeTexte.hpp)
 
 jeu = $(addprefix $(OBJDIR)/, Jeu.o controleurChoixAction.o )
 jeudepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
-demo = $(addprefix $(OBJDIR)/, Temp.o)
-demodepend = $(addprefix $(INCDIR)/, controleurChoixAction.hpp)
+demo = $(addprefix $(OBJDIR)/, Temp.o loadIA.o)
+demodepend = $(addprefix $(INCDIR)/, loadIA.hpp)
 
 all: $(PROGS)
 

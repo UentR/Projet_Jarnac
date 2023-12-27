@@ -7,7 +7,8 @@
 		"new": "cpp",
 		"iostream": "cpp",
 		"stdexcept": "cpp",
-		"ctime": "cpp"
+		"ctime": "cpp",
+		"string": "cpp"
 	},
 	"cSpell.words": ["Jarnac"]
 }

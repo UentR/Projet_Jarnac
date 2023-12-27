@@ -9,17 +9,19 @@ char *envIALevel = getenv("LEVEL");
 bool EmptyIALevel = envIALevel == NULL;
 const int LevelIA = (EmptyIALevel) ? 60 : atoi(envIALevel);
 
-string Sort(string Mot) {
-  string Sorted = Mot;
-  sort(Sorted.begin(), Sorted.end());
+char *Sort(char *Mot) {
+  int Size = strlen(Mot);
+  char *Sorted = new char[Size + 1];
+  strcpy(Sorted, Mot);
+  sort(Sorted, Sorted + Size);
   return Sorted;
 }
 
-string chRetire(string Word, char Letter) {
-  string newString = "";
-  for (char character : Word) {
-    if (character != Letter) {
-      newString += character;
+char *chRetire(char *Word, char Letter) {
+  char *newString = new char[strlen(Word) + 1];
+  for (auto *t = Word; *t; t++) {
+    if (*t != Letter) {
+      strcat(newString, t);
     }
   }
   return newString;
@@ -35,29 +37,32 @@ string Retire(string Word, string Duplicate) {
   return newString;
 }
 
-set<string> DictPermutations(string Vrac, int Length) {
-  set<string> Permutations = {};
+set<char *> DictPermutations(char *Vrac, int Length) {
+  set<char *> Permutations = {};
+  char *Word;
   if (Length == 1) {
-    for (char Letter : Vrac) {
-      Permutations.insert(string(1, Letter));
+    for (auto *t = Vrac; *t; t++) {
+      Permutations.insert(t);
     }
   } else {
-    for (char Letter : Vrac) {
-      string NewVrac = chRetire(Vrac, Letter);
-      set<string> NewPermutations = DictPermutations(NewVrac, Length - 1);
-      for (string Permutation : NewPermutations) {
-        Permutations.insert(Sort(Letter + Permutation));
+    for (auto *t = Vrac; *t; t++) {
+      char *NewVrac = chRetire(Vrac, *t);
+      set<char *> NewPermutations = DictPermutations(NewVrac, Length - 1);
+      for (char *Permutation : NewPermutations) {
+        strcpy(Word, Permutation);
+        strcat(Word, t);
+        Permutations.insert(Sort(Word));
       }
     }
   }
   return Permutations;
 }
 
-set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac) {
+set<string> FindWords(char *Vrac, map<char *, char *> Words, bool Jarnac) {
   set<string> FoundWords = {};
   string SortedWord;
   bool StopSearch = false;
-  int Len = min((int)Vrac.length(), 9);
+  int Len = min((int)strlen(Vrac) - 1, 9);
   int I;
   for (int i = 3; i <= Len; i++) {
     if (Jarnac) {
@@ -65,8 +70,8 @@ set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac) {
     } else {
       I = i;
     }
-    set<string> Permutations = DictPermutations(Vrac, I);
-    for (string Permutation : Permutations) {
+    set<char *> Permutations = DictPermutations(Vrac, I);
+    for (char *Permutation : Permutations) {
       if (Words.find(Permutation) != Words.end() and
           ((rand() % 100) < LevelIA)) {
         FoundWords.insert(Words[Permutation]);
@@ -80,36 +85,38 @@ set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac) {
   return FoundWords;
 }
 
-tuple<Node *, string> Analyze(string Vrac, vector<Node *> PlayerWords) {
-  set<tuple<Node *, string, string, Node *> > toAnalyze = {};
+tuple<Node *, char *> Analyze(char *Vrac, vector<Node *> PlayerWords) {
+  set<tuple<Node *, char *, char *, Node *> > toAnalyze = {};
   if (PlayerWords.size() == 0) {
-    return make_tuple(new Node, "");
+    return make_tuple(new Node, (char *)"");
   }
   // On analyse tous les mots du joueur
   for (Node *Word : PlayerWords) {
-    toAnalyze.insert(make_tuple(Word, Vrac, "", Word));
+    toAnalyze.insert(make_tuple(Word, Vrac, (char *)"", Word));
   }
 
-  tuple<Node *, string> BaseCase = make_tuple(PlayerWords[0], "");
-  set<tuple<Node *, string> > End = {};
+  tuple<Node *, char *> BaseCase = make_tuple(PlayerWords[0], (char *)"");
+  set<tuple<Node *, char *> > End = {};
   Node *Word;
-  string tVrac;
+  char *tVrac;
   bool Child;
-  string Path;
+  char *Path;
+  char *NewPath;
   Node *Origin;
   while (!toAnalyze.empty()) {
     tie(Word, tVrac, Path, Origin) = *toAnalyze.begin();
     toAnalyze.erase(toAnalyze.begin());
     Child = false;
-    for (char Letter : tVrac) {
-      if ((Word->Children.find(Letter) != Word->Children.end()) and
+    for (auto *t = tVrac; t != '\0'; t++) {
+      // for (auto *Finder = Word->Children; *t; t++) {
+      if ((Word->Children.find(*t) != Word->Children.end()) and
           ((rand() % 100) < LevelIA)) {
         Child = true;
         // Si on peut atteindre un enfant, on l'ajoute à la liste des
         // noeuds à analyser
-        toAnalyze.insert(make_tuple(Word->Children[Letter],
-                                    chRetire(tVrac, Letter), Path + Letter,
-                                    Origin));
+
+        toAnalyze.insert(make_tuple(Word->Children[*t], chRetire(tVrac, *t),
+                                    Path + Letter, Origin));
       }
     }
     // Si on ne peut pas atteindre d'enfant, on ajoute le mot à la liste
@@ -152,7 +159,8 @@ int getLine(char *Board, char *Word, int Joueur) {
   return -1;
 }
 
-Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
+Play *BestMove(BOARD *Board, int Joueur, bool Jarnac, AI *AIHelper) {
+  cout << "BestMove" << endl;
   writeToDebugFile("BestMove", ERROR);
   Play *Current = new Play;
   Current->Jarnac = Jarnac;
@@ -163,8 +171,9 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
 
   vector<Node *> PlayerWords = {};
   set<string> Playable = {};
-
+  cout << "Jarnac : " << Jarnac << endl;
   int Ligne = getLine(Board->Board, "", Joueur);
+  cout << "Ligne : " << Ligne << endl;
   writeToDebugFile("Jarnac : " + to_string(Jarnac), ERROR);
 
   int CurrJoueur = Joueur;
@@ -173,13 +182,16 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
   }
 
   if (Ligne != -1) {
+    cout << "Ligne != -1" << endl;
     for (int i = 0; i < 8; i++) {
       if (*(Board->Board + CurrJoueur * 80 + i * 10) != '\0') {
         PlayerWords.push_back(
             AIHelper->NodeDict[Sort(*(Board + CurrJoueur * 80 + i * 10))]);
       }
     }
+    cout << "PlayerWords.size() : " << PlayerWords.size() << endl;
     tie(Word, Path) = Analyze(Board->Vracs[CurrJoueur], PlayerWords);
+    cout << "Word : " << Word->Ana << endl;
     if (Path.length() >= 1) {
       Current->Word = Word->Children[Path[0]]->Ana;
       if (Jarnac) {
@@ -191,9 +203,10 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
       Current->DLetter = Path[0];
       return Current;
     }
-
+    cout << "Path.length() < 1" << endl;
     // On regarde si on peut placer un mot avec le vrac de l'adversaire
     Playable = FindWords(Board->Vracs[CurrJoueur], AIHelper->Dict, true);
+    cout << "Playable.size() : " << Playable.size() << endl;
     if (Playable.size() > 0) {
       Current->Word = *Playable.begin();
       if (Jarnac) {
@@ -205,6 +218,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
       Current->DLetter = *Playable.begin();
       return Current;
     }
+    cout << "Hre" << endl;
   }
 
   Current->End = true;
@@ -215,7 +229,7 @@ Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper) {
 
 void LoadDict(AI *AIHelper, string FileName) {
   ifstream File;
-  string Word;
+  char *Word;
   File.open(FileName);
   // Avec une map on peut trouver un mot en O(1) au lieu de chercher
   // dans un vecteur en O(n)
@@ -230,7 +244,8 @@ void LoadDict(AI *AIHelper, string FileName) {
 void LoadTree(AI *AIHelper, string FileName) {
   ifstream File;
   Node *T;
-  string letter;
+  char letter;
+  char *Word;
   File.open(FileName);
   T = new Node;
   // Structure du fichier :
@@ -238,8 +253,10 @@ void LoadTree(AI *AIHelper, string FileName) {
   while (File >> T->Ana) {
     File >> letter;
     while (letter != ";") {
+      strcpy(T->Ana, Word);
+      strcat(Word, &letter);
       // On ajoute les noeuds enfants
-      T->Children[letter[0]] = AIHelper->NodeDict[Sort((T->Ana + letter))];
+      T->Children[letter] = AIHelper->NodeDict[Sort(Word)];
       File >> letter;
     }
     AIHelper->NodeDict[Sort(T->Ana)] = T;
@@ -249,8 +266,11 @@ void LoadTree(AI *AIHelper, string FileName) {
 }
 
 void StartUpAI(AI *AIHelper) {
+  cout << "Loading AI" << endl;
   LoadDict(AIHelper, "Text/DicoIA.txt");
+  cout << "Dict loaded" << endl;
   LoadTree(AIHelper, "Text/Arbre.txt");
+  cout << "Tree loaded" << endl;
 }
 
 void TEST() {

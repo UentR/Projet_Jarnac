@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -22,7 +24,7 @@ struct BOARD {
  * @param map<char,Node*> Children - Les noeuds enfants du noeud.
  */
 struct Node {
-  string Ana;
+  char *Ana;
   map<char, Node *> Children;
 };
 
@@ -34,8 +36,8 @@ struct Node {
  * entrée et les noeuds correspondant en sortie.
  */
 struct AI {
-  map<string, string> Dict;
-  map<string, Node *> NodeDict;
+  map<char *, char *> Dict;
+  map<char *, Node *> NodeDict;
 };
 
 /**
@@ -99,7 +101,7 @@ string Retire(string Word, string Duplicate);
  * @return vector<string> Un vecteur contenant toutes les permutations
  * possibles.
  */
-set<string> DictPermutations(string Vrac, int Length);
+set<char *> DictPermutations(char *Vrac, int Length);
 
 /**
  * @brief Recherche des mots dans un dictionnaire.
@@ -108,7 +110,7 @@ set<string> DictPermutations(string Vrac, int Length);
  * @param bool Jarnac - Si le mode Jarnac est activé.
  * @return set<string> Un ensemble de mots trouvés.
  */
-set<string> FindWords(string Vrac, map<string, string> Words, bool Jarnac);
+tuple<Node *, char *> Analyze(char *Vrac, vector<Node *> PlayerWords);
 
 /**
  * @brief Analyse une chaîne de caractères et retourne le mot le plus long
@@ -136,7 +138,7 @@ string PiocheEchange(BOARD Board, int Joueur);
  * @param int Joueur - Le joueur qui joue.
  * @return int La ligne sur laquelle se trouve le mot.
  */
-int getLine(BOARD Board, string Word, int Joueur);
+int getLine(char *Board, char *Word, int Joueur);
 
 /**
  * @brief Retourne le meilleur coup possible à jouer.
@@ -146,7 +148,7 @@ int getLine(BOARD Board, string Word, int Joueur);
  * @param AI* AIHelper - L'IA qui aide à trouver le meilleur coup.
  * @return Play* Le meilleur coup possible.
  */
-Play *BestMove(BOARD Board, int Joueur, bool Jarnac, AI *AIHelper);
+Play *BestMove(BOARD *Board, int Joueur, bool Jarnac, AI *AIHelper);
 
 /**
  * @brief Charge un dictionnaire à partir d'un fichier. Chaque mot du fichier
